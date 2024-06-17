@@ -4,6 +4,7 @@ import { toast, Toaster } from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 
 function Login() {
+  const navigate  =useNavigate();
   const dealer = {
     username: "cug@dealer",
     password: "1234",
@@ -16,7 +17,7 @@ function Login() {
   const [username, setusername] = useState("");
   const [password, setpassword] = useState("");
   const handeAdminLogin = (e) => {
-const navigate  =useNavigate();
+
     if (isAdmin) {
       if (username == admin.username && password == admin.password) {
         toast.success("Login successful");
