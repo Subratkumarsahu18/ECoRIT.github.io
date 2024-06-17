@@ -15,6 +15,7 @@ import TermsOfService from "./Components/TermsOfService";
 import ContactForm from "./Components/ContactForm";
 import Add_new_CUG from "./Components/Dealer_Inner_Components/Add_New_Cug";
 import ProfilePage from "./Components/ProfilePage";
+import OperatorPage from "./Components/OperatorPage";
 
 function App() {
   const [count, setCount] = useState(0);
@@ -33,6 +34,8 @@ function App() {
         <Route path="/TermsOfService" element={<TermsOfService/>} />
         <Route path="/ContactForm" element={<ContactForm/>} />
         <Route path="/ProfilePage" element={<ProfilePage/>} />
+        <Route path="/OperatorPage" element={<OperatorPage/>} />
+       
       </Routes>
     </BrowserRouter>
   );

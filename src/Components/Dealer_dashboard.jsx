@@ -31,7 +31,7 @@ function Dealer_dashboard() {
         </h2>
         <div className="flex flex-wrap justify-center items-center space-x-8">
           {/* Profile Card */}
-          <div className="bg-[#2664eb] p-4 pb-8 px-16 rounded-lg text-center ">
+          <div className="bg-[#2664eb] relative p-4 pb-8 px-16 rounded-lg text-center ">
             <img
               className="w-32 h-32 bg-white rounded-full mx-auto mb-2"
               src={acc_icon}
@@ -40,9 +40,15 @@ function Dealer_dashboard() {
 
             <p className="text-xl">Name: Iftikar Bhat</p>
             <p className="text-xl">Emp_Id: 83538027</p>
-            <button className="mt-4 px-4 py-2 bg-blue-100 text-blue-700 font-semibold rounded-lg">
+            <button className="">
+            <Link
+              to="/ProfilePage"
+              className=" px-4 py-2 absolute right-20 bottom-2 bg-blue-100 text-blue-700 font-semibold rounded-lg"
+            >
               Learn more
+            </Link>
             </button>
+            
           </div>
 
           {/* Action Buttons */}
@@ -107,7 +113,9 @@ function Dealer_dashboard() {
 
             {/* Copyright Notice */}
             <div className="text-center md:text-right">
-              <p className="text-sm">&copy; 2024 East Coast Railway. All Rights Reserved.</p>
+              <p className="text-sm">
+                &copy; 2024 East Coast Railway. All Rights Reserved.
+              </p>
             </div>
           </div>
         </div>

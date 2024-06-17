@@ -26,7 +26,7 @@ function Upload_new_CUG_Number() {
       <Toaster />
       {/* Header */}
       <div className="w-full bg-blue-700 py-4 flex justify-start px-4 md:px-8">
-        <h1 className="text-2xl md:text-3xl text-white">Create Dealer</h1>
+        <h1 className="text-2xl md:text-3xl text-white">Upload New CUG Number</h1>
       </div>
 
       {/* Main Content */}

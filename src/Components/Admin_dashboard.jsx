@@ -37,7 +37,7 @@ function Admin_dashboard() {
         <div className="flex space-x-2 md:space-x-4 mt-4 md:mt-3">
           {/* <a href="#" className="text-white">Allotment</a>
           <a href="#" className="text-white">Deactivate CUG</a> */}
-          <a href="#" className="text-white">Operator</a>
+          <Link to="/OperatorPage" className="hover:underline">Operator</Link>
           <div className="relative -mt-2" onMouseOver={() => { setDropdownOpen(true); }} onMouseLeave={() => { setDropdownOpen(false); }}>
             <span className=" hover:cursor-pointer">
               <svg
@@ -111,6 +111,7 @@ function Admin_dashboard() {
             <Route path="planreport" element={<PlanWiseBillingReport />} />
             <Route path="uploadcugbill" element={<Upload_CUG_Bill />} />
             <Route path="uploadnewnumber" element={<Upload_new_CUG_Number />} />
+            
           </Routes>
         </div>
       </div>
