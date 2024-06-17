@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { toast, Toaster } from "react-hot-toast";
+import { useNavigate } from "react-router-dom";
 
 function Login() {
   const dealer = {
@@ -15,14 +16,14 @@ function Login() {
   const [username, setusername] = useState("");
   const [password, setpassword] = useState("");
   const handeAdminLogin = (e) => {
-
+const navigate  =useNavigate();
     if (isAdmin) {
       if (username == admin.username && password == admin.password) {
         toast.success("Login successful");
         console.log("success")
         setTimeout(() => {
           
-          window.location = "/Admin_dashboard";
+          navigate('/Admin_dashboard');
         }, 1500);
       } else {
         toast.error("Invalid credentials");
@@ -31,7 +32,7 @@ function Login() {
     } else if (username == dealer.username && password == dealer.password) {
       toast.success("Login successful");
       setTimeout(() => {
-        window.location = "/Dealer_dashboard";
+        navigate("/Dealer_dashboard");
       }, 1500);
     } else {
       toast.error("Invalid credentials");
