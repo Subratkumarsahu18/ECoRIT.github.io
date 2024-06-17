@@ -3,13 +3,54 @@ import toast, { Toaster } from "react-hot-toast";
 
 const Activate_Deactivate_New_CUG = () => {
   const [dispacdc, setdispacdc] = useState(false);
+  const [enteredCUG, setEnteredCUG] = useState("");
+  const [cugDetails, setCugDetails] = useState(null);
+
+  const validCUGs = {
+    "1111111111": {
+      employeeNumber: "1234567890",
+      employeeName: "John Doe",
+      division: "HQ",
+      department: "ACCOUNTS",
+      billUnit: "10",
+      allocation: "1234567",
+      plan: "A",
+    },
+    "2222222222": {
+      employeeNumber: "0987654321",
+      employeeName: "Jane Smith",
+      division: "CON",
+      department: "ENGINEERING",
+      billUnit: "29",
+      allocation: "7654321",
+      plan: "B",
+    },
+  };
+
+  const handleCUGChange = (event) => {
+    setEnteredCUG(event.target.value);
+  };
+
+  const handleSubmit = () => {
+    if (validCUGs[enteredCUG]) {
+      setCugDetails(validCUGs[enteredCUG]);
+      setdispacdc(true);
+    } else {
+      toast.error("Wrong input");
+      setEnteredCUG("");
+    }
+  };
 
   return (
     <>
       <Toaster />
       {!dispacdc ? (
-        <div className="flex flex-col items-center p-6 min-h-screen bg-gray-100">
-          <h1 className="text-xl font-bold mb-6 text-blue-600">Activate/Deactivate CUG</h1>
+        <div className="flex flex-col items-center min-h-screen bg-white">
+          <div className="w-full bg-blue-700 py-4 flex mb-10 justify-between items-center px-4 md:px-8">
+            <h1 className="text-2xl md:text-3xl text-white">
+              Activate/Deactivate CUG
+            </h1>
+          </div>
           <div className="w-full max-w-sm">
             <div className="mb-4">
               <label className="block text-sm font-medium text-gray-700">
@@ -17,11 +58,13 @@ const Activate_Deactivate_New_CUG = () => {
               </label>
               <input
                 type="text"
+                value={enteredCUG}
+                onChange={handleCUGChange}
                 placeholder="Enter 11 Digit Number"
-                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                className="mt-1 block w-full px-3 text-black py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
               />
               <button
-                onClick={() => setdispacdc(true)}
+                onClick={handleSubmit}
                 className="mt-2 w-full bg-blue-500 text-white py-2 rounded-md hover:bg-blue-700"
               >
                 Submit
@@ -35,9 +78,19 @@ const Activate_Deactivate_New_CUG = () => {
             onClick={() => setdispacdc(false)}
             className="absolute top-4 right-4 p-2 text-white bg-blue-500 rounded-md hover:bg-blue-700"
           >
-            {/* Replace the text with an SVG vector */}
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" fill="currentColor">
-              <path d="M15.5 19.5l-1.41-1.41L12.83 18H5v-2h7.83l-2.09-2.09L15.5 12l6 6-6 6-1.5-1.5zM18 0H6C2.69 0 0 2.69 0 6v12c0 3.31 2.69 6 6 6h12c3.31 0 6-2.69 6-6V6c0-3.31-2.69-6-6-6zm0 20H6c-2.21 0-4-1.79-4-4V6c0-2.21 1.79-4 4-4h12c2.21 0 4 1.79 4 4v10c0 2.21-1.79 4-4 4z"/>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              strokeWidth={1.5}
+              stroke="currentColor"
+              className="size-6 text-white"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M15.75 19.5 8.25 12l7.5-7.5"
+              />
             </svg>
           </button>
           <h1 className="text-xl font-bold mb-6">Activate/Deactivate CUG</h1>
@@ -48,8 +101,9 @@ const Activate_Deactivate_New_CUG = () => {
               </label>
               <input
                 type="text"
-                placeholder="Enter  11 Digit Number"
-                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                value={enteredCUG}
+                readOnly
+                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm bg-gray-100"
               />
             </div>
             <div>
@@ -58,8 +112,9 @@ const Activate_Deactivate_New_CUG = () => {
               </label>
               <input
                 type="text"
-                placeholder="Enter 10 Digit Number"
-                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                value={cugDetails.employeeNumber}
+                readOnly
+                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm bg-gray-100"
               />
             </div>
             <div>
@@ -68,8 +123,9 @@ const Activate_Deactivate_New_CUG = () => {
               </label>
               <input
                 type="text"
-                placeholder="Enter 10 Digit Number"
-                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                value={cugDetails.employeeName}
+                readOnly
+                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm bg-gray-100"
               />
             </div>
             <div>
@@ -78,8 +134,9 @@ const Activate_Deactivate_New_CUG = () => {
               </label>
               <input
                 type="text"
-                placeholder="Enter 10 Digit Number"
-                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                value={cugDetails.division}
+                readOnly
+                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm bg-gray-100"
               />
             </div>
             <div>
@@ -88,8 +145,9 @@ const Activate_Deactivate_New_CUG = () => {
               </label>
               <input
                 type="text"
-                placeholder="Enter 10 Digit Number"
-                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                value={cugDetails.department}
+                readOnly
+                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm bg-gray-100"
               />
             </div>
             <div>
@@ -98,8 +156,9 @@ const Activate_Deactivate_New_CUG = () => {
               </label>
               <input
                 type="text"
-                placeholder="Enter 10 Digit Number"
-                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                value={cugDetails.billUnit}
+                readOnly
+                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm bg-gray-100"
               />
             </div>
             <div>
@@ -108,29 +167,28 @@ const Activate_Deactivate_New_CUG = () => {
               </label>
               <input
                 type="text"
-                placeholder="Enter 10 Digit Number"
-                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                value={cugDetails.allocation}
+                readOnly
+                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm bg-gray-100"
               />
             </div>
-            <div className="col-span-1 md:col-span-3 flex justify-between items-center mt-4">
+            <div className="flex items-center mt-4">
+              <label className="block text-sm font-medium text-gray-700 mr-4">
+                Plan:
+              </label>
+              <button className="bg-gray-200 text-gray-500 py-2 px-4 rounded-md cursor-not-allowed">
+                {cugDetails.plan}
+              </button>
               <button
-                className="bg-blue-700 text-white py-2 px-4 rounded-md hover:bg-blue-500"
+                className="ml-4 bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-700"
                 onClick={() => {
                   toast.success("Activated");
                 }}
               >
                 Activate
               </button>
-              <div className="text-center">
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Plan:
-                </label>
-                <button className="bg-blue-200 text-gray-700 py-2 px-4 rounded-md cursor-not-allowed">
-                  A
-                </button>
-              </div>
               <button
-                className="bg-blue-700 text-white py-2 px-4 rounded-md hover:bg-blue-500"
+                className="ml-4 bg-gray-500 text-white py-2 px-4 rounded-md hover:bg-gray-700"
                 onClick={() => {
                   toast.success("Deactivated");
                 }}

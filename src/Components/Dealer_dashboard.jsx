@@ -1,13 +1,13 @@
 import React from "react";
+import { Link } from "react-router-dom";
 import acc_icon from "../pics/acc_icon.png";
 import file from "../pics/file.png";
-import { Routes, Route, Link } from "react-router-dom";
-import Activate_Deactivate_New_CUG from "./Dealer_Inner_Components/Activate_Deactivate_New_CUG";
+
 function Dealer_dashboard() {
   return (
     <div className="min-h-screen bg-white flex flex-col items-center text-white">
       {/* Header */}
-      <div className="w-full bg-blue-700 py-4 flex justify-between items-center md:px-8">
+      <div className="w-full bg-blue-700 py-4 flex justify-between items-center px-4 md:px-8">
         <div className="flex items-center space-x-2">
           <img src={file} alt="Logo" className="w-12 h-12" />
           <div className="flex flex-col items-start">
@@ -35,10 +35,11 @@ function Dealer_dashboard() {
             <img
               className="w-32 h-32 bg-white rounded-full mx-auto mb-2"
               src={acc_icon}
+              alt="Profile"
             />
 
-            <p className="text-xl">Name: XXXXXX</p>
-            <p className="text-xl">Emp_Id: 22222</p>
+            <p className="text-xl">Name: Iftikar Bhat</p>
+            <p className="text-xl">Emp_Id: 83538027</p>
             <button className="mt-4 px-4 py-2 bg-blue-100 text-blue-700 font-semibold rounded-lg">
               Learn more
             </button>
@@ -46,31 +47,71 @@ function Dealer_dashboard() {
 
           {/* Action Buttons */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-            <Link to={"acdcreport"}>
+            <Link to="/acdcreport">
               <button className="w-48 h-32 bg-blue-600 rounded-lg hover:scale-90 duration-500 hover:bg-blue-500">
                 Activate/Deactivate CUG
               </button>
             </Link>
-            <Link to={"addnewcug"}>
+            <Link to="/addnewcug">
               <button className="w-48 h-32 bg-blue-600 rounded-lg hover:scale-90 duration-500 hover:bg-blue-500">
                 Add New CUG
               </button>
             </Link>
-            <Link to={"allocreport"}>
+            <Link to="/allocreport">
               <button className="w-48 h-32 bg-blue-600 rounded-lg hover:scale-90 duration-500 hover:bg-blue-500">
                 Allocation-wise Report
               </button>
             </Link>
-            <Link to={"planreport"}>
+            <Link to="/planreport">
               <button className="w-48 h-32 bg-blue-600 rounded-lg hover:scale-90 duration-500 hover:bg-blue-500">
                 Plan-Wise Billing Report
               </button>
             </Link>
           </div>
-          
         </div>
       </div>
-      
+
+      {/* Footer */}
+      <footer className="bg-blue-700 text-white py-4 mt-auto w-full">
+        <div className="container mx-auto px-4 md:px-8">
+          <div className="flex flex-col md:flex-row justify-between items-center">
+            {/* Logo and Contact Info */}
+            <div className="flex items-center space-x-4 mb-4 md:mb-0">
+              <img src={file} alt="Logo" className="w-12 h-12" />
+              <div className="text-center md:text-left">
+                <h3 className="text-lg font-bold">East Coast Railway</h3>
+                <p className="text-sm">Bhubaneswar, Odisha</p>
+              </div>
+            </div>
+
+            {/* Navigation Links */}
+            <div className="flex space-x-4">
+              <ul className="flex flex-col md:flex-row md:space-x-4">
+                <li>
+                  <Link to="/privacypolicy" className="hover:underline">
+                    Privacy Policy
+                  </Link>
+                </li>
+                <li>
+                  <Link to="/termsofservice" className="hover:underline">
+                    Terms Of Service
+                  </Link>
+                </li>
+                <li>
+                  <Link to="/contactform" className="hover:underline">
+                    Contact Form
+                  </Link>
+                </li>
+              </ul>
+            </div>
+
+            {/* Copyright Notice */}
+            <div className="text-center md:text-right">
+              <p className="text-sm">&copy; 2024 East Coast Railway. All Rights Reserved.</p>
+            </div>
+          </div>
+        </div>
+      </footer>
     </div>
   );
 }

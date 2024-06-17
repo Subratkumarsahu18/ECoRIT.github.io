@@ -43,6 +43,14 @@ const Add_new_CUG = () => {
     }
   };
 
+  const handleBack = () => {
+    setdispacdc(false);
+    setSelectedCUG(""); // Reset CUG number selection
+    setSelectedDivision(""); // Reset Division selection
+    setSelectedDepartment(""); // Reset Department selection
+    setSelectedAllocation(""); // Reset Allocation selection
+  };
+
   const divisions = {
     HQ: [
       "ACCOUNTS",
@@ -61,18 +69,46 @@ const Add_new_CUG = () => {
       "SECURITY",
       "STORES",
     ],
-    CON: ["ACCOUNTS", "ELECTRICAL", "ENGINEERING", "OPERATING", "PERSONNEL", "SIGNAL AND TELECOM"],
-    MCS: ["ACCOUNTS"  ,"ELECTRICAL"  , "MECHANICAL"  ,"PERSONNEL" ], // Add MCS departments if needed
+    CON: [
+      "ACCOUNTS",
+      "ELECTRICAL",
+      "ENGINEERING",
+      "OPERATING",
+      "PERSONNEL",
+      "SIGNAL AND TELECOM",
+    ],
+    MCS: ["ACCOUNTS", "ELECTRICAL", "MECHANICAL", "PERSONNEL"], // Add MCS departments if needed
   };
 
   return (
     <>
       <Toaster />
-      <div className="flex flex-col items-center  min-h-screen bg-white">
+      <div className="flex flex-col items-center min-h-screen bg-white relative">
         <div className="w-full bg-blue-700 py-4 flex mb-10 justify-between items-center px-4 md:px-8">
           <h1 className="text-2xl md:text-3xl text-white">Add New CUG</h1>
         </div>
-        <div className="w-full max-w-sm">
+        <div className="w-full max-w-sm ">
+          {dispacdc && (
+            <button
+              onClick={handleBack}
+              className="absolute top-4 right-4 p-2 text-white bg-blue-500 rounded-full hover:bg-blue-700"
+            >
+              <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              strokeWidth={1.5}
+              stroke="currentColor"
+              className="size-6 text-white"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M15.75 19.5 8.25 12l7.5-7.5"
+              />
+            </svg>
+            </button>
+          )}
           <div className="mb-4">
             <label className="block text-sm font-medium text-gray-700">
               Enter CUG Number
@@ -174,9 +210,12 @@ const Add_new_CUG = () => {
                         {dept}
                       </option>
                     ))}
-                  {selectedDivision === "MCS" && (
-                    <option value="MCS Department">MCS Department</option>
-                  )}
+                  {selectedDivision === "MCS" &&
+                    divisions.MCS.map((dept) => (
+                      <option key={dept} value={dept}>
+                        {dept}
+                      </option>
+                    ))}
                 </select>
               </div>
               <div>
@@ -238,4 +277,3 @@ const Add_new_CUG = () => {
 };
 
 export default Add_new_CUG;
-

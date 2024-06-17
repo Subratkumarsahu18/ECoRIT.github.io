@@ -1,29 +1,30 @@
-import React, { useState } from "react";
+import React, { useState } from "react"; // Import useState
+import { Routes, Route, Link, useNavigate } from "react-router-dom";
 import AllocationWiseReport from "./Admin_Inner_Components/Allocation_Wise_Report";
 import PlanWiseBillingReport from "./Admin_Inner_Components/PlanWiseBillingReport";
-import file from "../pics/file.png";
-import profile from "../pics/profile.png";
-//import PlanwisebillingReport2 from './Inner_Components/PlanwisebillingReport2';
 import ViewPlanReport from "./Admin_Inner_Components/Inner_Plan_Components/ViewPlanReport";
-import { Routes, Route, Link } from "react-router-dom";
 import Activate_Deactivate_CUG from "./Admin_Inner_Components/Activate_Deactivate_CUG";
 import Create_dealer from "./Admin_Inner_Components/Create_dealer";
 import Add_new_CUG from "./Admin_Inner_Components/Add_new_CUG";
-import Activate_Deactivate_Report from "./Admin_Inner_Components/Activate_Deactivate_Report";
 import CUG_Status_Report from "./Admin_Inner_Components/CUG_Status_Report";
 import Upload_CUG_Bill from "./Admin_Inner_Components/Upload_CUG_Bill";
 import Upload_new_CUG_Number from "./Admin_Inner_Components/Upload_new_CUG_Number";
 import Allotment_History from "./Admin_Inner_Components/Allotment_History";
+import PrivacyPolicy from './PrivacyPolicy'; // Import the PrivacyPolicy component
+import file from "../pics/file.png";
+import statisticsImage from "../pics/image.png"; // Ensure the path is correct
 
 function Admin_dashboard() {
+  const [activeLink, setActiveLink] = useState('createdealer');
   const [dropdownOpen, setDropdownOpen] = useState(false);
+  const navigate = useNavigate();
 
-  const toggleDropdown = () => {
-    setDropdownOpen(!dropdownOpen);
+  const handleNavLinkClick = (link) => {
+    setActiveLink(link);
   };
 
   return (
-    <div className="min-h-screen bg-[##407cff] flex flex-col text-white">
+    <div className="min-h-screen bg-white flex flex-col text-white">
       {/* Header */}
       <div className="w-full bg-blue-700 py-4 flex flex-wrap justify-between items-center px-4 md:px-8">
         <div className="flex items-center space-x-2">
@@ -34,119 +35,74 @@ function Admin_dashboard() {
           </div>
         </div>
         <div className="flex space-x-2 md:space-x-4 mt-4 md:mt-3">
-          <a href="#" className="text-white ">
-            Allotment
-          </a>
-          <a href="#" className="text-white">
-            Deactivate CUG
-          </a>
-          <a href="#" className="text-white">
-            Upload CUG
-          </a>
-
-          <div className="relative -mt-2">
-            <svg
-              onMouseOver={toggleDropdown}
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              strokeWidth={1.5}
-              stroke="currentColor"
-              className="size-10"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M17.982 18.725A7.488 7.488 0 0 0 12 15.75a7.488 7.488 0 0 0-5.982 2.975m11.963 0a9 9 0 1 0-11.963 0m11.963 0A8.966 8.966 0 0 1 12 21a8.966 8.966 0 0 1-5.982-2.275M15 9.75a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z"
-              />
-            </svg>
-
+          {/* <a href="#" className="text-white">Allotment</a>
+          <a href="#" className="text-white">Deactivate CUG</a> */}
+          <a href="#" className="text-white">Operator</a>
+          <div className="relative -mt-2" onMouseOver={() => { setDropdownOpen(true); }} onMouseLeave={() => { setDropdownOpen(false); }}>
+            <span className=" hover:cursor-pointer">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                strokeWidth={1.5}
+                stroke="currentColor"
+                className="size-10"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M17.982 18.725A7.488 7.488 0 0 0 12 15.75a7.488 7.488 0 0 0-5.982 2.975m11.963 0a9 9 0 1 0-11.963 0m11.963 0A8.966 8.966 0 0 1 12 21a8.966 8.966 0 0 1-5.982-2.275M15 9.75a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z"
+                />
+              </svg>
+            </span>
             {dropdownOpen && (
-              <div className="absolute right-0 mt-2 w-48 bg-white text-black rounded-lg shadow-lg py-2">
-                <a
-                  href="#my-profile"
-                  className="block px-4 py-2 hover:bg-gray-200"
-                >
-                  My Profile
-                </a>
-                <a href="/" className="block px-4 py-2 hover:bg-gray-200">
-                  Log Out
-                </a>
+              <div className="absolute right-0 w-48 bg-white text-black rounded-lg shadow-lg py-2">
+              <Link to="/ProfilePage" className="block px-4 py-2 hover:bg-gray-200">My Profile</Link>
+                <a href="/" className="block px-4 py-2 hover:bg-gray-200">Log Out</a>
               </div>
             )}
           </div>
         </div>
       </div>
-      <h2 className="text-2xl -mb-4 text-[#2664eb] font-semibold text-center mt-10">
-        Welcome To Admin Dashboard
-      </h2>
+      <h2 className="text-2xl -mb-4 text-[#2664eb] font-semibold text-center mt-10">Welcome To Admin Dashboard</h2>
       {/* Main Content */}
       <div className="p-4 md:p-8 flex lg:flex-row flex-col ">
         {/* Left Sidebar */}
         <div className="w-full md:w-1/6 flex flex-col space-y-4 mb-4 md:mb-0">
-          <Link to={"createdealer"}>
-            <button className="w-full h-20 bg-[#334A7F] hover:scale-90 duration-500 rounded-lg">
-              Create Dealer
-            </button>
-          </Link>
-          <Link to={"activecug"}>
-            <button className="w-full h-20 bg-[#334A7F]  hover:scale-90 duration-500 rounded-lg">
-              CUG DETAILS (Activate/Deactivate)
-            </button>
-          </Link>
-          <Link to={"addcug"}>
-            <button className="w-full h-20 bg-[#334A7F] hover:scale-90 duration-500 rounded-lg">
-              Add New CUG
-            </button>
-          </Link>
-          <Link to={"cugstatusreport"}>
-            <button className="w-full h-20 bg-[#334A7F] hover:scale-90 duration-500 rounded-lg">
-              CUG Status Report
-            </button>
-          </Link>
-          <Link to={"acdcreport"}>
-            <button className="w-full h-20 bg-[#334A7F] hover:scale-90 duration-500 rounded-lg">
-              Active/Deactivate Report
-            </button>
-          </Link>
-          <Link to={"allotmenthistory"}>
-            <button className="w-full h-20 bg-[#334A7F] hover:scale-90 duration-500 rounded-lg">
-              Allotment History
-            </button>
-          </Link>
-          <Link to={"allocreport"}>
-            <button className="w-full h-20 bg-[#334A7F] hover:scale-90 duration-500 rounded-lg">
-              Allocation-wise Report
-            </button>
-          </Link>
-          <Link to={"planreport"}>
-            <button className="w-full h-20 bg-[#334A7F] hover:scale-90 duration-500 rounded-lg">
-              Plan-wise Report Billing
-            </button>
-          </Link>
-          <Link to={"uploadcugbill"}>
-            <button className="w-full h-20 bg-[#334A7F] hover:scale-90 duration-500 rounded-lg">
-              Upload CUG Bill
-            </button>
-          </Link>
-          <Link to={"uploadnewnumber"}>
-            <button className="w-full h-20 bg-[#334A7F] hover:scale-90 duration-500 rounded-lg">
-              Upload New CUG No
-            </button>
-          </Link>
+          <NavLinkButton to="createdealer" activeLink={activeLink} onClick={handleNavLinkClick}>
+            Create Dealer
+          </NavLinkButton>
+          <NavLinkButton to="activecug" activeLink={activeLink} onClick={handleNavLinkClick}>
+            CUG DETAILS (Activate/Deactivate)
+          </NavLinkButton>
+          <NavLinkButton to="addcug" activeLink={activeLink} onClick={handleNavLinkClick}>
+            Add New CUG
+          </NavLinkButton>
+          <NavLinkButton to="cugstatusreport" activeLink={activeLink} onClick={handleNavLinkClick}>
+            CUG Status Report
+          </NavLinkButton>
+          <NavLinkButton to="allotmenthistory" activeLink={activeLink} onClick={handleNavLinkClick}>
+            Allotment History
+          </NavLinkButton>
+          <NavLinkButton to="allocreport" activeLink={activeLink} onClick={handleNavLinkClick}>
+            Allocation-wise Report
+          </NavLinkButton>
+          <NavLinkButton to="planreport" activeLink={activeLink} onClick={handleNavLinkClick}>
+            Plan-wise Report Billing
+          </NavLinkButton>
+          <NavLinkButton to="uploadcugbill" activeLink={activeLink} onClick={handleNavLinkClick}>
+            Upload CUG Bill
+          </NavLinkButton>
+          <NavLinkButton to="uploadnewnumber" activeLink={activeLink} onClick={handleNavLinkClick}>
+            Upload New CUG No
+          </NavLinkButton>
         </div>
-
         {/* Right Content */}
         <div className="w-full md:ml-4">
-          {/* Allotment of New CUG */}
-          {/* {alllcationwisereport&&  <AllocationWiseReport/>}
-         {Planwisereport&& <PlanWiseBillingReport/>} */}
-          {/* <PlanWiseBillingReport/> */}
-          {/* <ViewPlanReport/> */}
-
+          {/* Statistics Image */}
           <Routes>
+            <Route path="/" element={<img src={statisticsImage} alt="Statistics" className="w-full h-auto" />} />
             <Route path="activecug" element={<Activate_Deactivate_CUG />} />
-            <Route path="acdcreport" element={<Activate_Deactivate_Report />} />
             <Route path="addcug" element={<Add_new_CUG />} />
             <Route path="allocreport" element={<AllocationWiseReport />} />
             <Route path="allotmenthistory" element={<Allotment_History />} />
@@ -158,8 +114,42 @@ function Admin_dashboard() {
           </Routes>
         </div>
       </div>
+      {/* Footer */}
+      <footer className="bg-blue-700 text-white py-4 mt-auto">
+        <div className="container mx-auto flex flex-col md:flex-row justify-between items-center">
+          <div className="flex flex-col md:flex-row items-center md:items-start space-y-2 md:space-y-0 md:space-x-4">
+            <img src={file} alt="Logo" className="w-12 h-12" />
+            <div className="text-center md:text-left">
+              <h3 className="text-lg font-bold">East Coast Railway</h3>
+              <p className="text-sm">Bhubaneswar, Odisha</p>
+            </div>
+          </div>
+          <div className="mt-4 md:mt-0">
+            <ul className="flex flex-col md:flex-row md:space-x-4">
+              <li><Link to="/privacypolicy" className="hover:underline">Privacy Policy</Link></li> 
+              <li><Link to="/TermsOfService" className="hover:underline">Terms Of Service</Link></li> 
+              <li><Link to="/ContactForm" className="hover:underline">Contact Form</Link></li> 
+            </ul>
+          </div>
+          <div className="mt-4 md:mt-0 text-center md:text-right">
+            <p className="text-sm">&copy; 2024 East Coast Railway. All Rights Reserved.</p>
+          </div>
+        </div>
+      </footer>
     </div>
   );
 }
+
+const NavLinkButton = ({ to, activeLink, onClick, children }) => {
+  const isActive = activeLink === to;
+
+  return (
+    <Link to={to} onClick={() => onClick(to)}>
+      <button className={`w-full h-20 bg-[#334A7F] hover:scale-90 duration-500 rounded-lg ${isActive ? 'bg-cyan-500' : ''}`}>
+        {children}
+      </button>
+    </Link>
+  );
+};
 
 export default Admin_dashboard;

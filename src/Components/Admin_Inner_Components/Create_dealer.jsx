@@ -1,17 +1,87 @@
 import React, { useState } from "react";
 import toast, { Toaster } from "react-hot-toast";
-//kjjguygfyuf
+
 const Create_dealer = () => {
   const [showDetails, setShowDetails] = useState(false);
+  const [cugNumber, setCugNumber] = useState("");
+  const [employeeID, setEmployeeID] = useState("");
+  const [dealerDetails, setDealerDetails] = useState(null);
+
+  const validDetails = {
+    "1111111111": {
+      employeeName: "John Doe",
+      employeeID: "1234567890",
+      division: "HQ",
+      department: "ACCOUNTS",
+      plan: "A",
+      operator: "Airtel",
+      cugNumber: "1111111111",
+      status: "Activate",
+    },
+    "1234567890": {
+      employeeName: "John Doe",
+      employeeID: "1234567890",
+      division: "HQ",
+      department: "ACCOUNTS",
+      plan: "A",
+      operator: "Airtel",
+      cugNumber: "1111111111",
+      status: "Activate",
+    },
+    "2222222222": {
+      employeeName: "Jane Smith",
+      employeeID: "0987654321",
+      division: "CON",
+      department: "ENGINEERING",
+      plan: "B",
+      operator: "Vodafone",
+      cugNumber: "2222222222",
+      status: "Deactivate",
+    },
+    "0987654321": {
+      employeeName: "Jane Smith",
+      employeeID: "0987654321",
+      division: "CON",
+      department: "ENGINEERING",
+      plan: "B",
+      operator: "Vodafone",
+      cugNumber: "2222222222",
+      status: "Deactivate",
+    },
+  };
+
+  const handleCugChange = (event) => {
+    setCugNumber(event.target.value);
+    setEmployeeID(""); // Clear Employee ID input
+  };
+
+  const handleEmployeeChange = (event) => {
+    setEmployeeID(event.target.value);
+    setCugNumber(""); // Clear CUG Number input
+  };
+
+  const handleSubmit = () => {
+    if (validDetails[cugNumber]) {
+      setDealerDetails(validDetails[cugNumber]);
+      setShowDetails(true);
+    } else if (validDetails[employeeID]) {
+      setDealerDetails(validDetails[employeeID]);
+      setShowDetails(true);
+    } else {
+      toast.error("Wrong input");
+      setCugNumber("");
+      setEmployeeID("");
+    }
+  };
 
   return (
     <>
       <Toaster />
       {!showDetails ? (
-        <div className="flex flex-col items-center p-6 min-h-screen bg-gray-100">
-          <h1 className="text-xl font-bold mb-6 text-blue-600">
-            Create Dealer
-          </h1>
+        <div className="flex flex-col items-center  min-h-screen bg-white">
+          <div className="w-full bg-blue-700 py-4 flex mb-10 justify-between items-center px-4 md:px-8">
+            <h1 className="text-2xl md:text-3xl text-white">Create Dealer</h1>
+          </div>
           <div className="flex flex-col md:flex-row items-center justify-center w-full max-w-3xl space-y-6 md:space-y-0 md:space-x-6">
             <div className="w-full max-w-sm">
               <label className="block text-sm font-medium text-gray-700">
@@ -19,30 +89,35 @@ const Create_dealer = () => {
               </label>
               <input
                 type="text"
+                value={cugNumber}
+                onChange={handleCugChange}
                 placeholder="Enter 11 Digit Number"
-                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                className="mt-1 block w-full px-3 py-2 border text-black border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
               />
               <button
-                onClick={() => setShowDetails(true)}
+                onClick={handleSubmit}
                 className="mt-2 w-full bg-blue-500 text-white py-2 rounded-md hover:bg-blue-700"
               >
                 GO
               </button>
             </div>
             <div className="text-center md:mx-6">
-              <span className="text-lg font-semibold">OR</span>
+              <span className="text-lg font-semibold text-black">OR</span>{" "}
+              {/* Changed color to black */}
             </div>
             <div className="w-full max-w-sm">
               <label className="block text-sm font-medium text-gray-700">
-                Enter CUG Number
+                Enter Employee ID
               </label>
               <input
                 type="text"
+                value={employeeID}
+                onChange={handleEmployeeChange}
                 placeholder="Enter 11 Digit Number"
-                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                className="mt-1 block w-full px-3 py-2 border text-black border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
               />
               <button
-                onClick={() => setShowDetails(true)}
+                onClick={handleSubmit}
                 className="mt-2 w-full bg-blue-500 text-white py-2 rounded-md hover:bg-blue-700"
               >
                 GO
@@ -56,15 +131,19 @@ const Create_dealer = () => {
             onClick={() => setShowDetails(false)}
             className="absolute top-4 right-4 p-2 text-white bg-blue-500 rounded-md hover:bg-blue-700"
           >
-            {/* Replace the text with an SVG vector */}
             <svg
               xmlns="http://www.w3.org/2000/svg"
+              fill="none"
               viewBox="0 0 24 24"
-              width="24"
-              height="24"
-              fill="currentColor"
+              strokeWidth={1.5}
+              stroke="currentColor"
+              className="size-6 text-white"
             >
-              <path d="M15.5 19.5l-1.41-1.41L12.83 18H5v-2h7.83l-2.09-2.09L15.5 12l6 6-6 6-1.5-1.5zM18 0H6C2.69 0 0 2.69 0 6v12c0 3.31 2.69 6 6 6h12c3.31 0 6-2.69 6-6V6c0-3.31-2.69-6-6-6zm0 20H6c-2.21 0-4-1.79-4-4V6c0-2.21 1.79-4 4-4h12c2.21 0 4 1.79 4 4v10c0 2.21-1.79 4-4 4z" />
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M15.75 19.5 8.25 12l7.5-7.5"
+              />
             </svg>
           </button>
           <h1 className="text-xl font-bold mb-6 text-blue-600">
@@ -77,8 +156,9 @@ const Create_dealer = () => {
               </label>
               <input
                 type="text"
-                placeholder="Enter Name"
-                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                value={dealerDetails.employeeName}
+                readOnly
+                className="mt-1 block w-full px-3 py-2 border text-black border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm bg-gray-100"
               />
             </div>
             <div>
@@ -87,8 +167,9 @@ const Create_dealer = () => {
               </label>
               <input
                 type="text"
-                placeholder="Enter ID"
-                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                value={dealerDetails.employeeID}
+                readOnly
+                className="mt-1 block w-full px-3 py-2 border text-black border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm bg-gray-100"
               />
             </div>
             <div>
@@ -97,8 +178,9 @@ const Create_dealer = () => {
               </label>
               <input
                 type="text"
-                placeholder="Enter Division"
-                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                value={dealerDetails.division}
+                readOnly
+                className="mt-1 block w-full px-3 py-2 border text-black border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm bg-gray-100"
               />
             </div>
             <div>
@@ -107,8 +189,9 @@ const Create_dealer = () => {
               </label>
               <input
                 type="text"
-                placeholder="Enter Department"
-                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                value={dealerDetails.department}
+                readOnly
+                className="mt-1 block w-full px-3 py-2 border text-black border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm bg-gray-100"
               />
             </div>
             <div>
@@ -117,8 +200,9 @@ const Create_dealer = () => {
               </label>
               <input
                 type="text"
-                placeholder="A"
-                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                value={dealerDetails.plan}
+                readOnly
+                className="mt-1 block w-full px-3 py-2 border  text-black border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm bg-gray-100"
               />
             </div>
             <div>
@@ -127,8 +211,9 @@ const Create_dealer = () => {
               </label>
               <input
                 type="text"
-                placeholder="Airtel"
-                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                value={dealerDetails.operator}
+                readOnly
+                className="mt-1 block w-full px-3 py-2 border text-black border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm bg-gray-100"
               />
             </div>
             <div>
@@ -137,8 +222,9 @@ const Create_dealer = () => {
               </label>
               <input
                 type="text"
-                placeholder="Enter 11 Digit Number"
-                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                value={dealerDetails.cugNumber}
+                readOnly
+                className="mt-1 block w-full px-3 py-2 border text-black border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm bg-gray-100"
               />
             </div>
             <div>
@@ -147,8 +233,9 @@ const Create_dealer = () => {
               </label>
               <input
                 type="text"
-                placeholder="Activate/Deactivate"
-                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                value={dealerDetails.status}
+                readOnly
+                className="mt-1 block w-full px-3 py-2 border text-black border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm bg-gray-100"
               />
             </div>
           </div>

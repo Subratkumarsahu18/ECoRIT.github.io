@@ -10,6 +10,11 @@ import Dealer_dashboard from "./Components/Dealer_dashboard";
 import Admin_dashboard from "./Components/Admin_dashboard";
 import Activate_Deactivate_New_CUG from "./Components/Dealer_Inner_Components/Activate_Deactivate_New_CUG";
 import AllocationWiseReport from "./Components/Admin_Inner_Components/Allocation_Wise_Report";
+import PrivacyPolicy from "./Components/PrivacyPolicy";
+import TermsOfService from "./Components/TermsOfService";
+import ContactForm from "./Components/ContactForm";
+import Add_new_CUG from "./Components/Dealer_Inner_Components/Add_New_Cug";
+import ProfilePage from "./Components/ProfilePage";
 
 function App() {
   const [count, setCount] = useState(0);
@@ -20,10 +25,14 @@ function App() {
         <Route path = "/" element={<Login/>} />
         <Route path = "/Dealer_dashboard" element={<Dealer_dashboard/>} />
         <Route path = "/Admin_dashboard/*" element={<Admin_dashboard/>} />
-        <Route path="/Dealer_dashboard/acdcreport" element={<Activate_Deactivate_New_CUG/>} />
-        {/* <Route path="addnewcug" element={<Add_new_CUG />} /> */}
-        <Route path="/Dealer_dashboard/allocreport" element={<AllocationWiseReport/>} />
-        <Route path="/Dealer_dashboard/planreport" element={<PlanWiseReportBillling/>} />
+        <Route path="/acdcreport" element={<Activate_Deactivate_New_CUG/>} />
+        <Route path="/addnewcug" element={<Add_new_CUG/>} />
+        <Route path="/allocreport" element={<AllocationWiseReport/>} />
+        <Route path="/planreport" element={<PlanWiseReportBillling/>} />
+        <Route path="/PrivacyPolicy" element={<PrivacyPolicy/>} />
+        <Route path="/TermsOfService" element={<TermsOfService/>} />
+        <Route path="/ContactForm" element={<ContactForm/>} />
+        <Route path="/ProfilePage" element={<ProfilePage/>} />
       </Routes>
     </BrowserRouter>
   );
