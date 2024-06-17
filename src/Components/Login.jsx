@@ -22,7 +22,7 @@ function Login() {
         console.log("success")
         setTimeout(() => {
           
-          window.location = "http://localhost:5173/Admin_dashboard";
+          window.location = "/Admin_dashboard";
         }, 1500);
       } else {
         toast.error("Invalid credentials");
@@ -31,7 +31,7 @@ function Login() {
     } else if (username == dealer.username && password == dealer.password) {
       toast.success("Login successful");
       setTimeout(() => {
-        window.location = "http://localhost:5173/Dealer_dashboard";
+        window.location = "/Dealer_dashboard";
       }, 1500);
     } else {
       toast.error("Invalid credentials");
