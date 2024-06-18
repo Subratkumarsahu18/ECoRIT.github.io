@@ -1,37 +1,29 @@
-import React, { useState } from 'react';
+import React from 'react';
 
 const ProfilePage = () => {
-  // Example user data state
-  const [user, setUser] = useState({
+  // Static user data
+  const user = {
     name: 'John Doe',
     email: 'john.doe@example.com',
     phone: '123-456-7890',
     address: '123 Main St, Anytown, USA',
     bio: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
-  });
-
-  // Function to handle form submission
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    // Perform logic to update user profile (e.g., send API request)
-    console.log('Profile updated successfully!');
-  };
-
-  // Function to handle input changes
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setUser((prevUser) => ({
-      ...prevUser,
-      [name]: value,
-    }));
+    profilePic: 'https://via.placeholder.com/150', // Placeholder profile picture
   };
 
   return (
     <div className="min-h-screen bg-gray-100 flex items-center justify-center">
       <div className="bg-white p-8 rounded-lg shadow-md w-full max-w-md">
         <h2 className="text-2xl font-bold text-center mb-6">User Profile</h2>
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div>
+        <div className="flex flex-col items-center space-y-4">
+          <div className="mb-4">
+            <img
+              src={user.profilePic}
+              alt="Profile"
+              className="w-32 h-32 rounded-full object-cover"
+            />
+          </div>
+          <div className="w-full">
             <label htmlFor="name" className="block text-sm font-medium text-gray-700">
               Name
             </label>
@@ -40,12 +32,11 @@ const ProfilePage = () => {
               id="name"
               name="name"
               value={user.name}
-              onChange={handleChange}
-              className="w-full px-3 py-2 mt-1 text-gray-700 bg-white border rounded-md focus:outline-none focus:ring focus:ring-blue-200"
-              required
+              readOnly
+              className="w-full px-3 py-2 mt-1 text-gray-700 bg-gray-200 border rounded-md focus:outline-none"
             />
           </div>
-          <div>
+          <div className="w-full">
             <label htmlFor="email" className="block text-sm font-medium text-gray-700">
               Email
             </label>
@@ -54,12 +45,11 @@ const ProfilePage = () => {
               id="email"
               name="email"
               value={user.email}
-              onChange={handleChange}
-              className="w-full px-3 py-2 mt-1 text-gray-700 bg-white border rounded-md focus:outline-none focus:ring focus:ring-blue-200"
-              required
+              readOnly
+              className="w-full px-3 py-2 mt-1 text-gray-700 bg-gray-200 border rounded-md focus:outline-none"
             />
           </div>
-          <div>
+          <div className="w-full">
             <label htmlFor="phone" className="block text-sm font-medium text-gray-700">
               Phone
             </label>
@@ -68,12 +58,11 @@ const ProfilePage = () => {
               id="phone"
               name="phone"
               value={user.phone}
-              onChange={handleChange}
-              className="w-full px-3 py-2 mt-1 text-gray-700 bg-white border rounded-md focus:outline-none focus:ring focus:ring-blue-200"
-              required
+              readOnly
+              className="w-full px-3 py-2 mt-1 text-gray-700 bg-gray-200 border rounded-md focus:outline-none"
             />
           </div>
-          <div>
+          <div className="w-full">
             <label htmlFor="address" className="block text-sm font-medium text-gray-700">
               Address
             </label>
@@ -82,12 +71,11 @@ const ProfilePage = () => {
               id="address"
               name="address"
               value={user.address}
-              onChange={handleChange}
-              className="w-full px-3 py-2 mt-1 text-gray-700 bg-white border rounded-md focus:outline-none focus:ring focus:ring-blue-200"
-              required
+              readOnly
+              className="w-full px-3 py-2 mt-1 text-gray-700 bg-gray-200 border rounded-md focus:outline-none"
             />
           </div>
-          <div>
+          <div className="w-full">
             <label htmlFor="bio" className="block text-sm font-medium text-gray-700">
               Bio
             </label>
@@ -95,18 +83,11 @@ const ProfilePage = () => {
               id="bio"
               name="bio"
               value={user.bio}
-              onChange={handleChange}
-              className="w-full h-32 px-3 py-2 mt-1 text-gray-700 bg-white border rounded-md focus:outline-none focus:ring focus:ring-blue-200"
-              required
+              readOnly
+              className="w-full h-32 px-3 py-2 mt-1 text-gray-700 bg-gray-200 border rounded-md focus:outline-none"
             ></textarea>
           </div>
-          <button
-            type="submit"
-            className="w-full px-4 py-2 font-bold text-white bg-blue-500 rounded-md hover:bg-blue-600 focus:outline-none focus:bg-blue-600"
-          >
-            Update Profile
-          </button>
-        </form>
+        </div>
       </div>
     </div>
   );
