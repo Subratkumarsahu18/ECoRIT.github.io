@@ -4,34 +4,31 @@ const operators = [
   {
     name: 'Airtel',
     color: 'bg-red-500',
-    logo: 'path_to_airtel_logo.png', // Add the correct path to the Airtel logo
     url: 'https://www.airtel.in',
     plans: [
-      { title: 'Airtel Plan A', description: 'Description of Airtel Plan A', price: '$10/month' },
-      { title: 'Airtel Plan B', description: 'Description of Airtel Plan B', price: '$20/month' },
-      { title: 'Airtel Plan C', description: 'Description of Airtel Plan C', price: '$30/month' },
+      { title: 'Plan A', description: 'Description of Airtel Plan A', price: '₹10/month' },
+      { title: 'Plan B', description: 'Description of Airtel Plan B', price: '₹20/month' },
+      { title: 'Plan C', description: 'Description of Airtel Plan C', price: '₹30/month' },
     ],
   },
   {
     name: 'JIO',
-    color: 'bg-blue-500',
-    logo: 'path_to_jio_logo.png', // Add the correct path to the JIO logo
+    color: 'bg-[#0e3dc9]',
     url: 'https://www.jio.com',
     plans: [
-      { title: 'JIO Plan A', description: 'Description of JIO Plan A', price: '$15/month' },
-      { title: 'JIO Plan B', description: 'Description of JIO Plan B', price: '$25/month' },
-      { title: 'JIO Plan C', description: 'Description of JIO Plan C', price: '$35/month' },
+      { title: 'Plan A', description: 'Description of JIO Plan A', price: '₹15/month' },
+      { title: 'Plan B', description: 'Description of JIO Plan B', price: '₹25/month' },
+      { title: 'Plan C', description: 'Description of JIO Plan C', price: '₹35/month' },
     ],
   },
   {
     name: 'Vodafone',
-    color: 'bg-green-500',
-    logo: 'path_to_vodafone_logo.png', // Add the correct path to the Vodafone logo
+    color: 'bg-[#e60000]',
     url: 'https://www.vodafone.com',
     plans: [
-      { title: 'Vodafone Plan A', description: 'Description of Vodafone Plan A', price: '$12/month' },
-      { title: 'Vodafone Plan B', description: 'Description of Vodafone Plan B', price: '$22/month' },
-      { title: 'Vodafone Plan C', description: 'Description of Vodafone Plan C', price: '$32/month' },
+      { title: 'Plan A', description: 'Description of Vodafone Plan A', price: '₹12/month' },
+      { title: 'Plan B', description: 'Description of Vodafone Plan B', price: '₹22/month' },
+      { title: 'Plan C', description: 'Description of Vodafone Plan C', price: '₹32/month' },
     ],
   },
 ];
@@ -53,9 +50,6 @@ const OperatorPage = () => {
         {operators.map((operator) => (
           <div key={operator.name} className="w-full max-w-4xl mb-8">
             <div className={`flex items-center ${operator.color} text-white p-2 rounded-lg`}>
-              <a href={operator.url} target="_blank" rel="noopener noreferrer">
-                <img src={operator.logo} alt={`${operator.name} logo`} className="h-10 w-10 rounded-full mr-2" />
-              </a>
               <a href={operator.url} target="_blank" rel="noopener noreferrer" className="text-2xl font-bold">
                 {operator.name}
               </a>
@@ -78,6 +72,19 @@ const OperatorPage = () => {
           </div>
         ))}
       </div>
+      {/* Footer */}
+      <footer className="w-full bg-blue-700 py-4 flex justify-center items-center text-white mt-4">
+        <div className="text-center">
+          <div className="text-sm">East Coast Railway</div>
+          <div className="text-sm">Bhubaneswar, Odisha</div>
+          <div className="text-sm mt-2">
+            <a href="#" className="mx-2">Privacy Policy</a>
+            <a href="#" className="mx-2">Terms Of Service</a>
+            <a href="#" className="mx-2">Contact Form</a>
+          </div>
+          <div className="text-sm mt-2">© 2024 East Coast Railway. All Rights Reserved.</div>
+        </div>
+      </footer>
     </div>
   );
 };
