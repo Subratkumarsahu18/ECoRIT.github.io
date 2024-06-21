@@ -1,8 +1,9 @@
 import React, { useState } from "react";
 import toast, { Toaster } from "react-hot-toast";
+import { db } from '../../firebaseConfig'; // Adjust the path if your firebaseConfig.js is in a different directory
+import { collection, addDoc } from "firebase/firestore";
 
 const Add_new_CUG = () => {
-  const [dispacdc, setdispacdc] = useState(false);
   const [selectedPlan, setSelectedPlan] = useState("");
   const [selectedCUG, setSelectedCUG] = useState("");
   const [selectedDivision, setSelectedDivision] = useState("");
@@ -10,6 +11,7 @@ const Add_new_CUG = () => {
   const [selectedAllocation, setSelectedAllocation] = useState("");
   const [employeeNumber, setEmployeeNumber] = useState("");
   const [billUnit, setBillUnit] = useState("");
+  const [employeeName, setEmployeeName] = useState("");
 
   const handlePlanChange = (event) => {
     setSelectedPlan(event.target.value);
@@ -45,7 +47,11 @@ const Add_new_CUG = () => {
     setBillUnit(event.target.value);
   };
 
-  const handleSubmit = () => {
+  const handleEmployeeNameChange = (event) => {
+    setEmployeeName(event.target.value);
+  };
+
+  const handleSubmit = async () => {
     if (!/^\d{10}$/.test(selectedCUG)) {
       toast.error("CUG Number should be a valid 10-digit number.");
       setSelectedCUG("");
@@ -64,10 +70,21 @@ const Add_new_CUG = () => {
       return;
     }
 
-    if (!dispacdc) {
-      toast.success("New CUG Number Selected");
-      setdispacdc(true);
-    } else {
+    const newCUGData = {
+      selectedPlan,
+      selectedCUG,
+      selectedDivision,
+      selectedDepartment,
+      selectedAllocation,
+      employeeNumber,
+      billUnit,
+      employeeName,
+      status: "Active", // Default status when activated
+      timestamp: new Date().toLocaleString(),
+    };
+
+    try {
+      await addDoc(collection(db, "cug"), newCUGData);
       toast.success("New CUG member Added");
       setSelectedCUG("");
       setSelectedDivision("");
@@ -75,7 +92,10 @@ const Add_new_CUG = () => {
       setSelectedAllocation("");
       setEmployeeNumber("");
       setBillUnit("");
-      setdispacdc(false);
+      setEmployeeName("");
+      setSelectedPlan("");
+    } catch (error) {
+      toast.error("Error adding document: " + error.message);
     }
   };
 
@@ -98,7 +118,7 @@ const Add_new_CUG = () => {
       "STORES",
     ],
     CON: ["ACCOUNTS", "ELECTRICAL", "ENGINEERING", "OPERATING", "PERSONNEL", "SIGNAL AND TELECOM"],
-    MCS: ["ACCOUNTS", "ELECTRICAL", "MECHANICAL", "PERSONNEL"], 
+    MCS: ["ACCOUNTS", "ELECTRICAL", "MECHANICAL", "PERSONNEL"],
   };
 
   const planAmounts = {
@@ -127,7 +147,7 @@ const Add_new_CUG = () => {
               className="mt-1 block w-full px-3 py-2 text-black border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
             />
             <button
-              onClick={() => setdispacdc(true)}
+              onClick={handleSubmit}
               className="mt-2 w-full bg-blue-500 text-white py-2 rounded-md hover:bg-blue-700"
             >
               Submit
@@ -135,7 +155,7 @@ const Add_new_CUG = () => {
           </div>
         </div>
 
-        {dispacdc && (
+        {selectedCUG && (
           <div className="flex flex-col items-center p-6 h-fit bg-gray-100 text-blue-600">
             <h1 className="text-xl font-bold mb-6">Activate New CUG</h1>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4 w-full max-w-4xl">
@@ -168,6 +188,8 @@ const Add_new_CUG = () => {
                 </label>
                 <input
                   type="text"
+                  value={employeeName}
+                  onChange={handleEmployeeNameChange}
                   placeholder="Enter Employee Name"
                   className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                 />
