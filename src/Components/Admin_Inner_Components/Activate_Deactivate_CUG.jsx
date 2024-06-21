@@ -8,7 +8,7 @@ const Activate_Deactivate_New_CUG = () => {
 
   const validCUGs = {
     "1111111111": {
-      employeeNumber: "1234567890",
+      employeeNumber: "tt234567890",
       employeeName: "John Doe",
       division: "HQ",
       department: "ACCOUNTS",
@@ -17,7 +17,7 @@ const Activate_Deactivate_New_CUG = () => {
       plan: "A",
     },
     "2222222222": {
-      employeeNumber: "0987654321",
+      employeeNumber: "uu987654321",
       employeeName: "Jane Smith",
       division: "CON",
       department: "ENGINEERING",
@@ -67,7 +67,7 @@ const Activate_Deactivate_New_CUG = () => {
         <div className="flex flex-col items-center min-h-screen bg-white">
           <div className="w-full bg-blue-700 py-4 flex mb-10 justify-between items-center px-4 md:px-8">
             <h1 className="text-2xl md:text-3xl text-white">
-              Activate/Deactivate CUG
+              Deactivate CUG
             </h1>
           </div>
           <div className="w-full max-w-sm">
@@ -112,7 +112,7 @@ const Activate_Deactivate_New_CUG = () => {
               />
             </svg>
           </button>
-          <h1 className="text-xl font-bold mb-6">Activate/Deactivate CUG</h1>
+          <h1 className="text-xl font-bold mb-6">Deactivate CUG</h1>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4 w-full max-w-4xl">
             <div className="col-span-1 md:col-span-3">
               <label className="block text-sm font-medium text-gray-700">

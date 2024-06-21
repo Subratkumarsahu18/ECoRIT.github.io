@@ -8,6 +8,8 @@ const Add_new_CUG = () => {
   const [selectedDivision, setSelectedDivision] = useState("");
   const [selectedDepartment, setSelectedDepartment] = useState("");
   const [selectedAllocation, setSelectedAllocation] = useState("");
+  const [employeeNumber, setEmployeeNumber] = useState("");
+  const [billUnit, setBillUnit] = useState("");
 
   const handlePlanChange = (event) => {
     setSelectedPlan(event.target.value);
@@ -29,7 +31,37 @@ const Add_new_CUG = () => {
     setSelectedAllocation(event.target.value);
   };
 
+  const handleEmployeeNumberChange = (event) => {
+    const value = event.target.value;
+    // Validate employee number (11 characters alphanumeric)
+    if (/^[0-9a-zA-Z]{0,11}$/.test(value)) {
+      setEmployeeNumber(value);
+    }
+  };
+
+  const handleBillUnitChange = (event) => {
+    const value = event.target.value;
+    // Validate bill unit (exactly 8 digits)
+    if (/^\d{0,8}$/.test(value)) {
+      setBillUnit(value);
+    }
+  };
+
   const handleSubmit = () => {
+    // Validate employee number (11 characters alphanumeric)
+    if (!/^[0-9a-zA-Z]{11}$/.test(employeeNumber)) {
+      toast.error("Employee Number should be 11 characters alphanumeric.");
+      setEmployeeNumber("");
+      return;
+    }
+
+    // Validate bill unit (exactly 8 digits)
+    if (!/^\d{8}$/.test(billUnit)) {
+      toast.error("Bill Unit should be exactly 8 digits.");
+      setBillUnit("");
+      return;
+    }
+
     if (!dispacdc) {
       toast.success("New CUG Number Selected");
       setdispacdc(true);
@@ -39,6 +71,8 @@ const Add_new_CUG = () => {
       setSelectedDivision(""); // Reset Division selection
       setSelectedDepartment(""); // Reset Department selection
       setSelectedAllocation(""); // Reset Allocation selection
+      setEmployeeNumber(""); // Reset Employee Number selection
+      setBillUnit(""); // Reset Bill Unit selection
       setdispacdc(false);
     }
   };
@@ -62,7 +96,13 @@ const Add_new_CUG = () => {
       "STORES",
     ],
     CON: ["ACCOUNTS", "ELECTRICAL", "ENGINEERING", "OPERATING", "PERSONNEL", "SIGNAL AND TELECOM"],
-    MCS: ["ACCOUNTS"  ,"ELECTRICAL"  , "MECHANICAL"  ,"PERSONNEL" ], // Add MCS departments if needed
+    MCS: ["ACCOUNTS", "ELECTRICAL", "MECHANICAL", "PERSONNEL"], 
+  };
+
+  const planAmounts = {
+    "Plan A": "₹ 10",
+    "Plan B": "₹ 20",
+    "Plan C": "₹ 30",
   };
 
   return (
@@ -70,7 +110,7 @@ const Add_new_CUG = () => {
       <Toaster />
       <div className="flex flex-col items-center  min-h-screen bg-white">
         <div className="w-full bg-blue-700 py-4 flex mb-10 justify-between items-center px-4 md:px-8">
-          <h1 className="text-2xl md:text-3xl text-white">Add New CUG</h1>
+          <h1 className="text-2xl md:text-3xl text-white">Activate New CUG</h1>
         </div>
         <div className="w-full max-w-sm">
           <div className="mb-4">
@@ -104,7 +144,7 @@ const Add_new_CUG = () => {
 
         {dispacdc && (
           <div className="flex flex-col items-center p-6 h-fit bg-gray-100 text-blue-600">
-            <h1 className="text-xl font-bold mb-6">Add New CUG</h1>
+            <h1 className="text-xl font-bold mb-6">Activate New CUG</h1>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4 w-full max-w-4xl">
               <div className="col-span-1 md:col-span-3">
                 <label className="block text-sm font-medium text-gray-700">
@@ -123,7 +163,9 @@ const Add_new_CUG = () => {
                 </label>
                 <input
                   type="text"
-                  placeholder="Enter 10 Digit Number"
+                  value={employeeNumber}
+                  onChange={handleEmployeeNumberChange}
+                  placeholder="Enter 11 Digit Alpha-Numeric"
                   className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                 />
               </div>
@@ -174,9 +216,12 @@ const Add_new_CUG = () => {
                         {dept}
                       </option>
                     ))}
-                  {selectedDivision === "MCS" && (
-                    <option value="MCS Department">MCS Department</option>
-                  )}
+                  {selectedDivision === "MCS" &&
+                    divisions.CON.map((dept) => (
+                      <option key={dept} value={dept}>
+                        {dept}
+                      </option>
+                    ))}
                 </select>
               </div>
               <div>
@@ -185,7 +230,9 @@ const Add_new_CUG = () => {
                 </label>
                 <input
                   type="text"
-                  placeholder="Enter Bill Unit"
+                  value={billUnit}
+                  onChange={handleBillUnitChange}
+                  placeholder="Enter 8 Digit Number"
                   className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                 />
               </div>
@@ -222,11 +269,19 @@ const Add_new_CUG = () => {
                     <option value="Plan C">Plan C</option>
                   </select>
                 </div>
+                {selectedPlan && (
+                  <div className="flex items-center">
+                    <span className="text-gray-700 mr-2">Amount:</span>
+                    <span className="font-bold">
+                      {planAmounts[selectedPlan]}
+                    </span>
+                  </div>
+                )}
                 <button
                   className="bg-blue-700 text-white py-2 px-4 rounded-md hover:bg-blue-500"
                   onClick={handleSubmit}
                 >
-                  Submit
+                  Activate
                 </button>
               </div>
             </div>
@@ -238,4 +293,3 @@ const Add_new_CUG = () => {
 };
 
 export default Add_new_CUG;
-

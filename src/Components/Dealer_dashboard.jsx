@@ -4,10 +4,11 @@ import acc_icon from "../pics/acc_icon.png";
 import file from "../pics/file.png";
 import Header from './Header';
 import Footer from './Footer';
-import Add_New_CUG from "./Dealer_Inner_Components/Add_New_Cug";
+
 import Activate_Deactivate_New_CUG from "./Dealer_Inner_Components/Activate_Deactivate_New_CUG";
 import AllocationWiseReport from "./Admin_Inner_Components/Allocation_Wise_Report";
 import PlanWiseBillingReport from "./Admin_Inner_Components/PlanWiseBillingReport";
+import Add_new_CUG from "./Dealer_Inner_Components/Add_New_Cug";
 
 function Dealer_dashboard() {
   const [activeLink, setActiveLink] = useState('acdcreport');
@@ -38,7 +39,7 @@ function Dealer_dashboard() {
         <div className="w-full md:ml-4">
           <Routes>
             <Route path="acdcreport" element={<Activate_Deactivate_New_CUG />} />
-            <Route path="addnewcug" element={<Add_New_CUG />} />
+            <Route path="addnewcug" element={<Add_new_CUG />} />
             <Route path="allocreport" element={<AllocationWiseReport />} />
             <Route path="planreport" element={<PlanWiseBillingReport />} />
           </Routes>
