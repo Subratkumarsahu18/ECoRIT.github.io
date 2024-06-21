@@ -23,10 +23,10 @@ function Dealer_dashboard() {
       <div className="p-4 md:p-8 flex lg:flex-row flex-col">
         <div className="w-full md:w-1/6 flex flex-col space-y-4 mb-4 md:mb-0">
           <NavLinkButton to="acdcreport" activeLink={activeLink} onClick={handleNavLinkClick}>
-            Activate/Deactivate CUG
+          Deactivate CUG DETAILS
           </NavLinkButton>
           <NavLinkButton to="addnewcug" activeLink={activeLink} onClick={handleNavLinkClick}>
-            Add New CUG
+          Activate New CUG
           </NavLinkButton>
           <NavLinkButton to="allocreport" activeLink={activeLink} onClick={handleNavLinkClick}>
             Allocation-wise Report

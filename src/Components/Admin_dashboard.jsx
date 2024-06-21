@@ -35,10 +35,10 @@ function Admin_dashboard() {
             Create Dealer
           </NavLinkButton>
           <NavLinkButton to="activecug" activeLink={activeLink} onClick={handleNavLinkClick}>
-            CUG DETAILS (Activate/Deactivate)
+            Deactivate CUG DETAILS
           </NavLinkButton>
           <NavLinkButton to="addcug" activeLink={activeLink} onClick={handleNavLinkClick}>
-            Add New CUG
+          Activate New CUG
           </NavLinkButton>
           <NavLinkButton to="cugstatusreport" activeLink={activeLink} onClick={handleNavLinkClick}>
             CUG Status Report

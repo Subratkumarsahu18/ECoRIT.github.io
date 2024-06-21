@@ -12,7 +12,7 @@ const Activate_Deactivate_New_CUG = () => {
       employeeName: "John Doe",
       division: "HQ",
       department: "ACCOUNTS",
-      billUnit: "10",
+      billUnit: "00000010", // 8 digit number format
       allocation: "1234567",
       plan: "A",
     },
@@ -21,24 +21,43 @@ const Activate_Deactivate_New_CUG = () => {
       employeeName: "Jane Smith",
       division: "CON",
       department: "ENGINEERING",
-      billUnit: "29",
+      billUnit: "00000029", // 8 digit number format
       allocation: "7654321",
       plan: "B",
     },
   };
 
   const handleCUGChange = (event) => {
-    setEnteredCUG(event.target.value);
+    const value = event.target.value;
+    // Validate input to allow only 10 numeric digits
+    if (/^\d{0,10}$/.test(value)) {
+      setEnteredCUG(value);
+    }
   };
 
   const handleSubmit = () => {
+    // Validate CUG format (10 numeric digits)
+    if (!/^\d{10}$/.test(enteredCUG)) {
+      toast.error("CUG number should be exactly 10 numeric digits.");
+      setEnteredCUG("");
+      return;
+    }
+
     if (validCUGs[enteredCUG]) {
       setCugDetails(validCUGs[enteredCUG]);
       setdispacdc(true);
     } else {
-      toast.error("Wrong input");
+      toast.error("Invalid CUG number.");
       setEnteredCUG("");
     }
+  };
+
+  const handleDeactivate = () => {
+    // Perform deactivation logic here
+    // For example, clear cugDetails and setdispacdc(false)
+    setCugDetails(null);
+    setdispacdc(false);
+    toast.success("CUG deactivated successfully.");
   };
 
   return (
@@ -54,13 +73,13 @@ const Activate_Deactivate_New_CUG = () => {
           <div className="w-full max-w-sm">
             <div className="mb-4">
               <label className="block text-sm font-medium text-gray-700">
-                Enter CUG Number
+                Enter CUG Number (10 digits)
               </label>
               <input
                 type="text"
                 value={enteredCUG}
                 onChange={handleCUGChange}
-                placeholder="Enter 11 Digit Number"
+                placeholder="Enter 10 Digit Number"
                 className="mt-1 block w-full px-3 text-black py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
               />
               <button
@@ -112,7 +131,7 @@ const Activate_Deactivate_New_CUG = () => {
               </label>
               <input
                 type="text"
-                value={cugDetails.employeeNumber}
+                value={cugDetails ? cugDetails.employeeNumber : ""}
                 readOnly
                 className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm bg-gray-100"
               />
@@ -123,7 +142,7 @@ const Activate_Deactivate_New_CUG = () => {
               </label>
               <input
                 type="text"
-                value={cugDetails.employeeName}
+                value={cugDetails ? cugDetails.employeeName : ""}
                 readOnly
                 className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm bg-gray-100"
               />
@@ -134,7 +153,7 @@ const Activate_Deactivate_New_CUG = () => {
               </label>
               <input
                 type="text"
-                value={cugDetails.division}
+                value={cugDetails ? cugDetails.division : ""}
                 readOnly
                 className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm bg-gray-100"
               />
@@ -145,7 +164,7 @@ const Activate_Deactivate_New_CUG = () => {
               </label>
               <input
                 type="text"
-                value={cugDetails.department}
+                value={cugDetails ? cugDetails.department : ""}
                 readOnly
                 className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm bg-gray-100"
               />
@@ -156,7 +175,7 @@ const Activate_Deactivate_New_CUG = () => {
               </label>
               <input
                 type="text"
-                value={cugDetails.billUnit}
+                value={cugDetails ? cugDetails.billUnit : ""}
                 readOnly
                 className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm bg-gray-100"
               />
@@ -167,7 +186,7 @@ const Activate_Deactivate_New_CUG = () => {
               </label>
               <input
                 type="text"
-                value={cugDetails.allocation}
+                value={cugDetails ? cugDetails.allocation : ""}
                 readOnly
                 className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm bg-gray-100"
               />
@@ -177,21 +196,11 @@ const Activate_Deactivate_New_CUG = () => {
                 Plan:
               </label>
               <button className="bg-gray-200 text-gray-500 py-2 px-4 rounded-md cursor-not-allowed">
-                {cugDetails.plan}
-              </button>
-              <button
-                className="ml-4 bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-700"
-                onClick={() => {
-                  toast.success("Activated");
-                }}
-              >
-                Activate
+                {cugDetails ? cugDetails.plan : ""}
               </button>
               <button
                 className="ml-4 bg-gray-500 text-white py-2 px-4 rounded-md hover:bg-gray-700"
-                onClick={() => {
-                  toast.success("Deactivated");
-                }}
+                onClick={handleDeactivate}
               >
                 Deactivate
               </button>
