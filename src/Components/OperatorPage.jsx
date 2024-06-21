@@ -1,4 +1,7 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
+import Header from './Header';
+import Footer from './Footer';
 
 const operators = [
   {
@@ -40,10 +43,7 @@ const OperatorPage = () => {
 
   return (
     <div className="min-h-screen bg-white flex flex-col text-gray-800">
-      {/* Header */}
-      <div className="w-full bg-pink-700 py-4 flex justify-center items-center px-4 md:px-8">
-        <h1 className="text-2xl md:text-3xl text-white">Operator Plans and Offers</h1>
-      </div>
+      <Header />
 
       {/* Main Content */}
       <div className="flex flex-col items-center justify-center flex-grow p-4">
@@ -72,19 +72,8 @@ const OperatorPage = () => {
           </div>
         ))}
       </div>
-      {/* Footer */}
-      <footer className="w-full bg-blue-700 py-4 flex justify-center items-center text-white mt-4">
-        <div className="text-center">
-          <div className="text-sm">East Coast Railway</div>
-          <div className="text-sm">Bhubaneswar, Odisha</div>
-          <div className="text-sm mt-2">
-            <a href="#" className="mx-2">Privacy Policy</a>
-            <a href="#" className="mx-2">Terms Of Service</a>
-            <a href="#" className="mx-2">Contact Form</a>
-          </div>
-          <div className="text-sm mt-2">© 2024 East Coast Railway. All Rights Reserved.</div>
-        </div>
-      </footer>
+
+      <Footer />
     </div>
   );
 };

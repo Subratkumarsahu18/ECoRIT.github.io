@@ -1,26 +1,19 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import Header from './Header';
+import Footer from './Footer';
 
 function TermsOfService() {
   return (
-    <div className="min-h-screen bg-gray-100">
-      {/* Navbar */}
+    <div className="min-h-screen bg-gray-100 flex flex-col">
+      <Header />
       <div className="bg-white shadow-md">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-16">
-            <div className="flex">
-              <div className="flex-shrink-0 flex items-center">
-                <span className="text-lg font-bold">Terms of Service</span>
-              </div>
-            </div>
-          </div>
-        </div>
       </div>
 
       {/* Content */}
-      <div className="max-w-3xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
-        <div className="bg-white p-6 rounded-lg shadow-lg">
-          <div className="flex justify-between items-center mb-4">
+      <div className="max-w-3xl mx-auto mt-8 mb-8 bg-white p-6 rounded-lg shadow-lg">
+        
+      <div className="flex justify-between items-center mb-4">
             <h1 className="text-3xl font-bold">Terms of Service</h1>
             <Link to="/Admin_dashboard" className="text-blue-500 hover:underline">
               <svg
@@ -89,8 +82,9 @@ function TermsOfService() {
             </a>
             .
           </p>
-        </div>
+        
       </div>
+      <Footer />
     </div>
   );
 }
