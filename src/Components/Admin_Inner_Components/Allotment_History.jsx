@@ -44,7 +44,7 @@ function Allotment_History() {
     <div className="min-h-screen bg-white flex flex-col text-gray-800">
       {/* Header */}
       <div className="w-full bg-blue-700 py-4 flex justify-between items-center px-4 md:px-8 relative">
-        <h1 className="text-2xl md:text-3xl text-white">Allocation History</h1>
+        <h1 className="text-2xl md:text-3xl text-white">Allotment History</h1>
         {view && (
           <button
             onClick={() => setView(false)}
