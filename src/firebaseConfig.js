@@ -1,23 +1,20 @@
-// src/firebaseConfig.js
-import { initializeApp } from "firebase/app";
-import { getFirestore } from "firebase/firestore";
-import { getAuth } from "firebase/auth";
+import { initializeApp } from 'firebase/app';
+import { getAuth } from 'firebase/auth';
+import { getFirestore } from 'firebase/firestore';
 
-// Your web app's Firebase configuration
 const firebaseConfig = {
-  apiKey: "YOUR_API_KEY",
-  authDomain: "YOUR_AUTH_DOMAIN",
-  projectId: "YOUR_PROJECT_ID",
-  storageBucket: "YOUR_STORAGE_BUCKET",
-  messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
-  appId: "YOUR_APP_ID"
+  apiKey: "AIzaSyBTRXeN13mFDgUbRghOAphsJlxEd00KRb0",
+  authDomain: "ecorit-ecfe2.firebaseapp.com",
+  databaseURL: "https://ecorit-ecfe2-default-rtdb.firebaseio.com",
+  projectId: "ecorit-ecfe2",
+  storageBucket: "ecorit-ecfe2.appspot.com",
+  messagingSenderId: "1004298861566",
+  appId: "1:1004298861566:web:97998fc1cb0c9501fb1eaf",
+  measurementId: "G-4S7M45CTB2"
 };
 
-// Initialize Firebase
 const app = initializeApp(firebaseConfig);
-
-// Initialize Firestore and Auth
-const db = getFirestore(app);
 const auth = getAuth(app);
+const db = getFirestore(app);
 
-export { db, auth };
+export { auth, db };
