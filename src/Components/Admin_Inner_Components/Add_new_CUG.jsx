@@ -16,7 +16,10 @@ const Add_new_CUG = () => {
   };
 
   const handleCUGChange = (event) => {
-    setSelectedCUG(event.target.value);
+    const value = event.target.value;
+    if (/^\d{0,10}$/.test(value)) {
+      setSelectedCUG(value);
+    }
   };
 
   const handleDivisionChange = (event) => {
@@ -33,7 +36,6 @@ const Add_new_CUG = () => {
 
   const handleEmployeeNumberChange = (event) => {
     const value = event.target.value;
-    // Validate employee number (11 characters alphanumeric)
     if (/^[0-9a-zA-Z]{0,11}$/.test(value)) {
       setEmployeeNumber(value);
     }
@@ -44,14 +46,18 @@ const Add_new_CUG = () => {
   };
 
   const handleSubmit = () => {
-    // Validate employee number (11 characters alphanumeric)
+    if (!/^\d{10}$/.test(selectedCUG)) {
+      toast.error("CUG Number should be a valid 10-digit number.");
+      setSelectedCUG("");
+      return;
+    }
+
     if (!/^[0-9a-zA-Z]{11}$/.test(employeeNumber)) {
       toast.error("Employee Number should be 11 characters alphanumeric.");
       setEmployeeNumber("");
       return;
     }
 
-    // Validate bill unit (7 digits selected from dropdown)
     if (!/^\d{7}$/.test(billUnit)) {
       toast.error("Bill Unit should be a valid 7-digit number.");
       setBillUnit("");
@@ -63,12 +69,12 @@ const Add_new_CUG = () => {
       setdispacdc(true);
     } else {
       toast.success("New CUG member Added");
-      setSelectedCUG(""); // Reset CUG number selection
-      setSelectedDivision(""); // Reset Division selection
-      setSelectedDepartment(""); // Reset Department selection
-      setSelectedAllocation(""); // Reset Allocation selection
-      setEmployeeNumber(""); // Reset Employee Number selection
-      setBillUnit(""); // Reset Bill Unit selection
+      setSelectedCUG("");
+      setSelectedDivision("");
+      setSelectedDepartment("");
+      setSelectedAllocation("");
+      setEmployeeNumber("");
+      setBillUnit("");
       setdispacdc(false);
     }
   };
@@ -113,22 +119,13 @@ const Add_new_CUG = () => {
             <label className="block text-sm font-medium text-gray-700">
               Enter CUG Number
             </label>
-            <select
+            <input
+              type="text"
               value={selectedCUG}
               onChange={handleCUGChange}
-              className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm text-black appearance-none"
-              style={{
-                background: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'%3E%3Cpath fill='black' d='M7 10l5 5 5-5z'/%3E%3C/svg%3E") no-repeat right 0.75rem center/12px 12px`,
-              }}
-            >
-              <option value="">Select a number</option>
-              <option value="8390507688">8390507688</option>
-              <option value="9078101183">9078101183</option>
-              <option value="4658989895">4658989895</option>
-              <option value="8390507689">8390507689</option>
-              <option value="9078101188">9078101188</option>
-              <option value="4658989896">4658989896</option>
-            </select>
+              placeholder="Enter 10 Digit Number"
+              className="mt-1 block w-full px-3 py-2 text-black border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+            />
             <button
               onClick={() => setdispacdc(true)}
               className="mt-2 w-full bg-blue-500 text-white py-2 rounded-md hover:bg-blue-700"
