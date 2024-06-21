@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import toast, { Toaster } from "react-hot-toast";
 
-const Add_new_CUG = () => {
+const Add_New_Cug = () => {
   const [dispacdc, setdispacdc] = useState(false);
   const [selectedPlan, setSelectedPlan] = useState("");
   const [selectedCUG, setSelectedCUG] = useState("");
@@ -276,4 +276,4 @@ const Add_new_CUG = () => {
   );
 };
 
-export default Add_new_CUG;
+export default Add_New_Cug;
