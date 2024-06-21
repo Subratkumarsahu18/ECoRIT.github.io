@@ -40,11 +40,7 @@ const Add_new_CUG = () => {
   };
 
   const handleBillUnitChange = (event) => {
-    const value = event.target.value;
-    // Validate bill unit (exactly 8 digits)
-    if (/^\d{0,8}$/.test(value)) {
-      setBillUnit(value);
-    }
+    setBillUnit(event.target.value);
   };
 
   const handleSubmit = () => {
@@ -55,9 +51,9 @@ const Add_new_CUG = () => {
       return;
     }
 
-    // Validate bill unit (exactly 8 digits)
-    if (!/^\d{8}$/.test(billUnit)) {
-      toast.error("Bill Unit should be exactly 8 digits.");
+    // Validate bill unit (7 digits selected from dropdown)
+    if (!/^\d{7}$/.test(billUnit)) {
+      toast.error("Bill Unit should be a valid 7-digit number.");
       setBillUnit("");
       return;
     }
@@ -108,7 +104,7 @@ const Add_new_CUG = () => {
   return (
     <>
       <Toaster />
-      <div className="flex flex-col items-center  min-h-screen bg-white">
+      <div className="flex flex-col items-center min-h-screen bg-white">
         <div className="w-full bg-blue-700 py-4 flex mb-10 justify-between items-center px-4 md:px-8">
           <h1 className="text-2xl md:text-3xl text-white">Activate New CUG</h1>
         </div>
@@ -217,7 +213,7 @@ const Add_new_CUG = () => {
                       </option>
                     ))}
                   {selectedDivision === "MCS" &&
-                    divisions.CON.map((dept) => (
+                    divisions.MCS.map((dept) => (
                       <option key={dept} value={dept}>
                         {dept}
                       </option>
@@ -228,13 +224,19 @@ const Add_new_CUG = () => {
                 <label className="block text-sm font-medium text-gray-700">
                   Bill Unit
                 </label>
-                <input
-                  type="text"
+                <select
                   value={billUnit}
                   onChange={handleBillUnitChange}
-                  placeholder="Enter 8 Digit Number"
-                  className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                />
+                  className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm text-black appearance-none"
+                >
+                  <option value="">Select Number</option>
+                  <option value="1234567">1234567</option>
+                  <option value="2345678">2345678</option>
+                  <option value="3456789">3456789</option>
+                  <option value="4567890">4567890</option>
+                  <option value="5678901">5678901</option>
+                  <option value="6789012">6789012</option>
+                </select>
               </div>
               <div>
                 <label className="block text-sm font-medium text-gray-700">

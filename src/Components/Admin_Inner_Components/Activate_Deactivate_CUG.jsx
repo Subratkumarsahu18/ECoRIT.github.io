@@ -12,7 +12,7 @@ const Activate_Deactivate_New_CUG = () => {
       employeeName: "John Doe",
       division: "HQ",
       department: "ACCOUNTS",
-      billUnit: "00000010", // 8 digit number format
+      billUnit: "0000010", // 7 digit number format
       allocation: "1234567",
       plan: "A",
     },
@@ -21,7 +21,7 @@ const Activate_Deactivate_New_CUG = () => {
       employeeName: "Jane Smith",
       division: "CON",
       department: "ENGINEERING",
-      billUnit: "00000029", // 8 digit number format
+      billUnit: "0000029", // 7 digit number format
       allocation: "7654321",
       plan: "B",
     },
