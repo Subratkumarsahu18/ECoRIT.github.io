@@ -1,31 +1,13 @@
 import React, { useState } from "react";
 import toast, { Toaster } from "react-hot-toast";
+import { collection, query, where, getDocs, updateDoc, serverTimestamp } from "firebase/firestore";
+import { db } from "../../firebaseConfig";
 
-const Activate_Deactivate_New_CUG = () => {
+const ActivateDeactivateNewCUG = () => {
   const [dispacdc, setdispacdc] = useState(false);
   const [enteredCUG, setEnteredCUG] = useState("");
   const [cugDetails, setCugDetails] = useState(null);
-
-  const validCUGs = {
-    "1111111111": {
-      employeeNumber: "tt234567890",
-      employeeName: "John Doe",
-      division: "HQ",
-      department: "ACCOUNTS",
-      billUnit: "0000010", // 7 digit number format
-      allocation: "1234567",
-      plan: "A",
-    },
-    "2222222222": {
-      employeeNumber: "uu987654321",
-      employeeName: "Jane Smith",
-      division: "CON",
-      department: "ENGINEERING",
-      billUnit: "0000029", // 7 digit number format
-      allocation: "7654321",
-      plan: "B",
-    },
-  };
+  const [cugDocId, setCugDocId] = useState(null);
 
   const handleCUGChange = (event) => {
     const value = event.target.value;
@@ -35,7 +17,7 @@ const Activate_Deactivate_New_CUG = () => {
     }
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     // Validate CUG format (10 numeric digits)
     if (!/^\d{10}$/.test(enteredCUG)) {
       toast.error("CUG number should be exactly 10 numeric digits.");
@@ -43,21 +25,44 @@ const Activate_Deactivate_New_CUG = () => {
       return;
     }
 
-    if (validCUGs[enteredCUG]) {
-      setCugDetails(validCUGs[enteredCUG]);
-      setdispacdc(true);
-    } else {
-      toast.error("Invalid CUG number.");
-      setEnteredCUG("");
+    try {
+      const cugCollection = collection(db, "cug");
+      const cugQuery = query(cugCollection, where("selectedCUG", "==", enteredCUG), where("status", "==", "Active"));
+      const querySnapshot = await getDocs(cugQuery);
+
+      if (!querySnapshot.empty) {
+        querySnapshot.forEach((doc) => {
+          setCugDetails(doc.data());
+          setCugDocId(doc.id);
+        });
+        setdispacdc(true);
+      } else {
+        toast.error("No active CUG available.");
+      }
+    } catch (error) {
+      toast.error("Error fetching CUG data.");
+      console.error("Error fetching CUG data: ", error);
     }
   };
 
-  const handleDeactivate = () => {
-    // Perform deactivation logic here
-    // For example, clear cugDetails and setdispacdc(false)
-    setCugDetails(null);
-    setdispacdc(false);
-    toast.success("CUG deactivated successfully.");
+  const handleDeactivate = async () => {
+    if (cugDocId) {
+      try {
+        const docRef = doc(db, "cugs", cugDocId);
+        await updateDoc(docRef, {
+          status: "Inactive",
+          deactivatedAt: serverTimestamp(),
+        });
+        setCugDetails(null);
+        setdispacdc(false);
+        toast.success("CUG deactivated successfully.");
+      } catch (error) {
+        toast.error("Error deactivating CUG.");
+        console.error("Error deactivating CUG: ", error);
+      }
+    } else {
+      toast.error("CUG not found for deactivation.");
+    }
   };
 
   return (
@@ -66,9 +71,7 @@ const Activate_Deactivate_New_CUG = () => {
       {!dispacdc ? (
         <div className="flex flex-col items-center min-h-screen bg-white">
           <div className="w-full bg-blue-700 py-4 flex mb-10 justify-between items-center px-4 md:px-8">
-            <h1 className="text-2xl md:text-3xl text-white">
-              Deactivate CUG
-            </h1>
+            <h1 className="text-2xl md:text-3xl text-white">Deactivate CUG</h1>
           </div>
           <div className="w-full max-w-sm">
             <div className="mb-4">
@@ -153,7 +156,7 @@ const Activate_Deactivate_New_CUG = () => {
               </label>
               <input
                 type="text"
-                value={cugDetails ? cugDetails.division : ""}
+                value={cugDetails ? cugDetails.selectedDivision : ""}
                 readOnly
                 className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm bg-gray-100"
               />
@@ -164,7 +167,7 @@ const Activate_Deactivate_New_CUG = () => {
               </label>
               <input
                 type="text"
-                value={cugDetails ? cugDetails.department : ""}
+                value={cugDetails ? cugDetails.selectedDepartment : ""}
                 readOnly
                 className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm bg-gray-100"
               />
@@ -186,7 +189,7 @@ const Activate_Deactivate_New_CUG = () => {
               </label>
               <input
                 type="text"
-                value={cugDetails ? cugDetails.allocation : ""}
+                value={cugDetails ? cugDetails.selectedAllocation : ""}
                 readOnly
                 className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm bg-gray-100"
               />
@@ -196,10 +199,10 @@ const Activate_Deactivate_New_CUG = () => {
                 Plan:
               </label>
               <button className="bg-gray-200 text-gray-500 py-2 px-4 rounded-md cursor-not-allowed">
-                {cugDetails ? cugDetails.plan : ""}
+                {cugDetails ? cugDetails.selectedPlan : ""}
               </button>
               <button
-                className="ml-4 bg-gray-500 text-white py-2 px-4 rounded-md hover:bg-gray-700"
+                className="ml-4 bg-red-500 text-white py-2 px-4 rounded-md hover:bg-red-700"
                 onClick={handleDeactivate}
               >
                 Deactivate
@@ -212,4 +215,4 @@ const Activate_Deactivate_New_CUG = () => {
   );
 };
 
-export default Activate_Deactivate_New_CUG;
+export default ActivateDeactivateNewCUG;
