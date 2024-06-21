@@ -1,7 +1,5 @@
 import React, { useState } from "react";
 import { Link, Routes, Route } from "react-router-dom";
-import acc_icon from "../pics/acc_icon.png";
-import file from "../pics/file.png";
 import Header from './Header';
 import Footer from './Footer';
 

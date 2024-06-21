@@ -3,8 +3,6 @@ import toast, { Toaster } from 'react-hot-toast';
 
 function Upload_new_CUG_Number() {
   const [cugNumber, setCugNumber] = useState('');
-  const [employeeId, setEmployeeId] = useState('');
-  const [fileInputKey, setFileInputKey] = useState(Date.now()); // Key for resetting file input
 
   const handleCugSubmit = (e) => {
     e.preventDefault();
@@ -13,12 +11,12 @@ function Upload_new_CUG_Number() {
     setCugNumber(''); // Reset input field
   };
 
-  const handleEmployeeSubmit = (e) => {
-    e.preventDefault();
-    toast.success('Uploaded');
-    alert(`Employee ID Submitted: ${employeeId}`);
-    setEmployeeId(''); // Reset input field
-    setFileInputKey(Date.now()); // Reset file input
+  const handleCugNumberChange = (e) => {
+    const value = e.target.value;
+    // Allow only numeric values and limit to 10 digits
+    if (/^\d{0,10}$/.test(value)) {
+      setCugNumber(value);
+    }
   };
 
   return (
@@ -31,39 +29,22 @@ function Upload_new_CUG_Number() {
 
       {/* Main Content */}
       <div className="flex flex-col items-center justify-center flex-grow p-4">
-        <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-2xl flex justify-around">
+        <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-xs h-full max-h-xs flex items-center justify-center">
           {/* CUG Number Form */}
-          <form onSubmit={handleCugSubmit} className="flex flex-col items-center">
+          <form onSubmit={handleCugSubmit} className="flex flex-col items-center w-full">
             <h2 className="text-xl mb-4 text-black">Enter New CUG Number</h2>
             <input
               type="text"
               placeholder="Enter 10 Digit Number"
               className="bg-gray-100 p-2 mb-4 rounded-lg w-full focus:outline-none focus:ring-2 focus:ring-blue-500 text-black"
               value={cugNumber}
-              onChange={(e) => setCugNumber(e.target.value)}
+              onChange={handleCugNumberChange}
             />
             <button
               type="submit"
               className="bg-blue-600 text-white py-2 px-4 rounded-lg w-full hover:bg-blue-700"
             >
               Add
-            </button>
-          </form>
-
-          {/* Upload File Form */}
-          <div className="text-black flex items-center mx-4">OR</div>
-          <form onSubmit={handleEmployeeSubmit} className="flex flex-col items-center">
-            <h2 className="text-xl mb-4 text-black">Upload File</h2>
-            <input
-              type="file"
-              key={fileInputKey} // Key to reset input
-              className="bg-gray-100 p-2 mb-4 rounded-lg w-full focus:outline-none focus:ring-2 focus:ring-blue-500 text-black"
-            />
-            <button
-              type="submit"
-              className="bg-blue-600 text-white py-2 px-4 rounded-lg w-full hover:bg-blue-700"
-            >
-              Upload
             </button>
           </form>
         </div>
