@@ -1,4 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { db } from '../../firebaseConfig'; // Adjust the path if your firebaseConfig.js is in a different directory
+import { collection, query, where, getDocs } from 'firebase/firestore';
 
 function Allotment_History() {
   const [view, setView] = useState(false);
@@ -8,24 +10,39 @@ function Allotment_History() {
 
   const handleSubmit = () => {
     setErrorMessage('');
-    if (selectedCUG === '1234567890') {
-      setTableData([
-        { cugNo: '8390507688', employeeId: 'LA2B3cuD5t', userName: 'John Doe', activationDate: '07/05/2024', deactivationDate: 'Present' },
-        { cugNo: '90781011837', employeeId: '9X10Y11W12', userName: 'Jane Smith', activationDate: '06/07/2019', deactivationDate: '06/07/2020' },
-        { cugNo: '4658989895', employeeId: '5FQFIU83bu', userName: 'Alice Johnson', activationDate: '04/05/2024', deactivationDate: '04/05/2025' },
-      ]);
-      setView(true);
-    } else if (selectedCUG === '2345678901') {
-      setTableData([
-        { cugNo: '1234567890', employeeId: 'ABCD1234', userName: 'Emily White', activationDate: '10/11/2023', deactivationDate: 'Present' },
-        { cugNo: '2345678901', employeeId: 'WXYZ5678', userName: 'Michael Brown', activationDate: '12/01/2022', deactivationDate: '12/01/2023' },
-        { cugNo: '3456789012', employeeId: 'EFGH5678', userName: 'Sophia Lee', activationDate: '02/03/2021', deactivationDate: '02/03/2022' },
-        { cugNo: '4567890123', employeeId: 'IJKL5678', userName: 'William Taylor', activationDate: '04/05/2020', deactivationDate: '04/05/2021' },
-      ]);
-      setView(true);
-    } else {
+    if (selectedCUG.trim() === '') {
+      setErrorMessage('Please enter a valid 10-digit CUG number.');
+      setTableData([]);
       setView(false);
-      setErrorMessage('Invalid CUG number. Please enter a valid 10-digit CUG number.');
+      return;
+    }
+
+    fetchData(selectedCUG);
+  };
+
+  const fetchData = async (cugNumber) => {
+    try {
+      const q = query(collection(db, 'cug'), where('selectedCUG', '==', cugNumber));
+      const querySnapshot = await getDocs(q);
+
+      if (querySnapshot.empty) {
+        setErrorMessage('No entries found for the entered CUG number.');
+        setTableData([]);
+        setView(false);
+      } else {
+        let data = [];
+        querySnapshot.forEach((doc) => {
+          data.push(doc.data());
+        });
+        setTableData(data);
+        setView(true);
+        setErrorMessage('');
+      }
+    } catch (error) {
+      console.error('Error fetching data: ', error.message);
+      setErrorMessage('Error fetching data. Please try again later.');
+      setTableData([]);
+      setView(false);
     }
   };
 
@@ -58,11 +75,7 @@ function Allotment_History() {
               stroke="currentColor"
               className="size-6 text-white"
             >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M15.75 19.5 8.25 12l7.5-7.5"
-              />
+              <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 19.5 8.25 12l7.5-7.5" />
             </svg>
           </button>
         )}
@@ -105,11 +118,11 @@ function Allotment_History() {
               <tbody>
                 {sortedTableData.map((row, index) => (
                   <tr key={index} className="border-b border-gray-200">
-                    <td className="p-3">{row.cugNo}</td>
-                    <td className="p-3">{row.employeeId}</td>
-                    <td className="p-3">{row.userName}</td>
-                    <td className="p-3">{row.activationDate}</td>
-                    <td className="p-3">{row.deactivationDate}</td>
+                    <td className="p-3">{row.selectedCUG}</td>
+                    <td className="p-3">{row.employeeNumber}</td>
+                    <td className="p-3">{row.employeeName}</td>
+                    <td className="p-3">{row.timestamp}</td>
+                    <td className="p-3">{row.deactivationDate || '-'}</td>
                   </tr>
                 ))}
               </tbody>
