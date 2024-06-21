@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import toast, { Toaster } from "react-hot-toast";
 import { db } from '../../firebaseConfig'; // Adjust the path if your firebaseConfig.js is in a different directory
-import { collection, addDoc } from "firebase/firestore";
+import { collection, addDoc, query, where, getDocs } from "firebase/firestore";
 
 const Add_new_CUG = () => {
   const [selectedPlan, setSelectedPlan] = useState("");
@@ -64,28 +64,39 @@ const Add_new_CUG = () => {
       return;
     }
 
-    if (!/^\d{7}$/.test(billUnit)) {
-      toast.error("Bill Unit should be a valid 7-digit number.");
-      setBillUnit("");
-      return;
-    }
-
-    const newCUGData = {
-      selectedPlan,
-      selectedCUG,
-      selectedDivision,
-      selectedDepartment,
-      selectedAllocation,
-      employeeNumber,
-      billUnit,
-      employeeName,
-      status: "Active", // Default status when activated
-      timestamp: new Date().toLocaleString(),
-    };
-
     try {
+      // Check if the selectedCUG already exists in the database with status 'Active'
+      const cugQuerySnapshot = await getDocs(query(collection(db, "cug"), where("selectedCUG", "==", selectedCUG), where("status", "==", "Active")));
+      
+      if (!cugQuerySnapshot.empty) {
+        toast.error("CUG number already exists and is Active.");
+        return;
+      }
+
+      // Check if the employeeNumber already exists in the database
+      const empQuerySnapshot = await getDocs(query(collection(db, "cug"), where("employeeNumber", "==", employeeNumber)));
+      
+      if (!empQuerySnapshot.empty) {
+        toast.error("Employee Number already exists.");
+        return;
+      }
+
+      // Proceed to add the new CUG member
+      const newCUGData = {
+        selectedPlan,
+        selectedCUG,
+        selectedDivision,
+        selectedDepartment,
+        selectedAllocation,
+        employeeNumber,
+        billUnit,
+        employeeName,
+        status: "Active", // Default status when activated
+        timestamp: new Date().toLocaleString(),
+      };
+
       await addDoc(collection(db, "cug"), newCUGData);
-      toast.success("New CUG member Added");
+      toast.success("New CUG member added successfully");
       setSelectedCUG("");
       setSelectedDivision("");
       setSelectedDepartment("");
@@ -94,6 +105,7 @@ const Add_new_CUG = () => {
       setBillUnit("");
       setEmployeeName("");
       setSelectedPlan("");
+
     } catch (error) {
       toast.error("Error adding document: " + error.message);
     }
