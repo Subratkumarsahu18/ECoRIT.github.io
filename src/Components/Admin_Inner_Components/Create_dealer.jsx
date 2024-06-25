@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import toast, { Toaster } from "react-hot-toast";
 //import firebase from '../../firebaseConfig'; // Import firebase configuration
 import { db } from "../../firebaseConfig";
-import { doc, getDoc, setDoc } from 'firebase/firestore'; // Import Firestore methods
+import { collection, query,where, getDoc, setDoc } from 'firebase/firestore'; // Import Firestore methods
 
 
 const Create_dealer = () => {
@@ -50,20 +50,26 @@ const Create_dealer = () => {
   const handleSubmit = async () => {
     console.log("handleSubmit called with employeeID:", employeeID);
     try{
-      const docRef = doc(db, "cug", employeeID);
-      const docSnap = await getDoc(docRef);
+      const cugRef = collection(db, "cug"); // Reference to the "cug" collection
+      
+      // Query the collection for documents where employeeNumber matches the entered employeeID
+      const q = query(cugRef, where("employeeNumber", "==", employeeID));
+      const querySnapshot = await getDocs(q);
 
-      if (docSnap.exists()) {
+      if (!querySnapshot.empty) {
+        // Assuming there's only one document matching the employeeID
+        const docSnap = querySnapshot.docs[0];
         const data = docSnap.data();
-        // Map employeeNumber to employeeID
+        
         setDealerDetails({
           ...data,
-          employeeID: data.employeeNumber, // Map employeeNumber to employeeID
+          employeeID: employeeID, // Set employeeID explicitly
         });
         setShowDetails(true);
       } else {
         toast.error("Invalid Employee ID. Please enter a valid Employee ID.");
         setEmployeeID("");
+        setDealerDetails(null); // Reset dealerDetails if invalid
       }
     }catch (error) {
       console.error("Error fetching employee details:", error);
@@ -75,8 +81,8 @@ const Create_dealer = () => {
   const handleSubmission = async () => {
     console.log("handleSubmission called");
     try{
-      const dealerRef = doc(db, "Dealer", employeeID);
-      await setDoc(dealerRef, dealerDetails);
+      const dealerRef = collection(db, "Dealer"); // Reference to the "Dealer" collection
+      await setDoc(dealerRef, dealerDetails);// Set document in Firestore
       toast.success("Dealer is Created");
     }catch (error) {
       console.error("Error creating dealer:", error);
@@ -106,7 +112,7 @@ const Create_dealer = () => {
               maxLength={11}
             />
             <button
-              onClick={handleSubmit}
+              onClick={handleSubmit} // Event handler for validating employeeID against Firestore
               className="mt-2 w-full bg-blue-500 text-white py-2 rounded-md hover:bg-blue-700"
             >
               GO
@@ -164,7 +170,7 @@ const Create_dealer = () => {
               </label>
               <input
                 type="text"
-                value={dealerDetails.division}
+                value={dealerDetails.selectedDivision} {/* Assuming "selectedDivision" is the correct field name */}
                 readOnly
                 className="mt-1 block w-full px-3 py-2 border text-black border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm bg-gray-100"
               />
@@ -175,7 +181,7 @@ const Create_dealer = () => {
               </label>
               <input
                 type="text"
-                value={dealerDetails.department}
+                value={dealerDetails.selectedDepartment}
                 readOnly
                 className="mt-1 block w-full px-3 py-2 border text-black border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm bg-gray-100"
               />
