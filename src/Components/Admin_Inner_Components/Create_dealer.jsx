@@ -81,8 +81,8 @@ const Create_dealer = () => {
   const handleSubmission = async () => {
     console.log("handleSubmission called");
     try{
-      const dealerRef = collection(db, "Dealer",dealerDetails.employeeID); // Reference to the "Dealer" collection
-      await setDoc(dealerRef, dealerDetails);// Set document in Firestore
+      const dealerDocRef = doc(db, "Dealer",dealerDetails.employeeID); // Reference to the "Dealer" collection
+      await setDoc(dealerDocRef, dealerDetails);// Set document in Firestore
       toast.success("Dealer is Created");
     }catch (error) {
       console.error("Error creating dealer:", error);
