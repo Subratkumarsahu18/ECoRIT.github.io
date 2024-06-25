@@ -86,7 +86,7 @@ const Create_dealer = () => {
       toast.success("Dealer is Created");
     }catch (error) {
       console.error("Error creating dealer:", error);
-      toast.error("An error occurred while creating the dealer.");
+      toast.error(`An error occurred while creating the dealer: ${error.message}`);
     }
     
   };
