@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import toast, { Toaster } from "react-hot-toast";
 //import firebase from '../../firebaseConfig'; // Import firebase configuration
 import { db } from "../../firebaseConfig";
-import { collection, query,where, getDocs} from 'firebase/firestore'; // Import Firestore methods
+import { collection, query,where, getDocs,setDoc} from 'firebase/firestore'; // Import Firestore methods
 
 
 const Create_dealer = () => {
