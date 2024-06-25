@@ -73,7 +73,7 @@ const Create_dealer = () => {
       }
     }catch (error) {
       console.error("Error fetching employee details:", error);
-      toast.error("An error occurred while fetching employee details: ${error.message}");
+      toast.error(`An error occurred while fetching employee details: ${error.message}`);
     }
     
   };
