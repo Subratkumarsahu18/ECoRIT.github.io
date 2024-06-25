@@ -1,12 +1,15 @@
 import React, { useState } from "react";
 import toast, { Toaster } from "react-hot-toast";
+import firebase from '../../../firebaseConfig'; // Import firebase configuration
+import { getFirestore, doc, getDoc, setDoc } from 'firebase/firestore'; // Import Firestore methods
+
 
 const Create_dealer = () => {
   const [showDetails, setShowDetails] = useState(false);
   const [employeeID, setEmployeeID] = useState("");
   const [dealerDetails, setDealerDetails] = useState(null);
-
-  const validDetails = {
+  const db = getFirestore(firebase); // Initialize Firestore
+  /*const validDetails = {
     "SS234567890": {
       employeeName: "John Doe",
       employeeID: "SS234567890",
@@ -28,7 +31,7 @@ const Create_dealer = () => {
       status: "Deactivate",
     },
   };
-
+*/
   const handleEmployeeChange = (event) => {
     const value = event.target.value.trim(); // Trim whitespace
 
@@ -41,18 +44,40 @@ const Create_dealer = () => {
     }
   };
 
-  const handleSubmit = () => {
-    if (validDetails[employeeID]) {
-      setDealerDetails(validDetails[employeeID]);
-      setShowDetails(true);
-    } else {
-      toast.error("Invalid Employee ID. Please enter a valid Employee ID.");
-      setEmployeeID("");
+  const handleSubmit = async () => {
+    try{
+      const docRef = doc(db, "cug", employeeID);
+      const docSnap = await getDoc(docRef);
+
+      if (docSnap.exists()) {
+        const data = docSnap.data();
+        // Map employeeNumber to employeeID
+        setDealerDetails({
+          ...data,
+          employeeID: data.employeeNumber, // Map employeeNumber to employeeID
+        });
+        setShowDetails(true);
+      } else {
+        toast.error("Invalid Employee ID. Please enter a valid Employee ID.");
+        setEmployeeID("");
+      }
+    }catch (error) {
+      console.error("Error fetching employee details:", error);
+      toast.error("An error occurred while fetching employee details.");
     }
+    
   };
 
-  const handleSubmission = () => {
-    toast.success("Dealer is Created");
+  const handleSubmission = async () => {
+    try{
+      const dealerRef = doc(db, "Dealer", employeeID);
+      await setDoc(dealerRef, dealerDetails);
+      toast.success("Dealer is Created");
+    }catch (error) {
+      console.error("Error creating dealer:", error);
+      toast.error("An error occurred while creating the dealer.");
+    }
+    
   };
 
   return (
