@@ -1,14 +1,15 @@
 import React, { useState } from "react";
 import toast, { Toaster } from "react-hot-toast";
 import firebase from '../../firebaseConfig'; // Import firebase configuration
-import { getFirestore, doc, getDoc, setDoc } from 'firebase/firestore'; // Import Firestore methods
+import { doc, getDoc, setDoc } from 'firebase/firestore'; // Import Firestore methods
 
 
 const Create_dealer = () => {
+  console.log("Create_dealer component rendered");
   const [showDetails, setShowDetails] = useState(false);
   const [employeeID, setEmployeeID] = useState("");
   const [dealerDetails, setDealerDetails] = useState(null);
-  const db = getFirestore(firebase); // Initialize Firestore
+  //const db = getFirestore(firebase); // Initialize Firestore
   /*const validDetails = {
     "SS234567890": {
       employeeName: "John Doe",
@@ -33,6 +34,7 @@ const Create_dealer = () => {
   };
 */
   const handleEmployeeChange = (event) => {
+    console.log("handleEmployeeChange called");
     const value = event.target.value.trim(); // Trim whitespace
 
     // Validate if input contains only alphanumeric and has max length of 11
@@ -45,6 +47,7 @@ const Create_dealer = () => {
   };
 
   const handleSubmit = async () => {
+    console.log("handleSubmit called with employeeID:", employeeID);
     try{
       const docRef = doc(db, "cug", employeeID);
       const docSnap = await getDoc(docRef);
@@ -69,6 +72,7 @@ const Create_dealer = () => {
   };
 
   const handleSubmission = async () => {
+    console.log("handleSubmission called");
     try{
       const dealerRef = doc(db, "Dealer", employeeID);
       await setDoc(dealerRef, dealerDetails);
