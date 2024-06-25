@@ -10,30 +10,8 @@ const Create_dealer = () => {
   const [showDetails, setShowDetails] = useState(false);
   const [employeeID, setEmployeeID] = useState("");
   const [dealerDetails, setDealerDetails] = useState(null);
-  //const db = getFirestore(firebase); // Initialize Firestore
-  /*const validDetails = {
-    "SS234567890": {
-      employeeName: "John Doe",
-      employeeID: "SS234567890",
-      division: "HQ",
-      department: "ACCOUNTS",
-      plan: "A",
-      operator: "Airtel",
-      cugNumber: "1111111111",
-      status: "Activate",
-    },
-    "TT987654321": {
-      employeeName: "Jane Smith",
-      employeeID: "TT987654321",
-      division: "CON",
-      department: "ENGINEERING",
-      plan: "B",
-      operator: "Vodafone",
-      cugNumber: "2222222222",
-      status: "Deactivate",
-    },
-  };
-*/
+  
+
   const handleEmployeeChange = (event) => {
     console.log("handleEmployeeChange called");
     const value = event.target.value.trim(); // Trim whitespace
