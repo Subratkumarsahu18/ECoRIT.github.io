@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { db } from '../../firebaseConfig'; // Adjust the path if your firebaseConfig.js is in a different directory
 import { collection, query, where, getDocs } from 'firebase/firestore';
 
@@ -32,7 +32,14 @@ function Allotment_History() {
       } else {
         let data = [];
         querySnapshot.forEach((doc) => {
-          data.push(doc.data());
+          const rowData = {
+            selectedCUG: doc.data().selectedCUG,
+            employeeNumber: doc.data().employeeNumber,
+            employeeName: doc.data().employeeName,
+            timestamp: doc.data().timestamp,
+            deactivatedAt: doc.data().deactivatedAt || '-',
+          };
+          data.push(rowData);
         });
         setTableData(data);
         setView(true);
@@ -55,7 +62,7 @@ function Allotment_History() {
     }
   };
 
-  const sortedTableData = tableData.sort((a, b) => new Date(b.activationDate) - new Date(a.activationDate));
+  const sortedTableData = tableData.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
 
   return (
     <div className="min-h-screen bg-white flex flex-col text-gray-800">
@@ -122,7 +129,7 @@ function Allotment_History() {
                     <td className="p-3">{row.employeeNumber}</td>
                     <td className="p-3">{row.employeeName}</td>
                     <td className="p-3">{row.timestamp}</td>
-                    <td className="p-3">{row.deactivationDate || '-'}</td>
+                    <td className="p-3">{row.deactivatedAt}</td>
                   </tr>
                 ))}
               </tbody>

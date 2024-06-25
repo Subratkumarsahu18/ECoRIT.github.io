@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import toast, { Toaster } from "react-hot-toast";
-import { collection, query, where, getDocs, updateDoc, serverTimestamp } from "firebase/firestore";
+import { collection, query, where, getDocs, updateDoc, serverTimestamp, doc, setDoc, Timestamp } from "firebase/firestore";
 import { db } from "../../firebaseConfig";
 
 const ActivateDeactivateNewCUG = () => {
@@ -48,11 +48,32 @@ const ActivateDeactivateNewCUG = () => {
   const handleDeactivate = async () => {
     if (cugDocId) {
       try {
-        const docRef = doc(db, "cugs", cugDocId);
-        await updateDoc(docRef, {
-          status: "Inactive",
-          deactivatedAt: serverTimestamp(),
+        const docRef = doc(db, "cug", cugDocId);
+        const deactivationTimestamp = Timestamp.now();
+        const formattedTimestamp = deactivationTimestamp.toDate().toLocaleString("en-US", {
+          year: "numeric",
+          month: "2-digit",
+          day: "2-digit",
+          hour: "2-digit",
+          minute: "2-digit",
+          second: "2-digit",
+          hour12: true,
         });
+
+        // Update the CUG document
+        await updateDoc(docRef, {
+          status: "Deactivated",
+          deactivatedAt: formattedTimestamp,
+        });
+
+        // Update the Allotment History
+        const historyCollection = collection(db, "allotmentHistory");
+        const historyDocRef = doc(historyCollection, enteredCUG);
+        await setDoc(historyDocRef, {
+          status: "Deactivated",
+          deactivatedAt: formattedTimestamp,
+        }, { merge: true });
+
         setCugDetails(null);
         setdispacdc(false);
         toast.success("CUG deactivated successfully.");
@@ -208,6 +229,19 @@ const ActivateDeactivateNewCUG = () => {
                 Deactivate
               </button>
             </div>
+            {cugDetails?.deactivatedAt && (
+              <div className="col-span-1 md:col-span-3 mt-4">
+                <label className="block text-sm font-medium text-gray-700">
+                  Deactivated At
+                </label>
+                <input
+                  type="text"
+                  value={cugDetails.deactivatedAt}
+                  readOnly
+                  className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm bg-gray-100"
+                />
+              </div>
+            )}
           </div>
         </div>
       )}
