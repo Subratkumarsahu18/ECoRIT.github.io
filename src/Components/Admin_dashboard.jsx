@@ -17,19 +17,17 @@ import Header from "./Header";
 import Footer from "./Footer";
 
 function Admin_dashboard() {
-  // useEffect(() => {
-  //   window.location = "/Admin_dashboard";
-  //   handleNavLinkClick("")
-
-  // }, []);
-  
-
   const [activeLink, setActiveLink] = useState("createdealer");
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const navigate = useNavigate();
 
   const handleNavLinkClick = (link) => {
     setActiveLink(link);
+    setDropdownOpen(false);
+  };
+
+  const toggleDropdown = () => {
+    setDropdownOpen(!dropdownOpen);
   };
 
   return (
@@ -39,72 +37,84 @@ function Admin_dashboard() {
         Welcome To Admin Dashboard
       </h2>
       <div className="p-4 md:p-8 flex lg:flex-row flex-col">
-        <div className="w-full md:w-1/6 flex flex-col space-y-4 mb-4 md:mb-0">
-          <NavLinkButton
-            to="createdealer"
-            activeLink={activeLink}
-            onClick={handleNavLinkClick}
+        <div className="relative flex flex-col mb-4 md:mb-0 lg:w-1/6">
+          <button
+            className="lg:hidden bg-[#334A7F] text-white p-2 rounded-md mb-4"
+            onClick={toggleDropdown}
           >
-            Create Dealer
-          </NavLinkButton>
-          <NavLinkButton
-            to="activecug"
-            activeLink={activeLink}
-            onClick={handleNavLinkClick}
+            ☰ Menu
+          </button>
+          <div
+            className={`${
+              dropdownOpen ? "block" : "hidden"
+            } lg:block lg:relative bg-[#334A7F] p-4 rounded-md lg:rounded-none lg:bg-transparent overflow-y-auto max-h-96 lg:max-h-[calc(100vh-80px)] w-full`}
           >
-            Deactivate CUG DETAILS
-          </NavLinkButton>
-          <NavLinkButton
-            to="addcug"
-            activeLink={activeLink}
-            onClick={handleNavLinkClick}
-          >
-            Activate New CUG
-          </NavLinkButton>
-          <NavLinkButton
-            to="cugstatusreport"
-            activeLink={activeLink}
-            onClick={handleNavLinkClick}
-          >
-            CUG Status Report
-          </NavLinkButton>
-          <NavLinkButton
-            to="allotmenthistory"
-            activeLink={activeLink}
-            onClick={handleNavLinkClick}
-          >
-            Allotment History
-          </NavLinkButton>
-          <NavLinkButton
-            to="allocreport"
-            activeLink={activeLink}
-            onClick={handleNavLinkClick}
-          >
-            Allocation-wise Report
-          </NavLinkButton>
-          <NavLinkButton
-            to="planreport"
-            activeLink={activeLink}
-            onClick={handleNavLinkClick}
-          >
-            Plan-wise Report Billing
-          </NavLinkButton>
-          <NavLinkButton
-            to="uploadcugbill"
-            activeLink={activeLink}
-            onClick={handleNavLinkClick}
-          >
-            Upload CUG Bill
-          </NavLinkButton>
-          <NavLinkButton
-            to="uploadnewnumber"
-            activeLink={activeLink}
-            onClick={handleNavLinkClick}
-          >
-            Upload New CUG No
-          </NavLinkButton>
+            <NavLinkButton
+              to="createdealer"
+              activeLink={activeLink}
+              onClick={handleNavLinkClick}
+            >
+              Create Dealer
+            </NavLinkButton>
+            <NavLinkButton
+              to="activecug"
+              activeLink={activeLink}
+              onClick={handleNavLinkClick}
+            >
+              View/Deactivate CUG 
+            </NavLinkButton>
+            <NavLinkButton
+              to="addcug"
+              activeLink={activeLink}
+              onClick={handleNavLinkClick}
+            >
+              Activate New CUG
+            </NavLinkButton>
+            <NavLinkButton
+              to="cugstatusreport"
+              activeLink={activeLink}
+              onClick={handleNavLinkClick}
+            >
+              CUG Status Report
+            </NavLinkButton>
+            <NavLinkButton
+              to="allotmenthistory"
+              activeLink={activeLink}
+              onClick={handleNavLinkClick}
+            >
+              Allotment History
+            </NavLinkButton>
+            <NavLinkButton
+              to="allocreport"
+              activeLink={activeLink}
+              onClick={handleNavLinkClick}
+            >
+              Allocation Report
+            </NavLinkButton>
+            <NavLinkButton
+              to="planreport"
+              activeLink={activeLink}
+              onClick={handleNavLinkClick}
+            >
+              Plan-wise Report 
+            </NavLinkButton>
+            <NavLinkButton
+              to="uploadcugbill"
+              activeLink={activeLink}
+              onClick={handleNavLinkClick}
+            >
+              Upload CUG Bill
+            </NavLinkButton>
+            <NavLinkButton
+              to="uploadnewnumber"
+              activeLink={activeLink}
+              onClick={handleNavLinkClick}
+            >
+              Upload New CUG No
+            </NavLinkButton>
+          </div>
         </div>
-        <div className="w-full md:ml-4">
+        <div className="w-full lg:ml-4">
           <Routes>
             <Route
               path="/"
@@ -135,7 +145,7 @@ const NavLinkButton = ({ to, activeLink, onClick, children }) => {
       <button
         className={`w-full h-20 bg-[#334A7F] hover:scale-90 duration-500 rounded-lg ${
           isActive ? "bg-cyan-500" : ""
-        }`}
+        } mb-2`}
       >
         {children}
       </button>
