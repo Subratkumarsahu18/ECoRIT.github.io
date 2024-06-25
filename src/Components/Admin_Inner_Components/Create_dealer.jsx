@@ -148,7 +148,7 @@ const Create_dealer = () => {
               </label>
               <input
                 type="text"
-                value={dealerDetails.employeeName}
+                value={dealerDetails.employeeName || ''}
                 readOnly
                 className="mt-1 block w-full px-3 py-2 border text-black border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm bg-gray-100"
               />
@@ -159,7 +159,7 @@ const Create_dealer = () => {
               </label>
               <input
                 type="text"
-                value={dealerDetails.employeeID}
+                value={dealerDetails.employeeID || ''}
                 readOnly
                 className="mt-1 block w-full px-3 py-2 border text-black border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm bg-gray-100"
               />
@@ -170,7 +170,7 @@ const Create_dealer = () => {
               </label>
               <input
                 type="text"
-                value={dealerDetails.selectedDivision} // Assuming "selectedDivision" is the correct field name 
+                value={dealerDetails.selectedDivision || ''} // Assuming "selectedDivision" is the correct field name 
                 readOnly
                 className="mt-1 block w-full px-3 py-2 border text-black border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm bg-gray-100"
               />
@@ -181,7 +181,7 @@ const Create_dealer = () => {
               </label>
               <input
                 type="text"
-                value={dealerDetails.selectedDepartment}
+                value={dealerDetails.selectedDepartment || ''}
                 readOnly
                 className="mt-1 block w-full px-3 py-2 border text-black border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm bg-gray-100"
               />
