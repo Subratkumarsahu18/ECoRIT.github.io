@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import toast, { Toaster } from "react-hot-toast";
-import firebase from '../../firebaseConfig'; // Import firebase configuration
+//import firebase from '../../firebaseConfig'; // Import firebase configuration
+import { db } from "../../firebaseConfig";
 import { doc, getDoc, setDoc } from 'firebase/firestore'; // Import Firestore methods
 
 
