@@ -1,17 +1,11 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import Header from './Header';
-import Footer from './Footer';
 
 function PrivacyPolicy() {
   return (
     <div className="min-h-screen bg-gray-100 flex flex-col">
-      <Header />
-      <div className="bg-white shadow-md">
-      </div>
-
       {/* Content Box */}
-      <div className="max-w-3xl mx-auto mt-8 mb-8 bg-white p-6 rounded-lg shadow-lg"> {/* Added mb-8 class for margin-bottom */}
+      <div className="max-w-3xl mx-auto mt-8 mb-8 bg-white p-6 rounded-lg shadow-lg">
         <div className="flex justify-between items-center mb-4">
           <h1 className="text-3xl font-bold">Privacy Policy</h1>
           <Link to="/Admin_dashboard" className="text-blue-500 hover:underline">
@@ -88,7 +82,6 @@ function PrivacyPolicy() {
           .
         </p>
       </div>
-      <Footer />
     </div>
   );
 }

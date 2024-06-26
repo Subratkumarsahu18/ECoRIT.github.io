@@ -18,7 +18,7 @@ const Header = () => {
           </Link>
         </div>
       </div>
-      <div className="flex space-x-2 md:space-x-4 mt-4 md:mt-0"> {/* Adjusted margin top for mobile */}
+      <div className="flex space-x-2 md:space-x-4 mt-4 md:mt-0 ml-auto"> {/* Adjusted margin top for mobile and added ml-auto */}
         <Link to="/OperatorPage" className="text-white hover:underline">Operator</Link>
         <div className="relative">
           <span className="hover:cursor-pointer" onMouseOver={() => setDropdownOpen(true)} onMouseLeave={() => setDropdownOpen(false)}>
