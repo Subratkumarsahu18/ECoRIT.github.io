@@ -7,6 +7,8 @@ function Allotment_History() {
   const [errorMessage, setErrorMessage] = useState('');
   const [selectedCUG, setSelectedCUG] = useState('');
   const [tableData, setTableData] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const rowsPerPage = 5; // Number of rows per page
 
   const handleSubmit = () => {
     setErrorMessage('');
@@ -64,6 +66,24 @@ function Allotment_History() {
 
   const sortedTableData = tableData.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
 
+  // Pagination logic
+  const indexOfLastRow = currentPage * rowsPerPage;
+  const indexOfFirstRow = indexOfLastRow - rowsPerPage;
+  const currentRows = sortedTableData.slice(indexOfFirstRow, indexOfLastRow);
+  const totalPages = Math.ceil(sortedTableData.length / rowsPerPage);
+
+  const handlePreviousPage = () => {
+    setCurrentPage((prev) => Math.max(prev - 1, 1));
+  };
+
+  const handleNextPage = () => {
+    setCurrentPage((prev) => Math.min(prev + 1, totalPages));
+  };
+
+  const handlePageChange = (pageNumber) => {
+    setCurrentPage(pageNumber);
+  };
+
   return (
     <div className="min-h-screen bg-white flex flex-col text-gray-800">
       {/* Header */}
@@ -111,29 +131,58 @@ function Allotment_History() {
 
         {/* Table */}
         {view && (
-          <div className="overflow-x-auto w-full">
-            <table className="min-w-full bg-white rounded-lg shadow-lg">
-              <thead>
-                <tr className="w-full bg-blue-700 text-white">
-                  <th className="p-3 text-left">CUG No</th>
-                  <th className="p-3 text-left">Employee ID</th>
-                  <th className="p-3 text-left">User Name</th>
-                  <th className="p-3 text-left">Activation Date</th>
-                  <th className="p-3 text-left">Deactivation Date</th>
-                </tr>
-              </thead>
-              <tbody>
-                {sortedTableData.map((row, index) => (
-                  <tr key={index} className="border-b border-gray-200">
-                    <td className="p-3">{row.selectedCUG}</td>
-                    <td className="p-3">{row.employeeNumber}</td>
-                    <td className="p-3">{row.employeeName}</td>
-                    <td className="p-3">{row.timestamp}</td>
-                    <td className="p-3">{row.deactivatedAt}</td>
+          <div className="w-full">
+            <div className="overflow-x-auto">
+              <table className="min-w-full bg-white rounded-lg shadow-lg">
+                <thead>
+                  <tr className="w-full bg-blue-700 text-white">
+                    <th className="p-3 text-left">CUG No</th>
+                    <th className="p-3 text-left">Employee ID</th>
+                    <th className="p-3 text-left">User Name</th>
+                    <th className="p-3 text-left">Activation Date</th>
+                    <th className="p-3 text-left">Deactivation Date</th>
                   </tr>
+                </thead>
+                <tbody>
+                  {currentRows.map((row, index) => (
+                    <tr key={index} className="border-b border-gray-200">
+                      <td className="p-3">{row.selectedCUG}</td>
+                      <td className="p-3">{row.employeeNumber}</td>
+                      <td className="p-3">{row.employeeName}</td>
+                      <td className="p-3">{row.timestamp}</td>
+                      <td className="p-3">{row.deactivatedAt}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+            {sortedTableData.length > rowsPerPage && (
+              <div className="flex justify-end items-center mt-4">
+                <button
+                  onClick={handlePreviousPage}
+                  disabled={currentPage === 1}
+                  className="bg-gray-200 text-gray-700 py-1 px-3 rounded-lg mx-1 disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  Prev
+                </button>
+                {[...Array(totalPages).keys()].map((number) => (
+                  <button
+                    key={number + 1}
+                    onClick={() => handlePageChange(number + 1)}
+                    className={`py-1 px-3 rounded-lg mx-1 ${currentPage === number + 1 ? 'bg-blue-700 text-white' : 'bg-gray-200 text-gray-700'}`}
+                  >
+                    {number + 1}
+                  </button>
                 ))}
-              </tbody>
-            </table>
+                <button
+                  onClick={handleNextPage}
+                  disabled={currentPage === totalPages}
+                  className="bg-gray-200 text-gray-700 py-1 px-3 rounded-lg mx-1 disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  Next
+                </button>
+              </div>
+            )}
           </div>
         )}
       </div>
