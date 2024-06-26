@@ -52,7 +52,7 @@ function Upload_CUG_Bill() {
   return (
     <div className="min-h-screen bg-white flex flex-col">
       <div className="w-full bg-blue-700 py-4 flex justify-start px-4 md:px-8">
-        <h1 className="text-2xl md:text-3xl text-white">CUG Activate/Deactivate</h1>
+        <h1 className="text-2xl md:text-3xl text-white">Upload CUG Bill</h1>
       </div>
 
       <div className="flex flex-col items-center justify-center flex-grow p-4">
