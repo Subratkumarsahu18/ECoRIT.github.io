@@ -21,7 +21,7 @@ const Header = () => {
       <div className="flex space-x-2 md:space-x-4 mt-4 md:mt-0 ml-auto"> {/* Adjusted margin top for mobile and added ml-auto */}
         <Link to="/OperatorPage" className="text-white hover:underline">Operator</Link>
         <div className="relative">
-          <span className="hover:cursor-pointer" onMouseOver={() => setDropdownOpen(true)} onMouseLeave={() => setDropdownOpen(false)}>
+          <span className="hover:cursor-pointer" onMouseOver={() => setDropdownOpen(true)} >
             <svg
               xmlns="http://www.w3.org/2000/svg"
               fill="none"
@@ -38,7 +38,7 @@ const Header = () => {
             </svg>
           </span>
           {dropdownOpen && (
-            <div className="absolute right-0 top-full mt-1 w-48 bg-white text-black rounded-lg shadow-lg py-2">
+            <div onMouseLeave={() => setDropdownOpen(false)} className="absolute right-0 top-full mt-1 w-48 bg-white text-black rounded-lg shadow-lg py-2">
               <Link to="/ProfilePage" className="block px-4 py-2 hover:bg-gray-200">My Profile</Link>
               <a href="/" className="block px-4 py-2 hover:bg-gray-200">Log Out</a>
             </div>
