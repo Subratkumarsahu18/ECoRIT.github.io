@@ -2,14 +2,21 @@ import React, { useState } from "react";
 import toast, { Toaster } from "react-hot-toast";
 //import firebase from '../../firebaseConfig'; // Import firebase configuration
 import { db } from "../../firebaseConfig";
-import { collection, query,where, getDocs,setDoc,doc} from 'firebase/firestore'; // Import Firestore methods
+import { collection, query,where, getDocs,setDoc,doc, updateDoc,addDoc} from 'firebase/firestore'; // Import Firestore methods
 
 
 const Create_dealer = () => {
   console.log("Create_dealer component rendered");
   const [showDetails, setShowDetails] = useState(false);
   const [employeeID, setEmployeeID] = useState("");
-  const [dealerDetails, setDealerDetails] = useState(null);
+  const [dealerDetails, setDealerDetails] = useState({
+    employeeName: '',
+    employeeID: '',
+    selectedDivision: '',
+    selectedDepartment: '',
+    selectedCUG: '',
+    email: ''
+  });
   
 
   const handleEmployeeChange = (event) => {
@@ -23,6 +30,9 @@ const Create_dealer = () => {
       toast.error("Employee ID should be alphanumeric and up to 11 characters.");
       setEmployeeID("");
     }
+  };
+  const handleEmailChange = (event) => {
+    setDealerDetails({ ...dealerDetails, email: event.target.value });
   };
 
   const handleSubmit = async () => {
@@ -42,12 +52,20 @@ const Create_dealer = () => {
         setDealerDetails({
           ...data,
           employeeID: employeeID, // Set employeeID explicitly
+          email: '', // Reset email field
         });
         setShowDetails(true);
       } else {
         toast.error("Invalid Employee ID. Please enter a valid Employee ID.");
         setEmployeeID("");
-        setDealerDetails(null); // Reset dealerDetails if invalid
+        setDealerDetails({
+          employeeName: '',
+          employeeID: '',
+          selectedDivision: '',
+          selectedDepartment: '',
+          selectedCUG: '',
+          email: '', // Reset dealerDetails if invalid
+        }); // Reset dealerDetails if invalid
       }
     }catch (error) {
       console.error("Error fetching employee details:", error);
@@ -58,15 +76,38 @@ const Create_dealer = () => {
 
   const handleSubmission = async () => {
     console.log("handleSubmission called");
+    if (!validateEmail(dealerDetails.email)) {
+      toast.error("Invalid email format. Please enter a valid email.");
+      return;
+    }
     try{
       const dealerDocRef = doc(db, "Dealer",dealerDetails.employeeID); // Reference to the "Dealer" collection
-      await setDoc(dealerDocRef, dealerDetails);// Set document in Firestore
-      toast.success("Dealer is Created");
+      const dealerDocSnap = await getDocs(query(collection(db, "Dealer"), where("employeeID", "==", dealerDetails.employeeID)));
+      
+      if (!dealerDocSnap.empty) {
+        toast.error("Dealer already exists");
+      } else {
+        await setDoc(dealerDocRef, dealerDetails); // Set document in Firestore
+        toast.success("Dealer is Created");
+
+        // Update the cug collection with the email
+        const cugDocRef =  await addDoc(collection(db, "cug"), {
+          employeeNumber: dealerDetails.employeeID,
+          email: dealerDetails.email,
+        });//doc(db, "cug", dealerDetails.employeeID);
+        //await updateDoc(cugDocRef, { email: dealerDetails.email });
+        toast.success("Email added to cug collection");
+      }
     }catch (error) {
       console.error("Error creating dealer:", error);
       toast.error(`An error occurred while creating the dealer: ${error.message}`);
     }
     
+  };
+
+  const validateEmail = (email) => {
+    const re = /\S+@\S+\.\S+/;
+    return re.test(email);
   };
 
   return (
@@ -162,6 +203,29 @@ const Create_dealer = () => {
                 value={dealerDetails.selectedDepartment || ''}
                 readOnly
                 className="mt-1 block w-full px-3 py-2 border text-black border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm bg-gray-100"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700">
+                CUG Nummber
+              </label>
+              <input
+                type="text"
+                value={dealerDetails.selectedCUG || ''}
+                readOnly
+                className="mt-1 block w-full px-3 py-2 border text-black border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm bg-gray-100"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700">
+                Email
+              </label>
+              <input
+                type="email"
+                value={dealerDetails.email}
+                onChange={handleEmailChange}
+                className="mt-1 block w-full px-3 py-2 border text-black border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm bg-white"
+                placeholder="Enter email address"
               />
             </div>
           </div>
