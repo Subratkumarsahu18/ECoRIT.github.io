@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import toast, { Toaster } from "react-hot-toast";
-import { collection, query, where, getDocs, updateDoc, serverTimestamp, doc, setDoc, Timestamp } from "firebase/firestore";
+import { collection, query, where, getDocs, updateDoc, doc, Timestamp } from "firebase/firestore";
 import { db } from "../../firebaseConfig";
 
 const ActivateDeactivateNewCUG = () => {
@@ -65,14 +65,6 @@ const ActivateDeactivateNewCUG = () => {
           status: "Deactivated",
           deactivatedAt: formattedTimestamp,
         });
-
-        // Update the Allotment History
-        const historyCollection = collection(db, "allotmentHistory");
-        const historyDocRef = doc(historyCollection, enteredCUG);
-        await setDoc(historyDocRef, {
-          status: "Deactivated",
-          deactivatedAt: formattedTimestamp,
-        }, { merge: true });
 
         setCugDetails(null);
         setdispacdc(false);
