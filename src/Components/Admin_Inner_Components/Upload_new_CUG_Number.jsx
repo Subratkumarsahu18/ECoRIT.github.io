@@ -19,14 +19,14 @@ function Upload_new_CUG_Number() {
 
     try {
       // Upload file to Firebase Storage
-      const fileRef = ref(storage, `cug_bills/${file.name}`);
+      const fileRef = ref(storage, `Plan_report/${file.name}`);
       await uploadBytes(fileRef, file);
 
       // Get the download URL
       const fileURL = await getDownloadURL(fileRef);
 
       // Save file metadata and other details to Firestore
-      await addDoc(collection(db, 'cug_bills'), {
+      await addDoc(collection(db, 'Plan_report'), {
         operator,
         fileName: file.name,
         fileURL,
