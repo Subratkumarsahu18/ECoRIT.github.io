@@ -103,14 +103,14 @@ function Admin_dashboard() {
               activeLink={activeLink}
               onClick={handleNavLinkClick}
             >
-              Upload CUG Bill
+              Upload CUG Details
             </NavLinkButton>
             <NavLinkButton
               to="uploadnewnumber"
               activeLink={activeLink}
               onClick={handleNavLinkClick}
             >
-              Upload New CUG No
+              Upload Plan Report
             </NavLinkButton>
           </div>
         </div>

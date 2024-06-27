@@ -1,53 +1,87 @@
 import React, { useState } from 'react';
-import toast, { Toaster } from 'react-hot-toast';
+import { storage, db } from '../../firebaseConfig';
+import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
+import { collection, addDoc } from "firebase/firestore"; 
 
 function Upload_new_CUG_Number() {
-  const [cugNumber, setCugNumber] = useState('');
+  const [operator, setOperator] = useState('');
+  const [file, setFile] = useState(null);
+  const [loading, setLoading] = useState(false);
 
-  const handleCugSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    toast.success('New Number Added');
-    alert(`CUG Number Submitted: ${cugNumber}`);
-    setCugNumber(''); // Reset input field
+    if (!file || !operator) {
+      alert('Please select an operator and a file to upload.');
+      return;
+    }
+
+    setLoading(true);
+
+    try {
+      // Upload file to Firebase Storage
+      const fileRef = ref(storage, `cug_bills/${file.name}`);
+      await uploadBytes(fileRef, file);
+
+      // Get the download URL
+      const fileURL = await getDownloadURL(fileRef);
+
+      // Save file metadata and other details to Firestore
+      await addDoc(collection(db, 'cug_bills'), {
+        operator,
+        fileName: file.name,
+        fileURL,
+        uploadedAt: new Date(),
+      });
+
+      alert('File uploaded successfully!');
+      setOperator('');
+      setFile(null);
+      e.target.reset(); // Reset the form fields
+    } catch (error) {
+      console.error("Error uploading file: ", error);
+      alert('Failed to upload file.');
+    } finally {
+      setLoading(false);
+    }
   };
 
-  const handleCugNumberChange = (e) => {
-    const value = e.target.value;
-    // Allow only numeric values and limit to 10 digits
-    if (/^\d{0,10}$/.test(value)) {
-      setCugNumber(value);
-    }
+  const handleFileChange = (e) => {
+    setFile(e.target.files[0]);
   };
 
   return (
     <div className="min-h-screen bg-white flex flex-col">
-      <Toaster />
-      {/* Header */}
       <div className="w-full bg-blue-700 py-4 flex justify-start px-4 md:px-8">
-        <h1 className="text-2xl md:text-3xl text-white">Upload New CUG Number</h1>
+        <h1 className="text-2xl md:text-3xl text-white">Upload Plan Report</h1>
       </div>
 
-      {/* Main Content */}
       <div className="flex flex-col items-center justify-center flex-grow p-4">
-        <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-xs h-full max-h-xs flex items-center justify-center">
-          {/* CUG Number Form */}
-          <form onSubmit={handleCugSubmit} className="flex flex-col items-center w-full">
-            <h2 className="text-xl mb-4 text-black">Enter New CUG Number</h2>
-            <input
-              type="text"
-              placeholder="Enter 10 Digit Number"
-              className="bg-gray-100 p-2 mb-4 rounded-lg w-full focus:outline-none focus:ring-2 focus:ring-blue-500 text-black"
-              value={cugNumber}
-              onChange={handleCugNumberChange}
-            />
-            <button
-              type="submit"
-              className="bg-blue-600 text-white py-2 px-4 rounded-lg w-full hover:bg-blue-700"
-            >
-              Add
-            </button>
-          </form>
-        </div>
+        <form onSubmit={handleSubmit} className="bg-white p-6 rounded-lg shadow-lg w-full max-w-md">
+          <h2 className="text-xl mb-4 text-black">Select Operator</h2>
+          <select
+            className="bg-gray-100 p-2 mb-4 rounded-lg w-full focus:outline-none focus:ring-2 focus:ring-blue-500 text-black"
+            value={operator}
+            onChange={(e) => setOperator(e.target.value)}
+          >
+            <option value="" disabled>Select Operator</option>
+            <option value="JIO">JIO</option>
+            <option value="AIRTEL">AIRTEL</option>
+            <option value="VODAFONE">VODAFONE</option>
+          </select>
+          <h2 className="text-xl mb-4 text-black">Upload File</h2>
+          <input
+            type="file"
+            className="bg-gray-100 p-2 mb-4 rounded-lg w-full focus:outline-none focus:ring-2 focus:ring-blue-500 text-black"
+            onChange={handleFileChange}
+          />
+          <button
+            type="submit"
+            className="bg-blue-600 text-white py-2 px-4 rounded-lg w-full hover:bg-blue-700"
+            disabled={loading}
+          >
+            {loading ? 'Uploading...' : 'Upload'}
+          </button>
+        </form>
       </div>
     </div>
   );
