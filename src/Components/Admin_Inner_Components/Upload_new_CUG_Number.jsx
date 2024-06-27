@@ -6,7 +6,27 @@ import { collection, addDoc } from "firebase/firestore";
 function Upload_new_CUG_Number() {
   const [operator, setOperator] = useState('');
   const [file, setFile] = useState(null);
+  const [uploadedFileURL, setUploadedFileURL] = useState('');
   const [loading, setLoading] = useState(false);
+
+  const handleFileChange = async (e) => {
+    const selectedFile = e.target.files[0];
+    if (selectedFile) {
+      setFile(selectedFile);
+      setLoading(true);
+      try {
+        const fileRef = ref(storage, `Plan_report/${selectedFile.name}`);
+        await uploadBytes(fileRef, selectedFile);
+        const fileURL = await getDownloadURL(fileRef);
+        setUploadedFileURL(fileURL);
+      } catch (error) {
+        console.error("Error uploading file: ", error);
+        alert('Failed to upload file.');
+      } finally {
+        setLoading(false);
+      }
+    }
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -18,24 +38,17 @@ function Upload_new_CUG_Number() {
     setLoading(true);
 
     try {
-      // Upload file to Firebase Storage
-      const fileRef = ref(storage, `Plan_report/${file.name}`);
-      await uploadBytes(fileRef, file);
-
-      // Get the download URL
-      const fileURL = await getDownloadURL(fileRef);
-
-      // Save file metadata and other details to Firestore
       await addDoc(collection(db, 'Plan_report'), {
         operator,
         fileName: file.name,
-        fileURL,
+        fileURL: uploadedFileURL,
         uploadedAt: new Date(),
       });
 
       alert('File uploaded successfully!');
       setOperator('');
       setFile(null);
+      setUploadedFileURL('');
       e.target.reset(); // Reset the form fields
     } catch (error) {
       console.error("Error uploading file: ", error);
@@ -45,8 +58,12 @@ function Upload_new_CUG_Number() {
     }
   };
 
-  const handleFileChange = (e) => {
-    setFile(e.target.files[0]);
+  const handlePreview = () => {
+    if (uploadedFileURL) {
+      window.open(uploadedFileURL, '_blank');
+    } else {
+      alert('No file uploaded.');
+    }
   };
 
   return (
@@ -74,13 +91,23 @@ function Upload_new_CUG_Number() {
             className="bg-gray-100 p-2 mb-4 rounded-lg w-full focus:outline-none focus:ring-2 focus:ring-blue-500 text-black"
             onChange={handleFileChange}
           />
-          <button
-            type="submit"
-            className="bg-blue-600 text-white py-2 px-4 rounded-lg w-full hover:bg-blue-700"
-            disabled={loading}
-          >
-            {loading ? 'Uploading...' : 'Upload'}
-          </button>
+          <div className="flex justify-between">
+            <button
+              type="button"
+              className="bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700"
+              onClick={handlePreview}
+              disabled={!uploadedFileURL}
+            >
+              Preview
+            </button>
+            <button
+              type="submit"
+              className="bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700"
+              disabled={loading}
+            >
+              {loading ? 'Uploading...' : 'Upload'}
+            </button>
+          </div>
         </form>
       </div>
     </div>

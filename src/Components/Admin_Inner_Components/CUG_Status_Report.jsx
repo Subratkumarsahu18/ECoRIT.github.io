@@ -1,35 +1,37 @@
 import React, { useState, useEffect } from 'react';
+import { db } from '../../firebaseConfig'; // Adjust the path if your firebaseConfig.js is in a different directory
+import { collection, getDocs } from 'firebase/firestore';
 
 function CUG_Status_Report() {
   const [currentPage, setCurrentPage] = useState(1);
   const [tableData, setTableData] = useState([]);
+  const rowsPerPage = 10; // Number of rows per page
 
   useEffect(() => {
-    const data = [
-      { cugNo: '8390507688', employeeId: 'LA2B3cuD5t', userName: 'John Doe', activationDate: '04/05/2024' },
-      { cugNo: '90781011837', employeeId: '9X10Y11W12', userName: 'Jane Smith', activationDate: '06/07/2019' },
-      { cugNo: '4658989895', employeeId: '5FQFIU83bu', userName: 'Alice Johnson', activationDate: '07/05/2024' },
-      { cugNo: '8390507689', employeeId: 'A2B3cuD5tL', userName: 'Bob Brown', activationDate: '01/02/2023' },
-      { cugNo: '90781011838', employeeId: 'Y11W129X10', userName: 'Charlie Davis', activationDate: '08/09/2020' },
-      { cugNo: '4658989896', employeeId: '3bu5FQFIU8', userName: 'Eve Martinez', activationDate: '12/11/2021' },
-      { cugNo: '8390507690', employeeId: 'D5tLA2B3cu', userName: 'Frank White', activationDate: '03/04/2022' },
-      { cugNo: '90781011839', employeeId: 'W129X10Y11', userName: 'Grace Green', activationDate: '05/06/2023' },
-      { cugNo: '4658989897', employeeId: 'FIU83bu5FQ', userName: 'Hank Blue', activationDate: '09/07/2023' },
-    ];
-    const updatedData = data.map((row) => {
-      const activationDate = new Date(row.activationDate.split('/').reverse().join('-'));
-      const deactivationDate = new Date(activationDate);
-      deactivationDate.setFullYear(deactivationDate.getFullYear() + 2);
-      const isActive = activationDate >= new Date(new Date().setFullYear(new Date().getFullYear() - 2));
-      return {
-        ...row,
-        deactivationDate: isActive ? '-' : deactivationDate.toLocaleDateString(),
-        status: isActive ? 'Active' : 'Inactive',
-      };
-    });
+    const fetchData = async () => {
+      try {
+        const querySnapshot = await getDocs(collection(db, 'Cug'));
+        let data = [];
+        querySnapshot.forEach((doc) => {
+          const rowData = {
+            cugNo: doc.data().selectedCUG,
+            employeeId: doc.data().employeeNumber,
+            userName: doc.data().employeeName,
+            activationDate: new Date(doc.data().timestamp.toDate()).toLocaleDateString(),
+            deactivationDate: doc.data().status === 'Inactive' ? new Date(doc.data().deactivatedAt.toDate()).toLocaleDateString() : '-',
+            status: doc.data().status,
+          };
+          data.push(rowData);
+        });
+        
+        data.sort((a, b) => new Date(b.activationDate.split('/').reverse().join('-')) - new Date(a.activationDate.split('/').reverse().join('-')));
+        setTableData(data);
+      } catch (error) {
+        console.error('Error fetching data: ', error.message);
+      }
+    };
 
-    updatedData.sort((a, b) => new Date(b.activationDate.split('/').reverse().join('-')) - new Date(a.activationDate.split('/').reverse().join('-')));
-    setTableData(updatedData);
+    fetchData();
   }, []);
 
   const handlePageChange = (page) => {
@@ -44,7 +46,6 @@ function CUG_Status_Report() {
     setCurrentPage((prevPage) => Math.min(prevPage + 1, totalPages));
   };
 
-  const rowsPerPage = 3;
   const totalPages = Math.ceil(tableData.length / rowsPerPage);
   const displayData = tableData.slice((currentPage - 1) * rowsPerPage, currentPage * rowsPerPage);
 
