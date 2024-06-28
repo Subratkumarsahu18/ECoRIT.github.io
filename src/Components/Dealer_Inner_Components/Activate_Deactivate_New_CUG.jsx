@@ -225,7 +225,7 @@ const ActivateDeactivateNewCUG = () => {
                 </button>
               </div>
               <button
-                className="ml-4 bg-red-500 text-white py-2 px-4 rounded-md hover:bg-red-700"
+                className="ml-4 bg-red-500 text-white py-2 px-4 mt-4 rounded-md hover:bg-red-700"
                 onClick={handleDeactivate}
               >
                 Deactivate
