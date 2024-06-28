@@ -110,7 +110,7 @@ function Admin_dashboard() {
               activeLink={activeLink}
               onClick={handleNavLinkClick}
             >
-              Upload Plan Report
+              Upload Plan Details
             </NavLinkButton>
           </div>
         </div>
