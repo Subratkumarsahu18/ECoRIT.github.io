@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import toast, { Toaster } from "react-hot-toast";
-import { db } from "../../firebaseConfig"; // Adjust the path if your firebaseConfig.js is in a different directory
+import { db } from '../../firebaseConfig'; // Adjust the path if your firebaseConfig.js is in a different directory
 import { collection, addDoc, query, where, getDocs } from "firebase/firestore";
 
 const Add_new_CUG = () => {
@@ -39,7 +39,7 @@ const Add_new_CUG = () => {
 
   const handleEmployeeNumberChange = (event) => {
     const value = event.target.value;
-    if (/^[A-Z]{0,2}[0-9]{0,9}$/.test(value)) {
+    if (/^\d{0,11}$/.test(value)) {
       setEmployeeNumber(value);
     }
   };
@@ -57,20 +57,56 @@ const Add_new_CUG = () => {
   };
 
   const handleSubmit = async () => {
+    // Validation checks
+    if (!selectedCUG) {
+      toast.error("Please enter a CUG Number.");
+      return;
+    }
+
     if (!/^\d{10}$/.test(selectedCUG)) {
       toast.error("CUG Number should be a valid 10-digit number.");
       setSelectedCUG("");
       return;
     }
 
-    if (!/^[A-Z]{2}[0-9]{9}$/.test(employeeNumber)) {
-      toast.error("Employee Number should be 2 capital alphabets followed by 9 digits.");
+    if (!employeeNumber) {
+      toast.error("Please enter an Employee Number.");
+      return;
+    }
+
+    if (!/^[0-9a-zA-Z]{11}$/.test(employeeNumber)) {
+      toast.error("Employee Number should be 11 characters alphanumeric.");
       setEmployeeNumber("");
       return;
     }
 
-    if (!selectedPlan || !selectedDivision || !selectedDepartment || !selectedAllocation || !billUnit || !employeeName || !selectedOperator) {
-      toast.error("All fields are compulsory.");
+    if (!selectedDivision) {
+      toast.error("Please select a Division.");
+      return;
+    }
+
+    if (!selectedDepartment) {
+      toast.error("Please select a Department.");
+      return;
+    }
+
+    if (!selectedAllocation) {
+      toast.error("Please select an Allocation.");
+      return;
+    }
+
+    if (!billUnit) {
+      toast.error("Please select a Bill Unit.");
+      return;
+    }
+
+    if (!employeeName) {
+      toast.error("Please enter Employee Name.");
+      return;
+    }
+
+    if (!selectedOperator) {
+      toast.error("Please select an Operator.");
       return;
     }
 
@@ -185,7 +221,7 @@ const Add_new_CUG = () => {
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4 w-full max-w-4xl">
               <div className="col-span-1 md:col-span-3">
                 <label className="block text-sm font-medium text-gray-700">
-                  CUG Number <span className="text-red-500">*</span>
+                  CUG Number
                 </label>
                 <input
                   type="text"
@@ -202,7 +238,7 @@ const Add_new_CUG = () => {
                   type="text"
                   value={employeeNumber}
                   onChange={handleEmployeeNumberChange}
-                  placeholder="Enter 2 Capital Letters and 9 Digits"
+                  placeholder="Enter 11 Digit Alpha-Numeric"
                   className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                 />
               </div>
@@ -307,7 +343,6 @@ const Add_new_CUG = () => {
                   <option value="03093319">03093319</option>
                   <option value="11021519">11021519</option>
                   <option value="12011619">12011619</option>
-                  
                 </select>
               </div>
               <div className="grid grid-cols-4 gap-5 col-span-3 items-center">
