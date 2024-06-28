@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import toast, { Toaster } from "react-hot-toast";
-import { db } from '../../firebaseConfig'; // Adjust the path if your firebaseConfig.js is in a different directory
+import { db } from "../../firebaseConfig"; // Adjust the path if your firebaseConfig.js is in a different directory
 import { collection, addDoc, query, where, getDocs } from "firebase/firestore";
 
 const Add_new_CUG = () => {
@@ -12,6 +12,7 @@ const Add_new_CUG = () => {
   const [employeeNumber, setEmployeeNumber] = useState("");
   const [billUnit, setBillUnit] = useState("");
   const [employeeName, setEmployeeName] = useState("");
+  const [selectedOperator, setSelectedOperator] = useState("");
 
   const handlePlanChange = (event) => {
     setSelectedPlan(event.target.value);
@@ -38,7 +39,7 @@ const Add_new_CUG = () => {
 
   const handleEmployeeNumberChange = (event) => {
     const value = event.target.value;
-    if (/^[0-9a-zA-Z]{0,11}$/.test(value)) {
+    if (/^[A-Z]{0,2}[0-9]{0,9}$/.test(value)) {
       setEmployeeNumber(value);
     }
   };
@@ -51,6 +52,10 @@ const Add_new_CUG = () => {
     setEmployeeName(event.target.value);
   };
 
+  const handleOperatorChange = (event) => {
+    setSelectedOperator(event.target.value);
+  };
+
   const handleSubmit = async () => {
     if (!/^\d{10}$/.test(selectedCUG)) {
       toast.error("CUG Number should be a valid 10-digit number.");
@@ -58,9 +63,14 @@ const Add_new_CUG = () => {
       return;
     }
 
-    if (!/^[0-9a-zA-Z]{11}$/.test(employeeNumber)) {
-      toast.error("Employee Number should be 11 characters alphanumeric.");
+    if (!/^[A-Z]{2}[0-9]{9}$/.test(employeeNumber)) {
+      toast.error("Employee Number should be 2 capital alphabets followed by 9 digits.");
       setEmployeeNumber("");
+      return;
+    }
+
+    if (!selectedPlan || !selectedDivision || !selectedDepartment || !selectedAllocation || !billUnit || !employeeName || !selectedOperator) {
+      toast.error("All fields are compulsory.");
       return;
     }
 
@@ -91,6 +101,7 @@ const Add_new_CUG = () => {
         employeeNumber,
         billUnit,
         employeeName,
+        selectedOperator,
         status: "Active", // Default status when activated
         timestamp: new Date().toLocaleString(),
       };
@@ -105,6 +116,7 @@ const Add_new_CUG = () => {
       setBillUnit("");
       setEmployeeName("");
       setSelectedPlan("");
+      setSelectedOperator("");
 
     } catch (error) {
       toast.error("Error adding document: " + error.message);
@@ -149,7 +161,7 @@ const Add_new_CUG = () => {
         <div className="w-full max-w-sm">
           <div className="mb-4">
             <label className="block text-sm font-medium text-gray-700">
-              Enter CUG Number
+              Enter CUG Number <span className="text-red-500">*</span>
             </label>
             <input
               type="text"
@@ -173,7 +185,7 @@ const Add_new_CUG = () => {
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4 w-full max-w-4xl">
               <div className="col-span-1 md:col-span-3">
                 <label className="block text-sm font-medium text-gray-700">
-                  CUG Number
+                  CUG Number <span className="text-red-500">*</span>
                 </label>
                 <input
                   type="text"
@@ -184,19 +196,19 @@ const Add_new_CUG = () => {
               </div>
               <div>
                 <label className="block text-sm font-medium text-gray-700">
-                  Employee Number
+                  Employee Number <span className="text-red-500">*</span>
                 </label>
                 <input
                   type="text"
                   value={employeeNumber}
                   onChange={handleEmployeeNumberChange}
-                  placeholder="Enter 11 Digit Alpha-Numeric"
+                  placeholder="Enter 2 Capital Letters and 9 Digits"
                   className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                 />
               </div>
               <div>
                 <label className="block text-sm font-medium text-gray-700">
-                  Employee Name
+                  Employee Name <span className="text-red-500">*</span>
                 </label>
                 <input
                   type="text"
@@ -208,7 +220,7 @@ const Add_new_CUG = () => {
               </div>
               <div>
                 <label className="block text-sm font-medium text-gray-700">
-                  Division
+                  Division <span className="text-red-500">*</span>
                 </label>
                 <select
                   value={selectedDivision}
@@ -223,7 +235,7 @@ const Add_new_CUG = () => {
               </div>
               <div>
                 <label className="block text-sm font-medium text-gray-700">
-                  Department
+                  Department <span className="text-red-500">*</span>
                 </label>
                 <select
                   value={selectedDepartment}
@@ -253,7 +265,7 @@ const Add_new_CUG = () => {
               </div>
               <div>
                 <label className="block text-sm font-medium text-gray-700">
-                  Bill Unit
+                  Bill Unit <span className="text-red-500">*</span>
                 </label>
                 <select
                   value={billUnit}
@@ -271,7 +283,7 @@ const Add_new_CUG = () => {
               </div>
               <div>
                 <label className="block text-sm font-medium text-gray-700">
-                  Allocation
+                  Allocation <span className="text-red-500">*</span>
                 </label>
                 <select
                   value={selectedAllocation}
@@ -279,14 +291,47 @@ const Add_new_CUG = () => {
                   className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm text-black appearance-none"
                 >
                   <option value="">Select Number</option>
-                  <option value="1234567">1234567</option>
-                  <option value="7654321">7654321</option>
+                  <option value="00873105">00873105</option>
+                  <option value="00873106">00873106</option>
+                  <option value="02030519">02030519</option>
+                  <option value="03011319">03011319</option>
+                  <option value="03021319">03021319</option>
+                  <option value="03031319">03031319</option>
+                  <option value="03041319">03041319</option>
+                  <option value="03053319">03053319</option>
+                  <option value="03061319">03061319</option>
+                  <option value="03071319">03071319</option>
+                  <option value="03081319">03081319</option>
+                  <option value="03091319">03091319</option>
+                  <option value="03092319">03092319</option>
+                  <option value="03093319">03093319</option>
+                  <option value="11021519">11021519</option>
+                  <option value="12011619">12011619</option>
+                  
                 </select>
               </div>
-              <div className="col-span-1 md:col-span-3 flex justify-between items-center mt-4">
+              <div className="grid grid-cols-4 gap-5 col-span-3 items-center">
                 <div className="w-full max-w-xs">
                   <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Plan:
+                    Operator: <span className="text-red-500">*</span>
+                  </label>
+                  <select
+                    value={selectedOperator}
+                    onChange={handleOperatorChange}
+                    className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm text-black appearance-none"
+                    style={{
+                      background: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'%3E%3Cpath fill='black' d='M7 10l5 5 5-5z'/%3E%3C/svg%3E") no-repeat right 0.75rem center/12px 12px`,
+                    }}
+                  >
+                    <option value="">Select Operator</option>
+                    <option value="JIO">JIO</option>
+                    <option value="AIRTEL">AIRTEL</option>
+                    <option value="VODAFONE">VODAFONE</option>
+                  </select>
+                </div>
+                <div className="w-full max-w-xs">
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Plan: <span className="text-red-500">*</span>
                   </label>
                   <select
                     value={selectedPlan}
@@ -304,14 +349,14 @@ const Add_new_CUG = () => {
                 </div>
                 {selectedPlan && (
                   <div className="flex items-center">
-                    <span className="text-gray-700 mr-2">Amount:</span>
-                    <span className="font-bold">
+                    <span className="text-gray-700 mt-5 mr-2">Amount:</span>
+                    <span className="font-bold mt-5">
                       {planAmounts[selectedPlan]}
                     </span>
                   </div>
                 )}
                 <button
-                  className="bg-blue-700 text-white py-2 px-4 rounded-md hover:bg-blue-500"
+                  className="bg-blue-700 text-white mt-5 py-2 px-4 rounded-md hover:bg-blue-500"
                   onClick={handleSubmit}
                 >
                   Activate
