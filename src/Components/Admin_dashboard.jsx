@@ -6,7 +6,7 @@ import Activate_Deactivate_CUG from "./Admin_Inner_Components/Activate_Deactivat
 import Create_dealer from "./Admin_Inner_Components/Create_dealer";
 import Add_new_CUG from "./Admin_Inner_Components/Add_new_CUG";
 import CUG_Status_Report from "./Admin_Inner_Components/CUG_Status_Report";
-import Upload_CUG_Bill from "./Admin_Inner_Components/Upload_CUG_Bill";
+import Upload_CUG_Details from "./Admin_Inner_Components/Upload_CUG_Details";
 import Upload_new_CUG_Number from "./Admin_Inner_Components/Upload_new_CUG_Number";
 import Allotment_History from "./Admin_Inner_Components/Allotment_History";
 import PrivacyPolicy from "./PrivacyPolicy";
@@ -98,7 +98,7 @@ function Admin_dashboard() {
               Plan-wise Report 
             </NavLinkButton>
             <NavLinkButton
-              to="uploadcugbill"
+              to="uploadcugdetails"
               activeLink={activeLink}
               onClick={handleNavLinkClick}
             >
@@ -126,7 +126,7 @@ function Admin_dashboard() {
             <Route path="createdealer" element={<Create_dealer />} />
             <Route path="cugstatusreport" element={<CUG_Status_Report />} />
             <Route path="planreport" element={<PlanWiseBillingReport />} />
-            <Route path="uploadcugbill" element={<Upload_CUG_Bill />} />
+            <Route path="uploadcugdetails" element={<Upload_CUG_Details />} />
             <Route path="uploadnewnumber" element={<Upload_new_CUG_Number />} />
           </Routes>
         </div>
