@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import toast, { Toaster } from "react-hot-toast";
 //import firebase from '../../firebaseConfig'; // Import firebase configuration
 import { db } from "../../firebaseConfig";
-import { collection, query,where, getDocs,setDoc,doc, updateDoc,addDoc} from 'firebase/firestore'; // Import Firestore methods
+import { collection, query,where, getDocs,setDoc,doc } from 'firebase/firestore'; // Import Firestore methods
 
 
 const Create_dealer = () => {
@@ -12,9 +12,7 @@ const Create_dealer = () => {
   const [dealerDetails, setDealerDetails] = useState({
     employeeName: '',
     employeeID: '',
-    selectedDivision: '',
-    selectedDepartment: '',
-    selectedCUG: '',
+    contactNumber:'',
     email: ''
   });
   
@@ -31,8 +29,13 @@ const Create_dealer = () => {
       setEmployeeID("");
     }
   };
-  const handleEmailChange = (event) => {
+  /*const handleEmailChange = (event) => {
     setDealerDetails({ ...dealerDetails, email: event.target.value });
+  };*/
+
+  const handleInputChange = (event) => {
+    const { name, value } = event.target;
+    setDealerDetails({ ...dealerDetails, [name]: value });
   };
 
   const handleSubmit = async () => {
@@ -50,13 +53,17 @@ const Create_dealer = () => {
         const data = docSnap.data();
         
         setDealerDetails({
-          ...data,
+          /*...data,
           employeeID: employeeID, // Set employeeID explicitly
-          email: '', // Reset email field
+          email: '', // Reset email field*/
+          employeeName: data.employeeName || '',
+          employeeID: employeeID,
+          contactNumber: data.contactNumber || '',
+          email: ''
         });
         setShowDetails(true);
       } else {
-        toast.error("Invalid Employee ID. Please enter a valid Employee ID.");
+        /*toast.error("Invalid Employee ID. Please enter a valid Employee ID.");
         setEmployeeID("");
         setDealerDetails({
           employeeName: '',
@@ -65,7 +72,14 @@ const Create_dealer = () => {
           selectedDepartment: '',
           selectedCUG: '',
           email: '', // Reset dealerDetails if invalid
-        }); // Reset dealerDetails if invalid
+        }); // Reset dealerDetails if invalid*/ 
+        setDealerDetails({
+          employeeName: '',
+          employeeID: employeeID,
+          contactNumber: '',
+          email: ''
+      });
+      setShowDetails(true);
       }
     }catch (error) {
       console.error("Error fetching employee details:", error);
@@ -76,15 +90,51 @@ const Create_dealer = () => {
 
   const handleSubmission = async () => {
     console.log("handleSubmission called");
-    if (!validateEmail(dealerDetails.email)) {
+    const { employeeName, employeeID, contactNumber, email } = dealerDetails;
+    if (!employeeName || !employeeID || !contactNumber || !email) {
+      toast.error("All fields are required.");
+      return;
+    }
+
+    if (!/^\S+@\S+\.\S+$/.test(email)) {
       toast.error("Invalid email format. Please enter a valid email.");
       return;
     }
+    if (!/^[0-9]+$/.test(contactNumber)) {
+      toast.error("Contact number should contain only digits.");
+      return;
+    }
+
     try{
-      const dealerDocRef = doc(db, "Dealer",dealerDetails.employeeID); // Reference to the "Dealer" collection
-      const dealerDocSnap = await getDocs(query(collection(db, "Dealer"), where("employeeID", "==", dealerDetails.employeeID)));
+      /*const dealerDocRef = doc(db, "Admin",dealerDetails.employeeID); // Reference to the "Dealer" collection
+      //const dealerDocSnap = await getDocs(query(collection(db, "Dealer"), where("employeeID", "==", dealerDetails.employeeID)));
+      await setDoc(dealerDocRef, dealerDetails);
+      toast.success("Dealer is Created");*/
+
+      /*const cugDocRef = doc(db, "cug", dealerDetails.employeeID);
+      await setDoc(cugDocRef, {
+        employeeNumber: dealerDetails.employeeID,
+        employeeName: dealerDetails.employeeName,
+        contactNumber: dealerDetails.contactNumber,
+        email: dealerDetails.email,
+      });
+      toast.success("Email added to cug collection");*/
       
-      if (!dealerDocSnap.empty) {
+      // Save the same details to the admin collection with an additional level field set to 1
+      const adminDocRef = doc(db, "Admin", dealerDetails.employeeID);
+      const adminDocSnap = await getDocs(query(collection(db, "Admin"), where("employeeID", "==", dealerDetails.employeeID)));
+      if (!adminDocSnap.empty) {
+        toast.error("Dealer already exists");
+      } else {
+       await setDoc(adminDocRef, {
+         ...dealerDetails,
+         level: 1
+       });
+      toast.success("Dealer is Created with level 1");
+      }
+      
+      
+      /*if (!dealerDocSnap.empty) {
         toast.error("Dealer already exists");
       } else {
         await setDoc(dealerDocRef, dealerDetails); // Set document in Firestore
@@ -97,7 +147,7 @@ const Create_dealer = () => {
         });//doc(db, "cug", dealerDetails.employeeID);
         //await updateDoc(cugDocRef, { email: dealerDetails.email });
         toast.success("Email added to cug collection");
-      }
+      }*/
     }catch (error) {
       console.error("Error creating dealer:", error);
       toast.error(`An error occurred while creating the dealer: ${error.message}`);
@@ -105,10 +155,7 @@ const Create_dealer = () => {
     
   };
 
-  const validateEmail = (email) => {
-    const re = /\S+@\S+\.\S+/;
-    return re.test(email);
-  };
+
 
   return (
     <>
@@ -167,9 +214,11 @@ const Create_dealer = () => {
               </label>
               <input
                 type="text"
-                value={dealerDetails.employeeName || ''}
-                readOnly
+                name="employeeName"
+                value={dealerDetails.employeeName}
+                onChange={handleInputChange}
                 className="mt-1 block w-full px-3 py-2 border text-black border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm bg-gray-100"
+                placeholder="Enter employee name"
               />
             </div>
             <div>
@@ -178,52 +227,37 @@ const Create_dealer = () => {
               </label>
               <input
                 type="text"
-                value={dealerDetails.employeeID || ''}
+                name="employeeID"
+                value={dealerDetails.employeeID}
                 readOnly
                 className="mt-1 block w-full px-3 py-2 border text-black border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm bg-gray-100"
               />
             </div>
             <div>
               <label className="block text-sm font-medium text-gray-700">
-                Division
+                Contact Number
               </label>
               <input
                 type="text"
-                value={dealerDetails.selectedDivision || ''} // Assuming "selectedDivision" is the correct field name 
-                readOnly
+                name="contactNumber"
+                value={dealerDetails.contactNumber}
+                //value={dealerDetails.selectedDivision || ''} // Assuming "selectedDivision" is the correct field name 
+                onChange={handleInputChange}
                 className="mt-1 block w-full px-3 py-2 border text-black border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm bg-gray-100"
+                placeholder="Enter contact number"
               />
             </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700">
-                Department
-              </label>
-              <input
-                type="text"
-                value={dealerDetails.selectedDepartment || ''}
-                readOnly
-                className="mt-1 block w-full px-3 py-2 border text-black border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm bg-gray-100"
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700">
-                CUG Nummber
-              </label>
-              <input
-                type="text"
-                value={dealerDetails.selectedCUG || ''}
-                readOnly
-                className="mt-1 block w-full px-3 py-2 border text-black border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm bg-gray-100"
-              />
-            </div>
+            
+            
             <div>
               <label className="block text-sm font-medium text-gray-700">
                 Email
               </label>
               <input
                 type="email"
+                name="email"
                 value={dealerDetails.email}
-                onChange={handleEmailChange}
+                onChange={handleInputChange}
                 className="mt-1 block w-full px-3 py-2 border text-black border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm bg-white"
                 placeholder="Enter email address"
               />
