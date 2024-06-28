@@ -3,7 +3,7 @@ import toast, { Toaster } from "react-hot-toast";
 import { collection, query, where, getDocs, updateDoc, doc, Timestamp } from "firebase/firestore";
 import { db } from "../../firebaseConfig";
 
-const Activate_Deactivate_New_CUG = () => {
+const ActivateDeactivateNewCUG = () => {
   const [dispacdc, setdispacdc] = useState(false);
   const [enteredCUG, setEnteredCUG] = useState("");
   const [cugDetails, setCugDetails] = useState(null);
@@ -208,12 +208,22 @@ const Activate_Deactivate_New_CUG = () => {
               />
             </div>
             <div className="flex items-center mt-4">
-              <label className="block text-sm font-medium text-gray-700 mr-4">
-                Plan:
-              </label>
-              <button className="bg-gray-200 text-gray-500 py-2 px-4 rounded-md cursor-not-allowed">
-                {cugDetails ? cugDetails.selectedPlan : ""}
-              </button>
+              <div className="flex flex-col items-start mr-4">
+                <label className="block text-sm font-medium text-gray-700">
+                  Operator:
+                </label>
+                <button className="bg-gray-200 text-gray-500 py-5 px-4 rounded-md cursor-not-allowed">
+                  {cugDetails ? cugDetails.selectedOperator : ""}
+                </button>
+              </div>
+              <div className="flex flex-col items-start mr-4">
+                <label className="block text-sm font-medium text-gray-700">
+                  Plan:
+                </label>
+                <button className="bg-gray-200 text-gray-500 py-2 px-4 rounded-md cursor-not-allowed">
+                  {cugDetails ? cugDetails.selectedPlan : ""}
+                </button>
+              </div>
               <button
                 className="ml-4 bg-red-500 text-white py-2 px-4 rounded-md hover:bg-red-700"
                 onClick={handleDeactivate}
@@ -221,6 +231,19 @@ const Activate_Deactivate_New_CUG = () => {
                 Deactivate
               </button>
             </div>
+            {cugDetails?.deactivatedAt && (
+              <div className="col-span-1 md:col-span-3 mt-4">
+                <label className="block text-sm font-medium text-gray-700">
+                  Deactivated At
+                </label>
+                <input
+                  type="text"
+                  value={cugDetails.deactivatedAt}
+                  readOnly
+                  className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm bg-gray-100"
+                />
+              </div>
+            )}
           </div>
         </div>
       )}
@@ -228,4 +251,4 @@ const Activate_Deactivate_New_CUG = () => {
   );
 };
 
-export default Activate_Deactivate_New_CUG;
+export default ActivateDeactivateNewCUG;

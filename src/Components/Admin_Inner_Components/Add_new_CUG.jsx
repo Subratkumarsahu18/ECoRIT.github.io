@@ -342,9 +342,9 @@ const Add_new_CUG = () => {
                     }}
                   >
                     <option value="">Select plan</option>
-                    <option value="Plan A">Plan A</option>
-                    <option value="Plan B">Plan B</option>
-                    <option value="Plan C">Plan C</option>
+                    <option value="Plan A">A</option>
+                    <option value="Plan B">B</option>
+                    <option value="Plan C">C</option>
                   </select>
                 </div>
                 {selectedPlan && (

@@ -208,12 +208,22 @@ const ActivateDeactivateNewCUG = () => {
               />
             </div>
             <div className="flex items-center mt-4">
-              <label className="block text-sm font-medium text-gray-700 mr-4">
-                Plan:
-              </label>
-              <button className="bg-gray-200 text-gray-500 py-2 px-4 rounded-md cursor-not-allowed">
-                {cugDetails ? cugDetails.selectedPlan : ""}
-              </button>
+              <div className="flex flex-col items-start mr-4">
+                <label className="block text-sm font-medium text-gray-700">
+                  Operator:
+                </label>
+                <button className="bg-gray-200 text-gray-500 py-5 px-4 rounded-md cursor-not-allowed">
+                  {cugDetails ? cugDetails.selectedOperator : ""}
+                </button>
+              </div>
+              <div className="flex flex-col items-start mr-4">
+                <label className="block text-sm font-medium text-gray-700">
+                  Plan:
+                </label>
+                <button className="bg-gray-200 text-gray-500 py-2 px-4 rounded-md cursor-not-allowed">
+                  {cugDetails ? cugDetails.selectedPlan : ""}
+                </button>
+              </div>
               <button
                 className="ml-4 bg-red-500 text-white py-2 px-4 rounded-md hover:bg-red-700"
                 onClick={handleDeactivate}
