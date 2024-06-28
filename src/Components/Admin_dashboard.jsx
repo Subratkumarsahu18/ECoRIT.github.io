@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import { Routes, Route, Link, useNavigate, Navigate } from "react-router-dom";
 import AllocationWiseReport from "./Admin_Inner_Components/Allocation_Wise_Report";
 import PlanWiseBillingReport from "./Admin_Inner_Components/PlanWiseBillingReport";
-import ViewPlanReport from "./Admin_Inner_Components/Inner_Plan_Components/ViewPlanReport";
 import Activate_Deactivate_CUG from "./Admin_Inner_Components/Activate_Deactivate_CUG";
 import Create_dealer from "./Admin_Inner_Components/Create_dealer";
 import Add_new_CUG from "./Admin_Inner_Components/Add_new_CUG";
