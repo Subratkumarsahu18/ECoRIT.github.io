@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { storage, db } from '../../firebaseConfig';
-import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
-import { collection, writeBatch, doc } from "firebase/firestore";
+import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
+import { collection, writeBatch, doc } from 'firebase/firestore';
 import * as XLSX from 'xlsx';
 
 function Upload_CUG_Details() {
@@ -16,13 +16,13 @@ function Upload_CUG_Details() {
       setLoading(true);
 
       try {
-        const fileRef = ref(storage, cug_details/${selectedFile.name});
+        const fileRef = ref(storage, `cug_details/${selectedFile.name}`);
         await uploadBytes(fileRef, selectedFile);
         const fileURL = await getDownloadURL(fileRef);
         setUploadedFileURL(fileURL);
         setLoading(false);
       } catch (error) {
-        console.error("Error uploading file: ", error);
+        console.error('Error uploading file: ', error);
         alert('Failed to upload file.');
         setLoading(false);
       }
@@ -41,7 +41,7 @@ function Upload_CUG_Details() {
     try {
       const reader = new FileReader();
       reader.onload = async (event) => {
-        try{
+        try {
           const arrayBuffer = event.target.result;
           const data = new Uint8Array(arrayBuffer);
           const workbook = XLSX.read(data, { type: 'array' });
@@ -53,22 +53,21 @@ function Upload_CUG_Details() {
           jsonData.forEach((row) => {
             const docRef = doc(collection(db, 'cug_details'));
             batch.set(docRef, row);
-        });
-        await batch.commit();
+          });
+          await batch.commit();
 
-        alert('File uploaded successfully!');
-        setFile(null);
-        setUploadedFileURL('');
-        e.target.reset(); // Reset the form fields
-      }catch(err){
-          console.error("Error parsing or uploading file data: ", err);
+          alert('File uploaded successfully!');
+          setFile(null);
+          setUploadedFileURL('');
+          e.target.reset(); // Reset the form fields
+        } catch (err) {
+          console.error('Error parsing or uploading file data: ', err);
           alert('Failed to process and upload file.');
-      }
-      //reader.readAsArrayBuffer(file);
-    };
-    reader.readAsArrayBuffer(file);
+        }
+      };
+      reader.readAsArrayBuffer(file);
     } catch (error) {
-      console.error("Error uploading file: ", error);
+      console.error('Error uploading file: ', error);
       alert('Failed to upload file.');
     } finally {
       setLoading(false);
@@ -126,4 +125,4 @@ function Upload_CUG_Details() {
   );
 }
 
-export default Upload_CUG_Details
+export default Upload_CUG_Details;
