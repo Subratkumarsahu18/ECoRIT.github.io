@@ -7,17 +7,18 @@ import { collection, query,where, getDocs,setDoc,doc } from 'firebase/firestore'
 
 const Create_dealer = () => {
   console.log("Create_dealer component rendered");
-  const [showDetails, setShowDetails] = useState(false);
-  const [employeeID, setEmployeeID] = useState("");
+  //const [showDetails, setShowDetails] = useState(false);
+  //const [employeeID, setEmployeeID] = useState("");
   const [dealerDetails, setDealerDetails] = useState({
     employeeName: '',
     employeeID: '',
     contactNumber:'',
-    email: ''
+    email: '',
+    password: ''
   });
-  
+  const [showPassword, setShowPassword] = useState(false);
 
-  const handleEmployeeChange = (event) => {
+  /*const handleEmployeeChange = (event) => {
     console.log("handleEmployeeChange called");
     const value = event.target.value.trim(); // Trim whitespace
 
@@ -38,7 +39,7 @@ const Create_dealer = () => {
     setDealerDetails({ ...dealerDetails, [name]: value });
   };
 
-  const handleSubmit = async () => {
+  /*const handleSubmit = async () => {
     console.log("handleSubmit called with employeeID:", employeeID);
     try{
       const cugRef = collection(db, "cug"); // Reference to the "cug" collection
@@ -56,13 +57,13 @@ const Create_dealer = () => {
           /*...data,
           employeeID: employeeID, // Set employeeID explicitly
           email: '', // Reset email field*/
-          employeeName: data.employeeName || '',
+          /*employeeName: data.employeeName || '',
           employeeID: employeeID,
           contactNumber: data.contactNumber || '',
           email: ''
         });
         setShowDetails(true);
-      } else {
+      } else {*/
         /*toast.error("Invalid Employee ID. Please enter a valid Employee ID.");
         setEmployeeID("");
         setDealerDetails({
@@ -73,7 +74,7 @@ const Create_dealer = () => {
           selectedCUG: '',
           email: '', // Reset dealerDetails if invalid
         }); // Reset dealerDetails if invalid*/ 
-        setDealerDetails({
+     /*   setDealerDetails({
           employeeName: '',
           employeeID: employeeID,
           contactNumber: '',
@@ -86,12 +87,25 @@ const Create_dealer = () => {
       toast.error(`An error occurred while fetching employee details: ${error.message}`);
     }
     
+  };*/
+
+  const validatePassword = (password) => {
+    const minLength = /.{8,}/;
+    const hasUpperCase = /[A-Z]/;
+    const hasLowerCase = /[a-z]/;
+    const hasSpecialChar = /[!@#$%^&*(),.?":{}|<>]/;
+    return (
+      minLength.test(password) &&
+      hasUpperCase.test(password) &&
+      hasLowerCase.test(password) &&
+      hasSpecialChar.test(password)
+    );
   };
 
   const handleSubmission = async () => {
     console.log("handleSubmission called");
-    const { employeeName, employeeID, contactNumber, email } = dealerDetails;
-    if (!employeeName || !employeeID || !contactNumber || !email) {
+    const { employeeName, employeeID, contactNumber, email, password  } = dealerDetails;
+    if (!employeeName || !employeeID || !contactNumber || !email || !password) {
       toast.error("All fields are required.");
       return;
     }
@@ -102,6 +116,10 @@ const Create_dealer = () => {
     }
     if (!/^[0-9]+$/.test(contactNumber)) {
       toast.error("Contact number should contain only digits.");
+      return;
+    }
+    if (!validatePassword(password)) {
+      toast.error("Password must have at least 8 characters, one uppercase letter, one lowercase letter, and one special character.");
       return;
     }
 
@@ -132,6 +150,14 @@ const Create_dealer = () => {
        });
       toast.success("Dealer is Created with level 1");
       }
+      // Reset form fields
+      setDealerDetails({
+        employeeName: '',
+        employeeID: '',
+        contactNumber: '',
+        email: '',
+        password: ''
+      });
       
       
       /*if (!dealerDocSnap.empty) {
@@ -149,7 +175,7 @@ const Create_dealer = () => {
         toast.success("Email added to cug collection");
       }*/
     }catch (error) {
-      console.error("Error creating dealer:", error);
+      console.error("Error in creating dealer:", error);
       toast.error(`An error occurred while creating the dealer: ${error.message}`);
     }
     
@@ -157,10 +183,10 @@ const Create_dealer = () => {
 
 
 
-  return (
-    <>
+ /* return (
+    <div>
       <Toaster />
-      {!showDetails ? (
+      
         <div className="flex flex-col items-center  min-h-screen bg-white">
           <div className="w-full bg-blue-700 py-4 flex mb-10 justify-between items-center px-4 md:px-8">
             <h1 className="text-2xl md:text-3xl text-white">Create Dealer</h1>
@@ -276,6 +302,113 @@ const Create_dealer = () => {
       )}
     </>
   );
+};
+
+export default Create_dealer;
+*/
+return (
+  <>
+    <Toaster />
+    <div className="relative flex flex-col items-center p-6 min-h-screen bg-gray-100">
+      <h1 className="text-xl font-bold mb-6 text-blue-600">Create Dealer</h1>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 w-full max-w-4xl">
+        <div>
+          <label className="block text-sm font-medium text-gray-700">
+            Employee Name
+          </label>
+          <input
+            type="text"
+            name="employeeName"
+            value={dealerDetails.employeeName}
+            onChange={handleInputChange}
+            className="mt-1 block w-full px-3 py-2 border text-black border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm bg-white"
+            placeholder="Enter employee name"
+          />
+        </div>
+        <div>
+          <label className="block text-sm font-medium text-gray-700">
+            Employee ID
+          </label>
+          <input
+            type="text"
+            name="employeeID"
+            value={dealerDetails.employeeID}
+            onChange={handleInputChange}
+            className="mt-1 block w-full px-3 py-2 border text-black border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm bg-white"
+            placeholder="Enter employee ID"
+          />
+        </div>
+        <div>
+          <label className="block text-sm font-medium text-gray-700">
+            Contact Number
+          </label>
+          <input
+            type="text"
+            name="contactNumber"
+            value={dealerDetails.contactNumber}
+            onChange={handleInputChange}
+            className="mt-1 block w-full px-3 py-2 border text-black border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm bg-white"
+            placeholder="Enter contact number"
+          />
+        </div>
+        <div>
+          <label className="block text-sm font-medium text-gray-700">
+            Email
+          </label>
+          <input
+            type="email"
+            name="email"
+            value={dealerDetails.email}
+            onChange={handleInputChange}
+            className="mt-1 block w-full px-3 py-2 border text-black border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm bg-white"
+            placeholder="Enter email address"
+          />
+        </div>
+        <div className="relative">
+            <label className="block text-sm font-medium text-gray-700">
+              Password
+            </label>
+            <div className="flex items-center mt-1">
+            <input
+              type={showPassword ? "text" : "password"}
+              name="password"
+              value={dealerDetails.password}
+              onChange={handleInputChange}
+              className="block w-full px-3 py-2 border text-black border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm bg-white"
+              //className="mt-1 block w-full px-3 py-2 border text-black border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm bg-white"
+              placeholder="Enter password"
+            />
+            <button
+              type="button"
+              className="ml-2 p-2 text-sm text-white bg-blue-500 rounded-md hover:bg-blue-700"
+              //className="absolute inset-y-0 right-0 px-3 py-2 text-sm text-gray-500"
+              onClick={() => setShowPassword(!showPassword)}
+            >
+              {showPassword ? "Hide" : "Show"}
+            </button>
+            </div>
+            <div className="mt-2 text-xs text-gray-600">
+              <ul>
+                <li>Password must have at least 8 characters</li>
+                <li>At least one uppercase letter</li>
+                <li>At least one lowercase letter</li>
+                <li>At least one special character</li>
+              </ul>
+            </div>
+          </div>
+      </div>
+      <div className="flex justify-center mt-4">
+        <button
+          type="submit"
+          className="bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-700"
+          onClick={handleSubmission}
+        >
+          Submit
+        </button>
+      </div>
+    </div>
+  </>
+);
 };
 
 export default Create_dealer;
