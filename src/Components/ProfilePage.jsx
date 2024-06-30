@@ -8,7 +8,7 @@ const ProfilePage = () => {
     email: 'john.doe@example.com',
     phone: '123-456-7890',
     address: '123 Main St, Anytown, USA',
-    bio: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
+    bio: 'WELCOME TO CLOSED USER GROUP OF ECor',
     profilePic: 'https://via.placeholder.com/150',
   };
 
