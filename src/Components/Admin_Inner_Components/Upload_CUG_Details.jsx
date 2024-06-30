@@ -12,6 +12,11 @@ function Upload_CUG_Details() {
   const handleFileChange = async (e) => {
     const selectedFile = e.target.files[0];
     if (selectedFile) {
+      if (selectedFile.type !== 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet') {
+        alert('Please upload a .xlsx file.');
+        return;
+      }
+
       setFile(selectedFile);
       setLoading(true);
 
@@ -99,6 +104,7 @@ function Upload_CUG_Details() {
           <h2 className="text-xl mb-4 text-black">Upload File</h2>
           <input
             type="file"
+            accept=".xlsx"
             className="bg-gray-100 p-2 mb-4 rounded-lg w-full focus:outline-none focus:ring-2 focus:ring-blue-500 text-black"
             onChange={handleFileChange}
           />

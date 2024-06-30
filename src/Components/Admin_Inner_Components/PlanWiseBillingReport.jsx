@@ -40,7 +40,7 @@ function PlanWiseReportBilling() {
             employeeName: data1.employeeName,
             selectedDepartment: data1.selectedDepartment,
             selectedDivision: data1.selectedDivision,
-            selectedAllocation: data1.selectedAllocation
+            selectedAllocation: data1.selectedAllocation,
           });
         });
         console.log(rows);
@@ -73,6 +73,31 @@ function PlanWiseReportBilling() {
     setCurrentPage(pageNumber);
   };
 
+  // Helper function to create pagination numbers with ellipses
+  const getPaginationNumbers = () => {
+    const pages = [];
+    const maxPagesToShow = 3;
+    let startPage = Math.max(currentPage - 1, 1);
+    let endPage = Math.min(startPage + maxPagesToShow - 1, totalPages);
+
+    if (endPage - startPage < maxPagesToShow - 1) {
+      startPage = Math.max(endPage - maxPagesToShow + 1, 1);
+    }
+
+    for (let i = startPage; i <= endPage; i++) {
+      pages.push(i);
+    }
+
+    if (startPage > 1) {
+      pages.unshift('...');
+    }
+    if (endPage < totalPages) {
+      pages.push('...');
+    }
+
+    return pages;
+  };
+
   return (
     <div className="min-h-screen bg-white flex flex-col text-gray-800">
       {/* Header */}
@@ -91,7 +116,9 @@ function PlanWiseReportBilling() {
               onChange={handleOperatorChange}
               className="bg-blue-100 p-2 mb-4 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
             >
-              <option value="" disabled>Select Operator</option>
+              <option value="" disabled>
+                Select Operator
+              </option>
               <option value="JIO">JIO</option>
               <option value="AIRTEL">AIRTEL</option>
               <option value="VODAFONE">VODAFONE</option>
@@ -101,7 +128,9 @@ function PlanWiseReportBilling() {
               onChange={handlePlanChange}
               className="bg-blue-100 p-2 mb-4 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
             >
-              <option value="" disabled>Select Plan</option>
+              <option value="" disabled>
+                Select Plan
+              </option>
               <option value="Plan A">Plan A</option>
               <option value="Plan B">Plan B</option>
               <option value="Plan C">Plan C</option>
@@ -160,15 +189,16 @@ function PlanWiseReportBilling() {
             >
               Prev
             </button>
-            {Array.from({ length: totalPages }).map((_, index) => (
+            {getPaginationNumbers().map((page, index) => (
               <button
                 key={index}
-                onClick={() => handlePageChange(index + 1)}
+                onClick={() => typeof page === 'number' && handlePageChange(page)}
                 className={`py-1 px-3 rounded-lg mx-1 ${
-                  currentPage === index + 1 ? 'bg-blue-700 text-white' : 'bg-gray-200 text-gray-700'
+                  currentPage === page ? 'bg-blue-700 text-white' : 'bg-gray-200 text-gray-700'
                 }`}
+                disabled={typeof page !== 'number'}
               >
-                {index + 1}
+                {page}
               </button>
             ))}
             <button
