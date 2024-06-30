@@ -4,7 +4,7 @@ import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { collection, writeBatch, doc } from 'firebase/firestore';
 import * as XLSX from 'xlsx';
 
-function Upload_CUG_Details() {
+function Upload_Plan_Details() {
   const [operator, setOperator] = useState('');
   const [file, setFile] = useState(null);
   const [uploadedFileURL, setUploadedFileURL] = useState('');
@@ -22,7 +22,7 @@ function Upload_CUG_Details() {
       setLoading(true);
 
       try {
-        const fileRef = ref(storage, `cug_details/${selectedFile.name}`);
+        const fileRef = ref(storage, `Plan_report/${selectedFile.name}`);
         await uploadBytes(fileRef, selectedFile);
         const fileURL = await getDownloadURL(fileRef);
         setUploadedFileURL(fileURL);
@@ -57,12 +57,12 @@ function Upload_CUG_Details() {
 
           const batch = writeBatch(db);
           jsonData.forEach((row) => {
-            const docRef = doc(collection(db, 'cug_details'));
+            const docRef = doc(collection(db, 'Plan_report'));
             batch.set(docRef, row);
           });
           await batch.commit();
 
-          await addDoc(collection(db, 'cug_details_files'), {
+          await addDoc(collection(db, 'Plan_report_files'), {
             operator,
             fileName: file.name,
             fileURL: uploadedFileURL,
@@ -99,7 +99,7 @@ function Upload_CUG_Details() {
   return (
     <div className="min-h-screen bg-white flex flex-col">
       <div className="w-full bg-blue-700 py-4 flex justify-start px-4 md:px-8">
-        <h1 className="text-2xl md:text-3xl text-white">Upload CUG Details</h1>
+        <h1 className="text-2xl md:text-3xl text-white">Upload Plan Details</h1>
       </div>
 
       <div className="flex flex-col items-center justify-center flex-grow p-4">
@@ -145,4 +145,4 @@ function Upload_CUG_Details() {
   );
 }
 
-export default Upload_CUG_Details;
+export default Upload_Plan_Details;
