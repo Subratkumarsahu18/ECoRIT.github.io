@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
 import { storage, db } from '../../firebaseConfig';
-import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
-import { collection, addDoc } from "firebase/firestore"; 
+import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
+import { collection, writeBatch, doc } from 'firebase/firestore';
+import * as XLSX from 'xlsx';
 
-function Upload_Plan_Details() {
+function Upload_CUG_Details() {
   const [operator, setOperator] = useState('');
   const [file, setFile] = useState(null);
   const [uploadedFileURL, setUploadedFileURL] = useState('');
@@ -16,17 +17,19 @@ function Upload_Plan_Details() {
         alert('Please upload a .xlsx file.');
         return;
       }
+
       setFile(selectedFile);
       setLoading(true);
+
       try {
-        const fileRef = ref(storage, `Plan_report/${selectedFile.name}`);
+        const fileRef = ref(storage, `cug_details/${selectedFile.name}`);
         await uploadBytes(fileRef, selectedFile);
         const fileURL = await getDownloadURL(fileRef);
         setUploadedFileURL(fileURL);
+        setLoading(false);
       } catch (error) {
-        console.error("Error uploading file: ", error);
+        console.error('Error uploading file: ', error);
         alert('Failed to upload file.');
-      } finally {
         setLoading(false);
       }
     }
@@ -42,20 +45,43 @@ function Upload_Plan_Details() {
     setLoading(true);
 
     try {
-      await addDoc(collection(db, 'Plan_report'), {
-        operator,
-        fileName: file.name,
-        fileURL: uploadedFileURL,
-        uploadedAt: new Date(),
-      });
+      const reader = new FileReader();
+      reader.onload = async (event) => {
+        try {
+          const arrayBuffer = event.target.result;
+          const data = new Uint8Array(arrayBuffer);
+          const workbook = XLSX.read(data, { type: 'array' });
+          const firstSheetName = workbook.SheetNames[0];
+          const worksheet = workbook.Sheets[firstSheetName];
+          const jsonData = XLSX.utils.sheet_to_json(worksheet);
 
-      alert('File uploaded successfully!');
-      setOperator('');
-      setFile(null);
-      setUploadedFileURL('');
-      e.target.reset(); // Reset the form fields
+          const batch = writeBatch(db);
+          jsonData.forEach((row) => {
+            const docRef = doc(collection(db, 'cug_details'));
+            batch.set(docRef, row);
+          });
+          await batch.commit();
+
+          await addDoc(collection(db, 'cug_details_files'), {
+            operator,
+            fileName: file.name,
+            fileURL: uploadedFileURL,
+            uploadedAt: new Date(),
+          });
+
+          alert('File uploaded successfully!');
+          setOperator('');
+          setFile(null);
+          setUploadedFileURL('');
+          e.target.reset(); // Reset the form fields
+        } catch (err) {
+          console.error('Error parsing or uploading file data: ', err);
+          alert('Failed to process and upload file.');
+        }
+      };
+      reader.readAsArrayBuffer(file);
     } catch (error) {
-      console.error("Error uploading file: ", error);
+      console.error('Error uploading file: ', error);
       alert('Failed to upload file.');
     } finally {
       setLoading(false);
@@ -73,7 +99,7 @@ function Upload_Plan_Details() {
   return (
     <div className="min-h-screen bg-white flex flex-col">
       <div className="w-full bg-blue-700 py-4 flex justify-start px-4 md:px-8">
-        <h1 className="text-2xl md:text-3xl text-white">Upload Plan Details</h1>
+        <h1 className="text-2xl md:text-3xl text-white">Upload CUG Details</h1>
       </div>
 
       <div className="flex flex-col items-center justify-center flex-grow p-4">
@@ -119,4 +145,4 @@ function Upload_Plan_Details() {
   );
 }
 
-export default Upload_Plan_Details;
+export default Upload_CUG_Details;
