@@ -15,7 +15,7 @@ function PlanWiseReportBilling() {
   };
 
   const handlePlanChange = (e) => {
-    setPlan(e.target.value);
+    setPlan(e.target.value) ;
   };
 
   // Function to handle form submission and query the database
