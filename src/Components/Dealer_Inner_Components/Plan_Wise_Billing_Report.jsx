@@ -1,155 +1,190 @@
-import React, { useEffect, useState } from "react";
-import { Routes, Route, Link, useNavigate, Navigate } from "react-router-dom";
-import AllocationWiseReport from "./Admin_Inner_Components/Allocation_Wise_Report";
-import PlanWiseBillingReport from "./Admin_Inner_Components/PlanWiseBillingReport";
-import Activate_Deactivate_CUG from "./Admin_Inner_Components/Activate_Deactivate_CUG";
-import Create_dealer from "./Admin_Inner_Components/Create_dealer";
-import Add_new_CUG from "./Admin_Inner_Components/Add_new_CUG";
-import CUG_Status_Report from "./Admin_Inner_Components/CUG_Status_Report";
-import Upload_CUG_Bill from "./Admin_Inner_Components/Upload_CUG_Bill";
-import Upload_new_CUG_Number from "./Admin_Inner_Components/Upload_new_CUG_Number";
-import Allotment_History from "./Admin_Inner_Components/Allotment_History";
-import PrivacyPolicy from "./PrivacyPolicy";
-import file from "../pics/file.png";
-import statisticsImage from "../pics/image.png";
-import Header from "./Header";
-import Footer from "./Footer";
+import React, { useState } from 'react';
+import { db } from '../../firebaseConfig'; // Adjust the path if your firebaseConfig.js is in a different directory
+import { collection, query, where, getDocs } from 'firebase/firestore';
 
-function Admin_dashboard() {
-  const [activeLink, setActiveLink] = useState("createdealer");
-  const [dropdownOpen, setDropdownOpen] = useState(false);
-  const navigate = useNavigate();
+function PlanWiseReportBilling() {
+  const [viewTable, setViewTable] = useState(false);
+  const [operator, setOperator] = useState('');
+  const [plan, setPlan] = useState('');
+  const [data, setData] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [rowsPerPage] = useState(10); // Number of rows per page
 
-  const handleNavLinkClick = (link) => {
-    setActiveLink(link);
-    setDropdownOpen(false);
+  const handleOperatorChange = (e) => {
+    setOperator(e.target.value);
   };
 
-  const toggleDropdown = () => {
-    setDropdownOpen(!dropdownOpen);
+  const handlePlanChange = (e) => {
+    setPlan(e.target.value);
+  };
+
+  // Function to handle form submission and query the database
+  const handleSubmit = async () => {
+    if (operator && plan) {
+      console.log(operator,plan);
+      const q = query(
+        collection(db, 'cug'),
+        where('selectedOperator', '==', operator),
+        where('selectedPlan', '==', plan)
+      );
+
+      try {
+        const querySnapshot = await getDocs(q);
+        const rows = [];
+        querySnapshot.forEach((doc) => {
+          const data1 = doc.data();
+          console.log(data1);
+          rows.push({
+            selectedCUG: data1.selectedCUG,
+            employeeId: data1.employeeNumber,
+            employeeName: data1.employeeName,
+            selectedDepartment: data1.selectedDepartment,
+            selectedDivision: data1.selectedDivision,
+            selectedAllocation: data1.selectedAllocation
+          });
+        });
+        console.log(rows);
+        setData(rows);
+        setViewTable(true);
+      } catch (error) {
+        console.error('Error fetching data: ', error);
+        // Handle error appropriately (e.g., show error message)
+      }
+    } else {
+      alert('Please select an operator and a plan.');
+    }
+  };
+
+  // Pagination logic
+  const indexOfLastRow = currentPage * rowsPerPage;
+  const indexOfFirstRow = indexOfLastRow - rowsPerPage;
+  const currentRows = data.slice(indexOfFirstRow, indexOfLastRow);
+  const totalPages = Math.ceil(data.length / rowsPerPage);
+
+  const handlePreviousPage = () => {
+    setCurrentPage((prev) => Math.max(prev - 1, 1));
+  };
+
+  const handleNextPage = () => {
+    setCurrentPage((prev) => Math.min(prev + 1, totalPages));
+  };
+
+  const handlePageChange = (pageNumber) => {
+    setCurrentPage(pageNumber);
   };
 
   return (
-    <div className="min-h-screen bg-white flex flex-col text-white">
-      <Header />
-      <h2 className="text-2xl -mb-4 text-[#2664eb] font-semibold text-center mt-10">
-        Welcome To Admin Dashboard
-      </h2>
-      <div className="p-4 md:p-8 flex lg:flex-row flex-col">
-        <div className="relative flex flex-col mb-4 md:mb-0 lg:w-1/6">
-          <button
-            className="lg:hidden bg-[#334A7F] text-white p-2 rounded-md mb-4"
-            onClick={toggleDropdown}
-          >
-            ☰ Menu
-          </button>
-          <div
-            className={`${
-              dropdownOpen ? "block" : "hidden"
-            } lg:block lg:relative bg-[#334A7F] p-4 rounded-md lg:rounded-none lg:bg-transparent overflow-y-auto max-h-96 lg:max-h-[calc(100vh-80px)] w-full`}
-          >
-            <NavLinkButton
-              to="createdealer"
-              activeLink={activeLink}
-              onClick={handleNavLinkClick}
-            >
-              Create Dealer
-            </NavLinkButton>
-            <NavLinkButton
-              to="activecug"
-              activeLink={activeLink}
-              onClick={handleNavLinkClick}
-            >
-              View/Deactivate CUG 
-            </NavLinkButton>
-            <NavLinkButton
-              to="addcug"
-              activeLink={activeLink}
-              onClick={handleNavLinkClick}
-            >
-              Activate New CUG
-            </NavLinkButton>
-            <NavLinkButton
-              to="cugstatusreport"
-              activeLink={activeLink}
-              onClick={handleNavLinkClick}
-            >
-              CUG Status Report
-            </NavLinkButton>
-            <NavLinkButton
-              to="allotmenthistory"
-              activeLink={activeLink}
-              onClick={handleNavLinkClick}
-            >
-              Allotment History
-            </NavLinkButton>
-            <NavLinkButton
-              to="allocreport"
-              activeLink={activeLink}
-              onClick={handleNavLinkClick}
-            >
-              Allocation Report
-            </NavLinkButton>
-            <NavLinkButton
-              to="planreport"
-              activeLink={activeLink}
-              onClick={handleNavLinkClick}
-            >
-              Plan-wise Report 
-            </NavLinkButton>
-            <NavLinkButton
-              to="uploadcugbill"
-              activeLink={activeLink}
-              onClick={handleNavLinkClick}
-            >
-              Upload CUG Details
-            </NavLinkButton>
-            <NavLinkButton
-              to="uploadnewnumber"
-              activeLink={activeLink}
-              onClick={handleNavLinkClick}
-            >
-              Upload Plan Details
-            </NavLinkButton>
-          </div>
-        </div>
-        <div className="w-full lg:ml-4">
-          <Routes>
-            <Route
-              path="/"
-              element={<Navigate to="/Admin_dashboard/createdealer" />}
-            />
-            <Route path="activecug" element={<Activate_Deactivate_CUG />} />
-            <Route path="addcug" element={<Add_new_CUG />} />
-            <Route path="allocreport" element={<AllocationWiseReport />} />
-            <Route path="allotmenthistory" element={<Allotment_History />} />
-            <Route path="createdealer" element={<Create_dealer />} />
-            <Route path="cugstatusreport" element={<CUG_Status_Report />} />
-            <Route path="planreport" element={<PlanWiseBillingReport />} />
-            <Route path="uploadcugbill" element={<Upload_CUG_Bill />} />
-            <Route path="uploadnewnumber" element={<Upload_new_CUG_Number />} />
-          </Routes>
-        </div>
+    <div className="min-h-screen bg-white flex flex-col text-gray-800">
+      {/* Header */}
+      <div className="w-full bg-blue-700 py-4 flex justify-between items-center px-4 md:px-8">
+        <h1 className="text-2xl md:text-3xl text-white">Plan Wise Report</h1>
       </div>
-      <Footer />
+
+      {/* Main Content */}
+      <div className="flex flex-col items-center justify-center flex-grow p-4">
+        {/* Form */}
+        <form className="bg-gray-100 p-6 rounded-lg shadow-lg mb-8">
+          <h2 className="text-xl mb-4 text-blue-700">Select Operator and Plan</h2>
+          <div className="flex space-x-4">
+            <select
+              value={operator}
+              onChange={handleOperatorChange}
+              className="bg-blue-100 p-2 mb-4 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+            >
+              <option value="" disabled>Select Operator</option>
+              <option value="JIO">JIO</option>
+              <option value="AIRTEL">AIRTEL</option>
+              <option value="VODAFONE">VODAFONE</option>
+            </select>
+            <select
+              value={plan}
+              onChange={handlePlanChange}
+              className="bg-blue-100 p-2 mb-4 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+            >
+              <option value="" disabled>Select Plan</option>
+              <option value="Plan A">Plan A</option>
+              <option value="Plan B">Plan B</option>
+              <option value="Plan C">Plan C</option>
+            </select>
+          </div>
+          <button
+            type="button"
+            onClick={handleSubmit}
+            className="bg-blue-700 text-white py-2 px-4 rounded-lg hover:bg-blue-800"
+          >
+            Submit
+          </button>
+        </form>
+
+        {/* Table */}
+        {viewTable && (
+          <div className="overflow-x-auto w-full">
+            <table className="min-w-full bg-white rounded-lg shadow-lg">
+              <thead>
+                <tr className="w-full bg-blue-700 text-white">
+                  <th className="p-3 text-left">Serial No.</th>
+                  <th className="p-3 text-left">CUG Number</th>
+                  <th className="p-3 text-left">Employee ID</th>
+                  <th className="p-3 text-left">Employee Name</th>
+                  <th className="p-3 text-left">Department</th>
+                  <th className="p-3 text-left">Division</th>
+                  <th className="p-3 text-left">Allocation Number</th>
+                </tr>
+              </thead>
+              <tbody>
+                {currentRows.map((row, index) => (
+                  <tr key={index} className="border-b border-gray-200">
+                    <td className="p-3">{indexOfFirstRow + index + 1}</td>
+                    <td className="p-3">{row.selectedCUG}</td>
+                    <td className="p-3">{row.employeeId}</td>
+                    <td className="p-3">{row.employeeName}</td>
+                    <td className="p-3">{row.selectedDepartment}</td>
+                    <td className="p-3">{row.selectedDivision}</td>
+                    <td className="p-3">{row.selectedAllocation}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
+
+        {/* Pagination controls */}
+        {totalPages > 1 && (
+          <div className="flex justify-end items-center mt-4">
+            <button
+              onClick={handlePreviousPage}
+              disabled={currentPage === 1}
+              className={`py-1 px-3 rounded-lg mx-1 ${
+                currentPage === 1 ? 'bg-gray-200 text-gray-700 cursor-not-allowed' : 'bg-blue-700 text-white'
+              }`}
+            >
+              Prev
+            </button>
+            {Array.from({ length: totalPages }).map((_, index) => (
+              <button
+                key={index}
+                onClick={() => handlePageChange(index + 1)}
+                className={`py-1 px-3 rounded-lg mx-1 ${
+                  currentPage === index + 1 ? 'bg-blue-700 text-white' : 'bg-gray-200 text-gray-700'
+                }`}
+              >
+                {index + 1}
+              </button>
+            ))}
+            <button
+              onClick={handleNextPage}
+              disabled={currentPage === totalPages}
+              className={`py-1 px-3 rounded-lg mx-1 ${
+                currentPage === totalPages ? 'bg-gray-200 text-gray-700 cursor-not-allowed' : 'bg-blue-700 text-white'
+              }`}
+            >
+              Next
+            </button>
+          </div>
+        )}
+      </div>
     </div>
   );
 }
 
-const NavLinkButton = ({ to, activeLink, onClick, children }) => {
-  const isActive = activeLink === to;
-
-  return (
-    <Link to={to} onClick={() => onClick(to)}>
-      <button
-        className={`w-full h-20 bg-[#334A7F] hover:scale-90 duration-500 rounded-lg ${
-          isActive ? "bg-cyan-500" : ""
-        } mb-2`}
-      >
-        {children}
-      </button>
-    </Link>
-  );
-};
-
-export default Admin_dashboard;
+export default PlanWiseReportBilling;
