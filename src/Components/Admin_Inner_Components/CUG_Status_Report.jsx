@@ -3,28 +3,25 @@ import { db } from '../../firebaseConfig'; // Adjust the path if your firebaseCo
 import { collection, getDocs } from 'firebase/firestore';
 
 function CUG_Status_Report() {
-  const [currentPage, setCurrentPage] = useState(1);
   const [tableData, setTableData] = useState([]);
-  const rowsPerPage = 10; // Number of rows per page
+  const [currentPage, setCurrentPage] = useState(1);
+  const rowsPerPage = 5; // Number of rows per page
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const querySnapshot = await getDocs(collection(db, 'Cug'));
+        const querySnapshot = await getDocs(collection(db, 'cug'));
         let data = [];
         querySnapshot.forEach((doc) => {
           const rowData = {
-            cugNo: doc.data().selectedCUG,
-            employeeId: doc.data().employeeNumber,
-            userName: doc.data().employeeName,
-            activationDate: new Date(doc.data().timestamp.toDate()).toLocaleDateString(),
-            deactivationDate: doc.data().status === 'Inactive' ? new Date(doc.data().deactivatedAt.toDate()).toLocaleDateString() : '-',
-            status: doc.data().status,
+            selectedCUG: doc.data().selectedCUG,
+            employeeNumber: doc.data().employeeNumber,
+            employeeName: doc.data().employeeName,
+            timestamp: doc.data().timestamp.toDate().toLocaleDateString(),
+            deactivatedAt: doc.data().deactivatedAt ? doc.data().deactivatedAt.toDate().toLocaleDateString() : '-',
           };
           data.push(rowData);
         });
-        
-        data.sort((a, b) => new Date(b.activationDate.split('/').reverse().join('-')) - new Date(a.activationDate.split('/').reverse().join('-')));
         setTableData(data);
       } catch (error) {
         console.error('Error fetching data: ', error.message);
@@ -34,20 +31,25 @@ function CUG_Status_Report() {
     fetchData();
   }, []);
 
-  const handlePageChange = (page) => {
-    setCurrentPage(page);
-  };
+  const sortedTableData = tableData.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
 
-  const handlePrevPage = () => {
-    setCurrentPage((prevPage) => Math.max(prevPage - 1, 1));
+  // Pagination logic
+  const indexOfLastRow = currentPage * rowsPerPage;
+  const indexOfFirstRow = indexOfLastRow - rowsPerPage;
+  const currentRows = sortedTableData.slice(indexOfFirstRow, indexOfLastRow);
+  const totalPages = Math.ceil(sortedTableData.length / rowsPerPage);
+
+  const handlePreviousPage = () => {
+    setCurrentPage((prev) => Math.max(prev - 1, 1));
   };
 
   const handleNextPage = () => {
-    setCurrentPage((prevPage) => Math.min(prevPage + 1, totalPages));
+    setCurrentPage((prev) => Math.min(prev + 1, totalPages));
   };
 
-  const totalPages = Math.ceil(tableData.length / rowsPerPage);
-  const displayData = tableData.slice((currentPage - 1) * rowsPerPage, currentPage * rowsPerPage);
+  const handlePageChange = (pageNumber) => {
+    setCurrentPage(pageNumber);
+  };
 
   return (
     <div className="min-h-screen bg-white flex flex-col text-gray-800">
@@ -59,59 +61,58 @@ function CUG_Status_Report() {
       {/* Main Content */}
       <div className="flex flex-col items-center justify-center flex-grow p-4">
         {/* Table */}
-        <div className="overflow-x-auto w-full">
-          <table className="min-w-full bg-white rounded-lg shadow-lg">
-            <thead>
-              <tr className="w-full bg-blue-700 text-white">
-                <th className="p-3 text-left">CUG No</th>
-                <th className="p-3 text-left">Employee ID</th>
-                <th className="p-3 text-left">User Name</th>
-                <th className="p-3 text-left">Activation Date</th>
-                <th className="p-3 text-left">Deactivation Date</th>
-                <th className="p-3 text-left">Status</th>
-              </tr>
-            </thead>
-            <tbody>
-              {displayData.map((row, index) => (
-                <tr key={index} className="border-b border-gray-200">
-                  <td className="p-3">{row.cugNo}</td>
-                  <td className="p-3">{row.employeeId}</td>
-                  <td className="p-3">{row.userName}</td>
-                  <td className="p-3">{row.activationDate}</td>
-                  <td className="p-3">{row.deactivationDate}</td>
-                  <td className="p-3">{row.status}</td>
+        <div className="w-full">
+          <div className="overflow-x-auto">
+            <table className="min-w-full bg-white rounded-lg shadow-lg">
+              <thead>
+                <tr className="w-full bg-blue-700 text-white">
+                  <th className="p-3 text-left">CUG No</th>
+                  <th className="p-3 text-left">Employee ID</th>
+                  <th className="p-3 text-left">User Name</th>
+                  <th className="p-3 text-left">Activation Date</th>
+                  <th className="p-3 text-left">Deactivation Date</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
-          {/* Pagination */}
-          <div className="flex justify-end mt-4">
-            <button
-              onClick={handlePrevPage}
-              disabled={currentPage === 1}
-              className="mx-1 px-3 py-1 rounded-lg bg-gray-200 text-gray-800 hover:bg-gray-300"
-            >
-              &lt; Prev
-            </button>
-            {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
-              <button
-                key={page}
-                onClick={() => handlePageChange(page)}
-                className={`mx-1 px-3 py-1 rounded-lg ${
-                  currentPage === page ? 'bg-blue-700 text-white' : 'bg-gray-200 text-gray-800 hover:bg-gray-300'
-                }`}
-              >
-                {page}
-              </button>
-            ))}
-            <button
-              onClick={handleNextPage}
-              disabled={currentPage === totalPages}
-              className="mx-1 px-3 py-1 rounded-lg bg-gray-200 text-gray-800 hover:bg-gray-300"
-            >
-              Next &gt;
-            </button>
+              </thead>
+              <tbody>
+                {currentRows.map((row, index) => (
+                  <tr key={index} className="border-b border-gray-200">
+                    <td className="p-3">{row.selectedCUG}</td>
+                    <td className="p-3">{row.employeeNumber}</td>
+                    <td className="p-3">{row.employeeName}</td>
+                    <td className="p-3">{row.timestamp}</td>
+                    <td className="p-3">{row.deactivatedAt}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
           </div>
+          {sortedTableData.length > rowsPerPage && (
+            <div className="flex justify-end items-center mt-4">
+              <button
+                onClick={handlePreviousPage}
+                disabled={currentPage === 1}
+                className="bg-gray-200 text-gray-700 py-1 px-3 rounded-lg mx-1 disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                Prev
+              </button>
+              {[...Array(totalPages).keys()].map((number) => (
+                <button
+                  key={number + 1}
+                  onClick={() => handlePageChange(number + 1)}
+                  className={`py-1 px-3 rounded-lg mx-1 ${currentPage === number + 1 ? 'bg-blue-700 text-white' : 'bg-gray-200 text-gray-700'}`}
+                >
+                  {number + 1}
+                </button>
+              ))}
+              <button
+                onClick={handleNextPage}
+                disabled={currentPage === totalPages}
+                className="bg-gray-200 text-gray-700 py-1 px-3 rounded-lg mx-1 disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                Next
+              </button>
+            </div>
+          )}
         </div>
       </div>
     </div>
