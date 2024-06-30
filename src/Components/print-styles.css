@@ -1,0 +1,23 @@
+
+/* print-styles.css */
+
+/* Ensure full width and minimal margins */
+body {
+    width: 100%;
+    margin: 0;
+    padding: 0;
+  }
+  
+  /* Remove unnecessary page breaks */
+  @media print {
+    /* Remove extra spacing between lines */
+    p, td, th {
+      margin: 0;
+      padding: 0;
+    }
+  
+    /* Ensure table rows stay together */
+    tr {
+      page-break-inside: avoid;
+    }
+  }

@@ -11,6 +11,7 @@ import TermsOfService from "./Components/TermsOfService";
 import ContactForm from "./Components/ContactForm";
 import ProfilePage from "./Components/ProfilePage";
 import OperatorPage from "./Components/OperatorPage";
+import ReportPage from "./Components/ReportPage";
 
 function App() {
   const [count, setCount] = useState(0);
@@ -26,6 +27,8 @@ function App() {
         <Route path="/ContactForm" element={<ContactForm />} />
         <Route path="/ProfilePage" element={<ProfilePage />} />
         <Route path="/OperatorPage" element={<OperatorPage />} />
+        <Route path="/report" element={<ReportPage />} />
+
       </Routes>
     </BrowserRouter>
   );
