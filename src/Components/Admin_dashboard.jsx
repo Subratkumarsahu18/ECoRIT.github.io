@@ -14,11 +14,35 @@ import file from "../pics/file.png";
 import statisticsImage from "../pics/image.png";
 import Header from "./Header";
 import Footer from "./Footer";
+import {toast,Toaster} from 'react-hot-toast'
+
 
 function Admin_dashboard() {
   const [activeLink, setActiveLink] = useState("createdealer");
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const navigate = useNavigate();
+
+
+  const [loading, setloading] = useState(true);
+  const [user, setuser] = useState(null);
+
+  useEffect(() => {
+    if(localStorage.getItem('user')==0){
+      setloading(false);
+
+    }
+    else{
+      toast.error('action not allowed');
+      setTimeout(() => {
+        navigate('/');
+      }, 1000);
+
+   
+    }
+    setloading(false);
+  }, [])
+  if(loading) return <>Loading ...</>
+  
 
   const handleNavLinkClick = (link) => {
     setActiveLink(link);
