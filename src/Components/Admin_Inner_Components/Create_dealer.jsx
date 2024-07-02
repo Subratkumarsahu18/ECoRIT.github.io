@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import toast, { Toaster } from "react-hot-toast";
 import { db } from "../../firebaseConfig";
 import { collection, query, where, getDocs, setDoc, doc } from 'firebase/firestore';
+// import { EyeIcon, EyeOffIcon } from '@heroicons/react/solid';
 
 const Create_dealer = () => {
   console.log("Create_dealer component rendered");
@@ -20,17 +21,17 @@ const Create_dealer = () => {
     const { name, value } = event.target;
 
     if (name === "employeeName" && !/^[a-zA-Z\s]*$/.test(value)) {
-      toast.error("Employee Name should contain only alphabets.");
+      alert("Employee Name should contain only alphabets.");
       return;
     }
 
-    if (name === "employeeID" && !/^\d{0,11}$/.test(value)) {
-      toast.error("Employee ID should be numeric and up to 11 digits.");
+    if (name === "employeeID" && !/^[a-zA-Z0-9]{0,11}$/.test(value)) {
+      alert("Employee ID should be alphanumeric and up to 11 characters.");
       return;
     }
 
     if (name === "contactNumber" && !/^\d{0,10}$/.test(value)) {
-      toast.error("Contact Number should be numeric and up to 10 digits.");
+      alert("Contact Number should be numeric and up to 10 digits.");
       return;
     }
 
@@ -68,27 +69,46 @@ const Create_dealer = () => {
     }
 
     try {
-      const adminDocRef = doc(db, "Admin", dealerDetails.employeeID);
-      const adminDocSnap = await getDocs(query(collection(db, "Admin"), where("employeeID", "==", dealerDetails.employeeID)));
+      // Check for existing dealer by employeeID, contactNumber, or email
+      const existingDealersQuery = query(
+        collection(db, "Admin"),
+        where("employeeID", "==", employeeID),
+        where("contactNumber", "==", contactNumber),
+        where("email", "==", email)
+      );
 
-      if (!adminDocSnap.empty) {
-        toast.error("Dealer already exists");
-      } else {
-        await setDoc(adminDocRef, {
-          ...dealerDetails,
-          level: 1
-        });
-        toast.success("Dealer is Created with level 1");
+      const existingDealersSnap = await getDocs(existingDealersQuery);
 
-        // Reset form fields
-        setDealerDetails({
-          employeeName: '',
-          employeeID: '',
-          contactNumber: '',
-          email: '',
-          password: ''
-        });
+      let dealerExists = false;
+
+      existingDealersSnap.forEach(doc => {
+        const data = doc.data();
+        if (data.employeeID === employeeID || data.contactNumber === contactNumber || data.email === email) {
+          dealerExists = true;
+        }
+      });
+
+      if (dealerExists) {
+        toast.error("Dealer with the same Employee ID, Contact Number, or Email already exists.");
+        return;
       }
+
+      const adminDocRef = doc(db, "Admin", dealerDetails.employeeID);
+      await setDoc(adminDocRef, {
+        ...dealerDetails,
+        level: 1
+      });
+
+      toast.success("Dealer is Created with level 1");
+
+      // Reset form fields
+      setDealerDetails({
+        employeeName: '',
+        employeeID: '',
+        contactNumber: '',
+        email: '',
+        password: ''
+      });
     } catch (error) {
       console.error("Error in creating dealer:", error);
       toast.error(`An error occurred while creating the dealer: ${error.message}`);
@@ -171,7 +191,16 @@ const Create_dealer = () => {
                 className="ml-2 p-2 text-sm text-white bg-blue-500 rounded-md hover:bg-blue-700"
                 onClick={() => setShowPassword(!showPassword)}
               >
-                {showPassword ? "Hide" : "Show"}
+                {showPassword ? (
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21" />
+                  </svg>
+                ) : (
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                  </svg>
+                )}
               </button>
             </div>
             <div className="mt-2 text-xs text-gray-600">

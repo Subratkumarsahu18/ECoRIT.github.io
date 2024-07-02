@@ -6,6 +6,7 @@ function CUG_Status_Report() {
   const [tableData, setTableData] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [sortDirection, setSortDirection] = useState('desc'); // Initial sort direction
+  const [loading, setLoading] = useState(true); // Loading state
   const rowsPerPage = 10; // Number of rows per page
 
   useEffect(() => {
@@ -51,8 +52,10 @@ function CUG_Status_Report() {
           }
         });
         setTableData(data);
+        setLoading(false); // Data fetching complete
       } catch (error) {
         console.error('Error fetching data: ', error.message);
+        setLoading(false); // Data fetching complete even if there's an error
       }
     };
 
@@ -143,70 +146,78 @@ function CUG_Status_Report() {
 
       {/* Main Content */}
       <div className="flex flex-col items-center justify-center flex-grow p-4">
-        {/* Table */}
-        <div className="w-full">
-          <div className="overflow-x-auto">
-            <table className="min-w-full bg-white rounded-lg shadow-lg">
-              <thead>
-                <tr className="w-full bg-blue-700 text-white">
-                  <th className="p-3 text-left">Serial No</th>
-                  <th className="p-3 text-left">CUG No</th>
-                  <th className="p-3 text-left">Employee ID</th>
-                  <th className="p-3 text-left">User Name</th>
-                  <th className="p-3 text-left">
-                    Activation Date{' '}
-                    <button onClick={toggleSortDirection}>
-                      {sortDirection === 'asc' ? (
-                        <span>&#9650;</span> // Upward arrow
-                      ) : (
-                        <span>&#9660;</span> // Downward arrow
-                      )}
-                    </button>
-                  </th>
-                  <th className="p-3 text-left">Deactivation Date</th>
-                  <th className="p-3 text-left">Status</th>
-                </tr>
-              </thead>
-              <tbody>
-                {currentRows.map((row, index) => (
-                  <tr key={index} className="border-b border-gray-200">
-                    <td className="p-3">{indexOfFirstRow + index + 1}</td>
-                    <td className="p-3">{row.selectedCUG}</td>
-                    <td className="p-3">{row.employeeNumber}</td>
-                    <td className="p-3">{row.employeeName}</td>
-                    <td className="p-3">{row.timestamp}</td>
-                    <td className="p-3">{row.deactivatedAt}</td>
-                    <td className="p-3">{row.status}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+        {loading ? (
+          <div className="flex items-center justify-center h-full">
+            <div className="loader border-t-4 border-b-4 border-blue-500 rounded-full w-16 h-16 animate-spin"></div>
           </div>
-          {/* Pagination controls */}
-          {totalPages > 1 && (
-            <div className="flex justify-end items-center mt-4">
-              <button
-                onClick={handlePreviousPage}
-                disabled={currentPage === 1}
-                className={`py-1 px-3 rounded-lg mx-1 ${
-                  currentPage === 1 ? 'bg-gray-200 text-gray-700 cursor-not-allowed' : 'bg-blue-700 text-white'
-                }`}
-              >
-                Prev
-              </button>
-              {generatePaginationButtons()}
-              <button
-                onClick={handleNextPage}
-                disabled={currentPage === totalPages}
-                className={`py-1 px-3 rounded-lg mx-1 ${
-                  currentPage === totalPages ? 'bg-gray-200 text-gray-700 cursor-not-allowed' : 'bg-blue-700 text-white'
-                }`}
-              >
-                Next
-              </button>
+        ) : (
+          <>
+            {/* Table */}
+            <div className="w-full">
+              <div className="overflow-x-auto">
+                <table className="min-w-full bg-white rounded-lg shadow-lg">
+                  <thead>
+                    <tr className="w-full bg-blue-700 text-white">
+                      <th className="p-3 text-left">Serial No</th>
+                      <th className="p-3 text-left">CUG No</th>
+                      <th className="p-3 text-left">Employee ID</th>
+                      <th className="p-3 text-left">User Name</th>
+                      <th className="p-3 text-left">
+                        Activation Date{' '}
+                        <button onClick={toggleSortDirection}>
+                          {sortDirection === 'asc' ? (
+                            <span>&#9650;</span> // Upward arrow
+                          ) : (
+                            <span>&#9660;</span> // Downward arrow
+                          )}
+                        </button>
+                      </th>
+                      <th className="p-3 text-left">Deactivation Date</th>
+                      <th className="p-3 text-left">Status</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {currentRows.map((row, index) => (
+                      <tr key={index} className="border-b border-gray-200">
+                        <td className="p-3">{indexOfFirstRow + index + 1}</td>
+                        <td className="p-3">{row.selectedCUG}</td>
+                        <td className="p-3">{row.employeeNumber}</td>
+                        <td className="p-3">{row.employeeName}</td>
+                        <td className="p-3">{row.timestamp}</td>
+                        <td className="p-3">{row.deactivatedAt}</td>
+                        <td className="p-3">{row.status}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+              {/* Pagination controls */}
+              {totalPages > 1 && (
+                <div className="flex justify-end items-center mt-4">
+                  <button
+                    onClick={handlePreviousPage}
+                    disabled={currentPage === 1}
+                    className={`py-1 px-3 rounded-lg mx-1 ${
+                      currentPage === 1 ? 'bg-gray-200 text-gray-700 cursor-not-allowed' : 'bg-blue-700 text-white'
+                    }`}
+                  >
+                    Prev
+                  </button>
+                  {generatePaginationButtons()}
+                  <button
+                    onClick={handleNextPage}
+                    disabled={currentPage === totalPages}
+                    className={`py-1 px-3 rounded-lg mx-1 ${
+                      currentPage === totalPages ? 'bg-gray-200 text-gray-700 cursor-not-allowed' : 'bg-blue-700 text-white'
+                    }`}
+                  >
+                    Next
+                  </button>
+                </div>
+              )}
             </div>
-          )}
-        </div>
+          </>
+        )}
       </div>
     </div>
   );
