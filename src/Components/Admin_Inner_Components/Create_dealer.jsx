@@ -24,17 +24,18 @@ const Create_dealer = () => {
       alert("Employee Name should contain only alphabets.");
       return;
     }
+    
 
-    if (name === "employeeID" && !/^[a-zA-Z0-9]{0,11}$/.test(value)) {
-      alert("Employee ID should be alphanumeric and up to 11 characters.");
+    if (name === "employeeID" && (!/^[a-zA-Z0-9]*$/.test(value)|| value.length > 11)) {
+      alert("Employee ID should be alphanumeric and exactly 11 characters.");
       return;
     }
 
-    if (name === "contactNumber" && !/^\d{0,10}$/.test(value)) {
-      alert("Contact Number should be numeric and up to 10 digits.");
+    if (name === "contactNumber" && (!/^\d*$/.test(value)||value.length > 10)) {
+      alert("Contact Number should be numeric and exactly 10 digits.");
       return;
     }
-
+     
     setDealerDetails({ ...dealerDetails, [name]: value });
   };
 
@@ -57,6 +58,15 @@ const Create_dealer = () => {
       toast.error("All fields are required.");
       return;
     }
+    if (employeeID.length !== 11 || !/^[a-zA-Z0-9]{11}$/.test(employeeID)) {
+      toast.error("Employee ID should be alphanumeric and exactly 11 characters.");
+      return;
+    }
+
+    if (contactNumber.length !== 10 || !/^\d{10}$/.test(contactNumber)) {
+      toast.error("Contact Number should be exactly 10 digits.");
+      return;
+    }
 
     if (!/^\S+@(gmail\.com|yahoo\.com)$/.test(email)) {
       toast.error("Invalid email format. Please use only gmail.com or yahoo.com.");
@@ -69,27 +79,42 @@ const Create_dealer = () => {
     }
 
     try {
-      // Check for existing dealer by employeeID, contactNumber, or email
-      const existingDealersQuery = query(
+      // Check for existing dealer by employeeID
+      const employeeIDQuery = query(
         collection(db, "Admin"),
         where("employeeID", "==", employeeID),
-        where("contactNumber", "==", contactNumber),
-        where("email", "==", email)
+        where("level", "==", 1)
       );
+      const employeeIDSnap = await getDocs(employeeIDQuery);
 
-      const existingDealersSnap = await getDocs(existingDealersQuery);
+      if (!employeeIDSnap.empty) {
+        toast.error(`Dealer with Employee ID ${employeeID} already exists.`);
+        return;
+      }
 
-      let dealerExists = false;
+      // Check for existing dealer by contactNumber
+      const contactNumberQuery = query(
+        collection(db, "Admin"),
+        where("contactNumber", "==", contactNumber),
+        where("level", "==", 1)
+      );
+      const contactNumberSnap = await getDocs(contactNumberQuery);
 
-      existingDealersSnap.forEach(doc => {
-        const data = doc.data();
-        if (data.employeeID === employeeID || data.contactNumber === contactNumber || data.email === email) {
-          dealerExists = true;
-        }
-      });
+      if (!contactNumberSnap.empty) {
+        toast.error(`Dealer with Contact Number ${contactNumber} already exists.`);
+        return;
+      }
 
-      if (dealerExists) {
-        toast.error("Dealer with the same Employee ID, Contact Number, or Email already exists.");
+      // Check for existing dealer by email
+      const emailQuery = query(
+        collection(db, "Admin"),
+        where("email", "==", email),
+        where("level", "==", 1)
+      );
+      const emailSnap = await getDocs(emailQuery);
+
+      if (!emailSnap.empty) {
+        toast.error(`Dealer with Email ${email} already exists.`);
         return;
       }
 
