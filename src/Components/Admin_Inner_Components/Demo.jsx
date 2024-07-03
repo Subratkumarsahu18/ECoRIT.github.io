@@ -26,35 +26,23 @@ function Demo() {
       'C': 39.9,
     };
 
-    const validDepartments = [
-      'ACCOUNTS',
-      'AUDIT',
-      'COMMERCIAL',
-      'ELECTRICAL',
-      'ENGINEERING',
-      'GENERAL ADMIN',
-      'MECHANICAL',
-      'MEDICAL',
-      'OPERATING',
-      'PERSONNEL',
-      'RRB',
-      'SIGNAL AND TELECOM',
-      'SAFETY',
-      'SECURITY',
-      'STORES',
+    const billUnits = ['3101002', '3101003', '3101004', '3101981'];
+    const allocations = [
+      "00873105","00873106","02030519","03011319","03021319","03031319",
+      "03041319","03053319","03061319","03071319","03081319","03091319",
+      "03092319","03093319","11021519","12011619"
     ];
+    const operators = ['JIO', 'AIRTEL', 'VODAFONE'];
 
     for (let rowIndex = 0; rowIndex < data.length; rowIndex++) {
       const row = data[rowIndex];
-      const empNumber = row['EMP NO'] ? row['EMP NO'].toString() : '';
       const cugNumber = row['CUG NO'] ? row['CUG NO'].toString() : '';
       const plan = row['PLAN'];
       const price = parseFloat(row['PRICE']);
-      const department = row['DEPARTMENT'];
+      const billUnit = row['BILL UNIT'];
+      const allocation = row['ALLOCATION'];
+      const operator = row['OPERATOR'];
 
-      if (empNumber.length !== 11) {
-        return `Invalid EMP NO at row ${rowIndex + 2}. EMP NO must be exactly 11 characters.`;
-      }
       if (cugNumber.length !== 10 || !/^\d+$/.test(cugNumber)) {
         return `Invalid CUG NO at row ${rowIndex + 2}. CUG NO must be exactly 10 digits.`;
       }
@@ -64,8 +52,14 @@ function Demo() {
       if (price !== planPrices[plan]) {
         return `Invalid PRICE at row ${rowIndex + 2}. PRICE must be ${planPrices[plan]} for PLAN ${plan}.`;
       }
-      if (!validDepartments.includes(department)) {
-        return `Invalid DEPARTMENT at row ${rowIndex + 2}. DEPARTMENT must be one of the allowed values.`;
+      if (!billUnits.includes(billUnit)) {
+        return `Invalid BILL UNIT at row ${rowIndex + 2}. Allowed values are: ${billUnits.join(', ')}.`;
+      }
+      if (!allocations.includes(allocation)) {
+        return `Invalid ALLOCATION at row ${rowIndex + 2}. Allowed values are: ${allocations.join(', ')}.`;
+      }
+      if (!operators.includes(operator)) {
+        return `Invalid OPERATOR at row ${rowIndex + 2}. Allowed values are: ${operators.join(', ')}.`;
       }
     }
 
