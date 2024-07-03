@@ -14,6 +14,8 @@ function CUG_Status_Report() {
       try {
         const querySnapshot = await getDocs(collection(db, 'cug'));
         let data = [];
+        let latestDeactivationData = {};
+
         querySnapshot.forEach((doc) => {
           let timestamp = '-';
           if (doc.data().timestamp instanceof Date) {
@@ -41,8 +43,18 @@ function CUG_Status_Report() {
             deactivatedAt: deactivatedAt,
             status: doc.data().status || '',
           };
-          data.push(rowData);
+
+          const cugNumber = rowData.selectedCUG;
+
+          // Update to keep the latest deactivation date data
+          if (!latestDeactivationData[cugNumber] || new Date(rowData.deactivatedAt) > new Date(latestDeactivationData[cugNumber].deactivatedAt)) {
+            latestDeactivationData[cugNumber] = rowData;
+          }
         });
+
+        // Convert object to array
+        data = Object.values(latestDeactivationData);
+
         // Sort data based on status and timestamp
         data.sort((a, b) => {
           if (a.status !== b.status) {
