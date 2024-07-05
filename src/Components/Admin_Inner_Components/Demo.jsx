@@ -28,19 +28,32 @@ function Demo() {
 
     const billUnits = ['3101002', '3101003', '3101004', '3101981'];
     const allocations = [
-      "00873105","00873106","02030519","03011319","03021319","03031319",
-      "03041319","03053319","03061319","03071319","03081319","03091319",
-      "03092319","03093319","11021519","12011619"
+      "00873105", "00873106", "02030519", "03011319", "03021319", "03031319",
+      "03041319", "03053319", "03061319", "03071319", "03081319", "03091319",
+      "03092319", "03093319", "11021519", "12011619"
     ];
     const operators = ['JIO', 'AIRTEL', 'VODAFONE'];
+
+    const requiredColumns = [
+      "CUG NO", "EMP NO", "NAME", "DESIGNATION", "DEPARTMENT",
+      "BILL UNIT", "ALLOCATION", "OPERATOR", "PLAN", "PRICE"
+    ];
+
+    // Check for required columns
+    const columns = Object.keys(data[0]);
+    for (const col of requiredColumns) {
+      if (!columns.includes(col)) {
+        return `Missing required column: ${col}. Please ensure all required columns are present.`;
+      }
+    }
 
     for (let rowIndex = 0; rowIndex < data.length; rowIndex++) {
       const row = data[rowIndex];
       const cugNumber = row['CUG NO'] ? row['CUG NO'].toString() : '';
       const plan = row['PLAN'];
       const price = parseFloat(row['PRICE']);
-      const billUnit = row['BILL UNIT'];
-      const allocation = row['ALLOCATION'];
+      const billUnit = row['BILL UNIT'] ? row['BILL UNIT'].toString() : '';
+      const allocation = row['ALLOCATION'] ? row['ALLOCATION'].toString() : '';
       const operator = row['OPERATOR'];
 
       if (cugNumber.length !== 10 || !/^\d+$/.test(cugNumber)) {
@@ -52,11 +65,11 @@ function Demo() {
       if (price !== planPrices[plan]) {
         return `Invalid PRICE at row ${rowIndex + 2}. PRICE must be ${planPrices[plan]} for PLAN ${plan}.`;
       }
-      if (!billUnits.includes(billUnit)) {
-        return `Invalid BILL UNIT at row ${rowIndex + 2}. Allowed values are: ${billUnits.join(', ')}.`;
+      if (billUnit.length !== 7 || !/^\d+$/.test(billUnit)) {
+        return `Invalid BILL UNIT at row ${rowIndex + 2}. BILL UNIT must be exactly 7 numeric characters.`;
       }
-      if (!allocations.includes(allocation)) {
-        return `Invalid ALLOCATION at row ${rowIndex + 2}. Allowed values are: ${allocations.join(', ')}.`;
+      if (allocation.length !== 8 || !/^\d+$/.test(allocation)) {
+        return `Invalid ALLOCATION at row ${rowIndex + 2}. ALLOCATION must be exactly 8 numeric characters.`;
       }
       if (!operators.includes(operator)) {
         return `Invalid OPERATOR at row ${rowIndex + 2}. Allowed values are: ${operators.join(', ')}.`;
@@ -97,24 +110,38 @@ function Demo() {
           const batch = writeBatch(db);
           jsonData.forEach((row) => {
             const docRef = doc(collection(db, 'demo'));
-            batch.set(docRef, row);
+            const { PRICE, ...dataToUpload } = row; // Exclude PRICE from the data being uploaded
+
+            // Ensure all fields are strings
+            Object.keys(dataToUpload).forEach(key => {
+              dataToUpload[key] = dataToUpload[key].toString();
+            });
+
+            // Add activation_date and status fields
+            const activationDate = new Date();
+            const activationDateString = activationDate.toLocaleString('en-US', { hour12: true });
+            dataToUpload.activation_date = activationDateString;
+            dataToUpload.status = 'Active';
+
+            batch.set(docRef, dataToUpload);
           });
           await batch.commit();
 
+          setLoading(false); // Hide loader before alert
           alert('File uploaded successfully!');
           setFile(null);
           e.target.reset(); // Reset the form fields
         } catch (err) {
           console.error('Error parsing or uploading file data: ', err);
           alert('Failed to process and upload file.');
+          setLoading(false); // Hide loader if there is an error
         }
       };
       reader.readAsArrayBuffer(file);
     } catch (error) {
       console.error('Error uploading file: ', error);
       alert('Failed to upload file.');
-    } finally {
-      setLoading(false);
+      setLoading(false); // Hide loader if there is an error
     }
   };
 
@@ -140,6 +167,7 @@ function Demo() {
           >
             {loading ? 'Uploading...' : 'Upload'}
           </button>
+          {loading && <div className="loader mt-4"></div>}
         </form>
       </div>
     </div>

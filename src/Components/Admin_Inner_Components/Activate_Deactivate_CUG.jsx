@@ -26,9 +26,9 @@ const ActivateDeactivateNewCUG = () => {
     }
 
     try {
-      const cugCollection = collection(db, "cug");
-      const cugQuery = query(cugCollection, where("selectedCUG", "==", enteredCUG), where("status", "==", "Active"));
-      const querySnapshot = await getDocs(cugQuery);
+      const demoCollection = collection(db, "demo");
+      const demoQuery = query(demoCollection, where("CUG NO", "==", enteredCUG), where("status", "==", "Active"));
+      const querySnapshot = await getDocs(demoQuery);
 
       if (!querySnapshot.empty) {
         querySnapshot.forEach((doc) => {
@@ -48,7 +48,7 @@ const ActivateDeactivateNewCUG = () => {
   const handleDeactivate = async () => {
     if (cugDocId) {
       try {
-        const docRef = doc(db, "cug", cugDocId);
+        const docRef = doc(db, "demo", cugDocId);
         const deactivationTimestamp = Timestamp.now();
         const formattedTimestamp = deactivationTimestamp.toDate().toLocaleString("en-US", {
           year: "numeric",
@@ -62,11 +62,15 @@ const ActivateDeactivateNewCUG = () => {
 
         // Update the CUG document
         await updateDoc(docRef, {
-          status: "Deactivated",
-          deactivatedAt: formattedTimestamp,
+          status: "deactivated",
+          deactivation_date: formattedTimestamp,
         });
 
-        setCugDetails(null);
+        setCugDetails((prevDetails) => ({
+          ...prevDetails,
+          status: "deactivated",
+          deactivation_date: formattedTimestamp,
+        }));
         setdispacdc(false);
         toast.success("CUG deactivated successfully.");
       } catch (error) {
@@ -147,7 +151,7 @@ const ActivateDeactivateNewCUG = () => {
               </label>
               <input
                 type="text"
-                value={cugDetails ? cugDetails.employeeNumber : ""}
+                value={cugDetails ? cugDetails["EMP NO"] : ""}
                 readOnly
                 className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm bg-gray-100"
               />
@@ -158,18 +162,18 @@ const ActivateDeactivateNewCUG = () => {
               </label>
               <input
                 type="text"
-                value={cugDetails ? cugDetails.employeeName : ""}
+                value={cugDetails ? cugDetails.NAME : ""}
                 readOnly
                 className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm bg-gray-100"
               />
             </div>
             <div>
               <label className="block text-sm font-medium text-gray-700">
-                Division
+                Designation
               </label>
               <input
                 type="text"
-                value={cugDetails ? cugDetails.selectedDivision : ""}
+                value={cugDetails ? cugDetails.DESIGNATION : ""}
                 readOnly
                 className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm bg-gray-100"
               />
@@ -180,7 +184,7 @@ const ActivateDeactivateNewCUG = () => {
               </label>
               <input
                 type="text"
-                value={cugDetails ? cugDetails.selectedDepartment : ""}
+                value={cugDetails ? cugDetails.DEPARTMENT : ""}
                 readOnly
                 className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm bg-gray-100"
               />
@@ -191,7 +195,7 @@ const ActivateDeactivateNewCUG = () => {
               </label>
               <input
                 type="text"
-                value={cugDetails ? cugDetails.billUnit : ""}
+                value={cugDetails ? cugDetails["BILL UNIT"] : ""}
                 readOnly
                 className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm bg-gray-100"
               />
@@ -202,7 +206,7 @@ const ActivateDeactivateNewCUG = () => {
               </label>
               <input
                 type="text"
-                value={cugDetails ? cugDetails.selectedAllocation : ""}
+                value={cugDetails ? cugDetails.ALLOCATION : ""}
                 readOnly
                 className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm bg-gray-100"
               />
@@ -212,8 +216,8 @@ const ActivateDeactivateNewCUG = () => {
                 <label className="block text-sm font-medium text-gray-700">
                   Operator:
                 </label>
-                <button className="bg-gray-200 text-gray-500 py-5 px-4 rounded-md cursor-not-allowed">
-                  {cugDetails ? cugDetails.selectedOperator : ""}
+                <button className="bg-gray-200 text-gray-500 py-2 px-4 rounded-md cursor-not-allowed">
+                  {cugDetails ? cugDetails.OPERATOR : ""}
                 </button>
               </div>
               <div className="flex flex-col items-start mr-4">
@@ -221,7 +225,7 @@ const ActivateDeactivateNewCUG = () => {
                   Plan:
                 </label>
                 <button className="bg-gray-200 text-gray-500 py-2 px-4 rounded-md cursor-not-allowed">
-                  {cugDetails ? cugDetails.selectedPlan : ""}
+                  {cugDetails ? cugDetails.PLAN : ""}
                 </button>
               </div>
               <button
@@ -231,14 +235,14 @@ const ActivateDeactivateNewCUG = () => {
                 Deactivate
               </button>
             </div>
-            {cugDetails?.deactivatedAt && (
+            {cugDetails?.deactivation_date && (
               <div className="col-span-1 md:col-span-3 mt-4">
                 <label className="block text-sm font-medium text-gray-700">
                   Deactivated At
                 </label>
                 <input
                   type="text"
-                  value={cugDetails.deactivatedAt}
+                  value={cugDetails.deactivation_date}
                   readOnly
                   className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm bg-gray-100"
                 />
