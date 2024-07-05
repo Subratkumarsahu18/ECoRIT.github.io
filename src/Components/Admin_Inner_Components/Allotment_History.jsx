@@ -12,7 +12,7 @@ function Allotment_History() {
 
   const handleSubmit = () => {
     setErrorMessage('');
-    if (selectedCUG.trim() === '') {
+    if (selectedCUG.trim() === '' || !/^\d{10}$/.test(selectedCUG)) {
       setErrorMessage('Please enter a valid 10-digit CUG number.');
       setTableData([]);
       setView(false);
@@ -24,7 +24,7 @@ function Allotment_History() {
 
   const fetchData = async (cugNumber) => {
     try {
-      const q = query(collection(db, 'cug'), where('selectedCUG', '==', cugNumber));
+      const q = query(collection(db, 'demo'), where('CUG NO', '==', cugNumber));
       const querySnapshot = await getDocs(q);
 
       if (querySnapshot.empty) {
@@ -35,11 +35,11 @@ function Allotment_History() {
         let data = [];
         querySnapshot.forEach((doc) => {
           const rowData = {
-            selectedCUG: doc.data().selectedCUG,
-            employeeNumber: doc.data().employeeNumber,
-            employeeName: doc.data().employeeName,
-            timestamp: doc.data().timestamp,
-            deactivatedAt: doc.data().deactivatedAt || '-',
+            cugNumber: doc.data()['CUG NO'],
+            employeeNumber: doc.data()['EMP NO'],
+            employeeName: doc.data().NAME,
+            activationDate: doc.data().activation_date,
+            deactivationDate: doc.data().deactivation_date || '-',
           };
           data.push(rowData);
         });
@@ -64,7 +64,7 @@ function Allotment_History() {
     }
   };
 
-  const sortedTableData = tableData.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+  const sortedTableData = tableData.sort((a, b) => new Date(b.activationDate) - new Date(a.activationDate));
 
   // Pagination logic
   const indexOfLastRow = currentPage * rowsPerPage;
@@ -146,11 +146,11 @@ function Allotment_History() {
                 <tbody>
                   {currentRows.map((row, index) => (
                     <tr key={index} className="border-b border-gray-200">
-                      <td className="p-3">{row.selectedCUG}</td>
+                      <td className="p-3">{row.cugNumber}</td>
                       <td className="p-3">{row.employeeNumber}</td>
                       <td className="p-3">{row.employeeName}</td>
-                      <td className="p-3">{row.timestamp}</td>
-                      <td className="p-3">{row.deactivatedAt}</td>
+                      <td className="p-3">{row.activationDate}</td>
+                      <td className="p-3">{row.deactivationDate}</td>
                     </tr>
                   ))}
                 </tbody>

@@ -12,48 +12,20 @@ function CUG_Status_Report() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const querySnapshot = await getDocs(collection(db, 'cug'));
+        const querySnapshot = await getDocs(collection(db, 'demo'));
         let data = [];
-        let latestDeactivationData = {};
 
         querySnapshot.forEach((doc) => {
-          let timestamp = '-';
-          if (doc.data().timestamp instanceof Date) {
-            timestamp = doc.data().timestamp.toDate().toLocaleDateString();
-          } else if (doc.data().timestamp && doc.data().timestamp.seconds) {
-            timestamp = new Date(doc.data().timestamp.seconds * 1000).toLocaleDateString();
-          } else if (doc.data().timestamp) {
-            timestamp = new Date(doc.data().timestamp).toLocaleDateString();
-          }
-
-          let deactivatedAt = '-';
-          if (doc.data().deactivatedAt instanceof Date) {
-            deactivatedAt = doc.data().deactivatedAt.toDate().toLocaleDateString();
-          } else if (doc.data().deactivatedAt && doc.data().deactivatedAt.seconds) {
-            deactivatedAt = new Date(doc.data().deactivatedAt.seconds * 1000).toLocaleDateString();
-          } else if (doc.data().deactivatedAt) {
-            deactivatedAt = new Date(doc.data().deactivatedAt).toLocaleDateString();
-          }
-
           const rowData = {
-            selectedCUG: doc.data().selectedCUG || '',
-            employeeNumber: doc.data().employeeNumber || '',
-            employeeName: doc.data().employeeName || '',
-            timestamp: timestamp,
-            deactivatedAt: deactivatedAt,
-            status: doc.data().status || '',
+            selectedCUG: doc.data()['CUG NO'] || '', // Adjust field names according to your Firestore document
+            employeeNumber: doc.data()['EMP NO'] || '', // Adjust field names according to your Firestore document
+            employeeName: doc.data()['NAME'] || '', // Adjust field names according to your Firestore document
+            timestamp: doc.data()['activation_date'] ? new Date(doc.data()['activation_date'].seconds * 1000).toLocaleDateString() : '-', // Adjust field names and date handling
+            deactivatedAt: doc.data()['deactivation_date'] ? new Date(doc.data()['deactivation_date'].seconds * 1000).toLocaleDateString() : '-', // Adjust field names and date handling
+            status: doc.data()['status'] || '', // Adjust field names according to your Firestore document
           };
-
-          const cugNumber = rowData.selectedCUG;
-
-          // Update to keep the latest deactivation date data
-          if (!latestDeactivationData[cugNumber] || new Date(rowData.deactivatedAt) > new Date(latestDeactivationData[cugNumber].deactivatedAt)) {
-            latestDeactivationData[cugNumber] = rowData;
-          }
+          data.push(rowData);
         });
-
-        // Convert object to array
-        data = Object.values(latestDeactivationData);
 
         // Sort data based on status and timestamp
         data.sort((a, b) => {
@@ -63,6 +35,7 @@ function CUG_Status_Report() {
             return sortDirection === 'asc' ? new Date(a.timestamp) - new Date(b.timestamp) : new Date(b.timestamp) - new Date(a.timestamp);
           }
         });
+
         setTableData(data);
         setLoading(false); // Data fetching complete
       } catch (error) {
