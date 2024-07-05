@@ -12,10 +12,12 @@ function PlanWiseReportBilling() {
 
   const handleOperatorChange = (e) => {
     setOperator(e.target.value);
+    setViewTable(false);
   };
 
   const handlePlanChange = (e) => {
     setPlan(e.target.value);
+    setViewTable(false);
   };
 
   // Function to handle form submission and query the database
@@ -47,6 +49,7 @@ function PlanWiseReportBilling() {
         console.log(rows);
         setData(rows);
         setViewTable(true);
+        setCurrentPage(1); // Reset to first page on new data fetch
       } catch (error) {
         console.error('Error fetching data: ', error);
         // Handle error appropriately (e.g., show error message)
@@ -132,9 +135,9 @@ function PlanWiseReportBilling() {
               <option value="" disabled>
                 Select Plan
               </option>
-              <option value="Plan A">Plan A</option>
-              <option value="Plan B">Plan B</option>
-              <option value="Plan C">Plan C</option>
+              <option value="A">A</option>
+              <option value="B">B</option>
+              <option value="C">C</option>
             </select>
           </div>
           <button
