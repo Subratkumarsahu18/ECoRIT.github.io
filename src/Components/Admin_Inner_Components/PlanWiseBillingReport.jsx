@@ -15,32 +15,33 @@ function PlanWiseReportBilling() {
   };
 
   const handlePlanChange = (e) => {
-    setPlan(e.target.value) ;
+    setPlan(e.target.value);
   };
 
   // Function to handle form submission and query the database
   const handleSubmit = async () => {
     if (operator && plan) {
-      console.log(operator,plan);
+      console.log(operator, plan);
       const q = query(
-        collection(db, 'cug'),
-        where('selectedOperator', '==', operator),
-        where('selectedPlan', '==', plan)
+        collection(db, 'demo'),
+        where('OPERATOR', '==', operator),
+        where('PLAN', '==', plan),
+        where('status', '==', 'Active') // Ensure only active employees are included
       );
 
       try {
         const querySnapshot = await getDocs(q);
         const rows = [];
         querySnapshot.forEach((doc) => {
-          const data1 = doc.data();
-          console.log(data1);
+          const data = doc.data();
+          console.log(data);
           rows.push({
-            selectedCUG: data1.selectedCUG,
-            employeeId: data1.employeeNumber,
-            employeeName: data1.employeeName,
-            selectedDepartment: data1.selectedDepartment,
-            selectedDivision: data1.selectedDivision,
-            selectedAllocation: data1.selectedAllocation,
+            selectedCUG: data['CUG NO'],
+            employeeId: data['EMP NO'],
+            employeeName: data['NAME'],
+            selectedDepartment: data['DEPARTMENT'],
+            selectedDivision: data['BILL UNIT'], // Assuming 'BILL UNIT' is analogous to 'Division'
+            selectedAllocation: data['ALLOCATION'],
           });
         });
         console.log(rows);
