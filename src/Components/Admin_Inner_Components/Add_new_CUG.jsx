@@ -166,21 +166,7 @@ const Add_new_CUG = () => {
   };
 
   const departments = [
-    "ACCOUNTS",
-    "AUDIT",
-    "COMMERCIAL",
-    "ELECTRICAL",
-    "ENGINEERING",
-    "GENERAL ADMIN",
-    "MECHANICAL",
-    "MEDICAL",
-    "OPERATING",
-    "PERSONNEL",
-    "RRB",
-    "SIGNAL AND TELECOM",
-    "SAFETY",
-    "SECURITY",
-    "STORES",
+    "S & T" , "ENGG" , "ELECT" , "ACCTS" , "OPTG" , "PERS" , "SECURITY" , "AUDIT" , "COMM" , "MED", "GA" , "SAFETY" , "MECH","STORES","RRB"
   ];
 
   const planAmounts = {
