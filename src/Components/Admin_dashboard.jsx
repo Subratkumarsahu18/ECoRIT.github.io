@@ -9,6 +9,7 @@ import CUG_Status_Report from "./Admin_Inner_Components/CUG_Status_Report";
 import Upload_CUG_Details from "./Admin_Inner_Components/Upload_CUG_Details";
 import Upload_Plan_Details from "./Admin_Inner_Components/Upload_Plan_Details";
 import Allotment_History from "./Admin_Inner_Components/Allotment_History";
+import Department_Billing_Report from "./Admin_Inner_Components/Department_Billing_Report";
 import PrivacyPolicy from "./PrivacyPolicy";
 import Demo from "./Admin_Inner_Components/Demo";
 import file from "../pics/file.png";
@@ -137,6 +138,13 @@ function Admin_dashboard() {
             >
               Demo
             </NavLinkButton>
+            <NavLinkButton
+              to="departmentbillingreport"
+              activeLink={activeLink}
+              onClick={handleNavLinkClick}
+            >
+              Department Billing Report
+            </NavLinkButton>
           </div>
         </div>
         <div className="w-full lg:ml-4">
@@ -155,6 +163,7 @@ function Admin_dashboard() {
             <Route path="uploadcugdetails" element={<Upload_CUG_Details />} />
             <Route path="uploadplandetails" element={<Upload_Plan_Details />} />
             <Route path="demo" element={<Demo />} />
+            <Route path="departmentbillingreport" element={<Department_Billing_Report />} />
           </Routes>
         </div>
       </div>
