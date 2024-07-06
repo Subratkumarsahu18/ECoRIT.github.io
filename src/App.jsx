@@ -10,8 +10,12 @@ import PrivacyPolicy from "./Components/PrivacyPolicy";
 import TermsOfService from "./Components/TermsOfService";
 import ContactForm from "./Components/ContactForm";
 import ProfilePage from "./Components/ProfilePage";
+<<<<<<< HEAD
 
+=======
+>>>>>>> ad07087faf08486ed14eb537fb12174de42739ac
 import ReportPage from "./Components/ReportPage";
+import DepartmentReport from './Components/DepartmentReport';
 
 function App() {
   const [count, setCount] = useState(0);
@@ -26,9 +30,13 @@ function App() {
         <Route path="/TermsOfService" element={<TermsOfService />} />
         <Route path="/ContactForm" element={<ContactForm />} />
         <Route path="/ProfilePage" element={<ProfilePage />} />
+<<<<<<< HEAD
 
+=======
+>>>>>>> ad07087faf08486ed14eb537fb12174de42739ac
         <Route path="/report" element={<ReportPage />} />
-
+        <Route path="/department-report" element={<DepartmentReport/>} />
+        
       </Routes>
     </BrowserRouter>
   );

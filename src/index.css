@@ -5,4 +5,10 @@
     border-top-color: #3b82f6; /* Tailwind's blue-500 */
     border-bottom-color: #3b82f6; /* Tailwind's blue-500 */
   }
+  @media print {
+    .no-print {
+      display: none;
+    }
+  }
+  
   
