@@ -14,25 +14,39 @@ function CUG_Status_Report() {
       try {
         const querySnapshot = await getDocs(collection(db, 'demo'));
         let data = [];
+        let deactivatedMap = new Map();
 
         querySnapshot.forEach((doc) => {
           const rowData = {
             selectedCUG: doc.data()['CUG NO'] || '', // Adjust field names according to your Firestore document
             employeeNumber: doc.data()['EMP NO'] || '', // Adjust field names according to your Firestore document
             employeeName: doc.data()['NAME'] || '', // Adjust field names according to your Firestore document
-            timestamp: doc.data()['activation_date'] ? new Date(doc.data()['activation_date'].seconds * 1000).toLocaleDateString() : '-', // Adjust field names and date handling
-            deactivatedAt: doc.data()['deactivation_date'] ? new Date(doc.data()['deactivation_date'].seconds * 1000).toLocaleDateString() : '-', // Adjust field names and date handling
+            activationDate: doc.data()['activation_date'] ? formatDate(doc.data()['activation_date']) : null, // Format activation date
+            deactivationDate: doc.data()['deactivation_date'] ? formatDate(doc.data()['deactivation_date']) : null, // Format deactivation date
             status: doc.data()['status'] || '', // Adjust field names according to your Firestore document
           };
-          data.push(rowData);
+
+          if (rowData.status === 'Deactivated') {
+            const current = deactivatedMap.get(rowData.selectedCUG);
+            if (!current || new Date(rowData.activationDate) > new Date(current.activationDate)) {
+              deactivatedMap.set(rowData.selectedCUG, rowData);
+            }
+          } else {
+            data.push(rowData);
+          }
         });
 
-        // Sort data based on status and timestamp
+        // Combine active employees and the latest deactivated employees
+        deactivatedMap.forEach((value) => {
+          data.push(value);
+        });
+
+        // Sort data based on status and activationDate
         data.sort((a, b) => {
           if (a.status !== b.status) {
             return sortDirection === 'asc' ? a.status.localeCompare(b.status) : b.status.localeCompare(a.status);
           } else {
-            return sortDirection === 'asc' ? new Date(a.timestamp) - new Date(b.timestamp) : new Date(b.timestamp) - new Date(a.timestamp);
+            return sortDirection === 'asc' ? new Date(a.activationDate) - new Date(b.activationDate) : new Date(b.activationDate) - new Date(a.activationDate);
           }
         });
 
@@ -46,6 +60,21 @@ function CUG_Status_Report() {
 
     fetchData();
   }, [sortDirection]); // Update useEffect dependency to re-fetch data when sortDirection changes
+
+  // Function to format date
+  const formatDate = (timestamp) => {
+    if (!timestamp) return '-';
+
+    if (timestamp instanceof Date) {
+      return timestamp.toLocaleDateString();
+    } else if (timestamp && timestamp.seconds) {
+      return new Date(timestamp.seconds * 1000).toLocaleDateString();
+    } else if (timestamp) {
+      return new Date(timestamp).toLocaleDateString();
+    }
+
+    return '-';
+  };
 
   // Pagination logic
   const indexOfLastRow = currentPage * rowsPerPage;
@@ -168,8 +197,8 @@ function CUG_Status_Report() {
                         <td className="p-3">{row.selectedCUG}</td>
                         <td className="p-3">{row.employeeNumber}</td>
                         <td className="p-3">{row.employeeName}</td>
-                        <td className="p-3">{row.timestamp}</td>
-                        <td className="p-3">{row.deactivatedAt}</td>
+                        <td className="p-3">{row.activationDate}</td>
+                        <td className="p-3">{row.deactivationDate}</td>
                         <td className="p-3">{row.status}</td>
                       </tr>
                     ))}
