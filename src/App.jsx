@@ -27,7 +27,6 @@ function App() {
         <Route path="/TermsOfService" element={<TermsOfService />} />
         <Route path="/ContactForm" element={<ContactForm />} />
         <Route path="/ProfilePage" element={<ProfilePage />} />
-        <Route path="/OperatorPage" element={<OperatorPage />} />
         <Route path="/report" element={<ReportPage />} />
         <Route path="/department-report" element={<DepartmentReport/>} />
         
