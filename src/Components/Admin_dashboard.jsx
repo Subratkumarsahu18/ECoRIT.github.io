@@ -12,7 +12,7 @@ import Allotment_History from "./Admin_Inner_Components/Allotment_History";
 import Department_Billing_Report from "./Admin_Inner_Components/Department_Billing_Report";
 import Update_Plan_Details from "./Admin_Inner_Components/Update_Plan_Details";
 import PrivacyPolicy from "./PrivacyPolicy";
-import Demo from "./Admin_Inner_Components/Demo";
+
 import file from "../pics/file.png";
 import statisticsImage from "../pics/image.png";
 import Header from "./Header";
@@ -76,13 +76,7 @@ function Admin_dashboard() {
             >
               Create Dealer
             </NavLinkButton>
-            <NavLinkButton
-              to="activecug"
-              activeLink={activeLink}
-              onClick={handleNavLinkClick}
-            >
-              View/Deactivate CUG 
-            </NavLinkButton>
+
             <NavLinkButton
               to="addcug"
               activeLink={activeLink}
@@ -90,6 +84,15 @@ function Admin_dashboard() {
             >
               Activate New CUG
             </NavLinkButton>
+
+            <NavLinkButton
+              to="activecug"
+              activeLink={activeLink}
+              onClick={handleNavLinkClick}
+            >
+              View/Deactivate CUG 
+            </NavLinkButton>
+            
             <NavLinkButton
               to="cugstatusreport"
               activeLink={activeLink}
@@ -118,6 +121,15 @@ function Admin_dashboard() {
             >
               Plan-wise Report 
             </NavLinkButton>
+
+            <NavLinkButton
+              to="departmentbillingreport"
+              activeLink={activeLink}
+              onClick={handleNavLinkClick}
+            >
+              Department Report
+            </NavLinkButton>
+
             <NavLinkButton
               to="uploadcugdetails"
               activeLink={activeLink}
@@ -132,20 +144,14 @@ function Admin_dashboard() {
             >
               Upload Plan Details
             </NavLinkButton>
-            <NavLinkButton
+            {/* <NavLinkButton
               to="demo"
               activeLink={activeLink}
               onClick={handleNavLinkClick}
             >
               Demo
-            </NavLinkButton>
-            <NavLinkButton
-              to="departmentbillingreport"
-              activeLink={activeLink}
-              onClick={handleNavLinkClick}
-            >
-              Department Billing Report
-            </NavLinkButton>
+            </NavLinkButton> */}
+            
             <NavLinkButton
               to="updateplandetails"
               activeLink={activeLink}
@@ -170,7 +176,7 @@ function Admin_dashboard() {
             <Route path="planreport" element={<PlanWiseBillingReport />} />
             <Route path="uploadcugdetails" element={<Upload_CUG_Details />} />
             <Route path="uploadplandetails" element={<Upload_Plan_Details />} />
-            <Route path="demo" element={<Demo />} />
+            {/* <Route path="demo" element={<Demo />} /> */}
             <Route path="departmentbillingreport" element={<Department_Billing_Report />} />
             <Route path="updateplandetails" element={<Update_Plan_Details />} />
           </Routes>

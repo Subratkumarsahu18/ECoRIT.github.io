@@ -88,7 +88,7 @@ const ActivateDeactivateNewCUG = () => {
       {!dispacdc ? (
         <div className="flex flex-col items-center min-h-screen bg-white">
           <div className="w-full bg-blue-700 py-4 flex mb-10 justify-between items-center px-4 md:px-8">
-            <h1 className="text-2xl md:text-3xl text-white">Deactivate CUG</h1>
+            <h1 className="text-2xl md:text-3xl text-white">View/Deactivate CUG</h1>
           </div>
           <div className="w-full max-w-sm">
             <div className="mb-4">
