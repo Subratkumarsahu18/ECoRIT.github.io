@@ -10,7 +10,6 @@ import PrivacyPolicy from "./Components/PrivacyPolicy";
 import TermsOfService from "./Components/TermsOfService";
 import ContactForm from "./Components/ContactForm";
 import ProfilePage from "./Components/ProfilePage";
-import OperatorPage from "./Components/OperatorPage";
 import ReportPage from "./Components/ReportPage";
 import DepartmentReport from './Components/DepartmentReport';
 
