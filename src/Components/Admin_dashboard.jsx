@@ -11,10 +11,6 @@ import Upload_Plan_Details from "./Admin_Inner_Components/Upload_Plan_Details";
 import Allotment_History from "./Admin_Inner_Components/Allotment_History";
 import Department_Billing_Report from "./Admin_Inner_Components/Department_Billing_Report";
 import Update_Plan_Details from "./Admin_Inner_Components/Update_Plan_Details";
-import PrivacyPolicy from "./PrivacyPolicy";
-
-import file from "../pics/file.png";
-import statisticsImage from "../pics/image.png";
 import Header from "./Header";
 import Footer from "./Footer";
 import { toast, Toaster } from 'react-hot-toast';
