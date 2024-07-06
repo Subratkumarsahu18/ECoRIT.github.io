@@ -12,6 +12,7 @@ import ContactForm from "./Components/ContactForm";
 import ProfilePage from "./Components/ProfilePage";
 import OperatorPage from "./Components/OperatorPage";
 import ReportPage from "./Components/ReportPage";
+import DepartmentReport from './Components/DepartmentReport';
 
 function App() {
   const [count, setCount] = useState(0);
@@ -28,7 +29,8 @@ function App() {
         <Route path="/ProfilePage" element={<ProfilePage />} />
         <Route path="/OperatorPage" element={<OperatorPage />} />
         <Route path="/report" element={<ReportPage />} />
-
+        <Route path="/department-report" element={<DepartmentReport/>} />
+        
       </Routes>
     </BrowserRouter>
   );
