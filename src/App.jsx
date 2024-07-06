@@ -10,7 +10,7 @@ import PrivacyPolicy from "./Components/PrivacyPolicy";
 import TermsOfService from "./Components/TermsOfService";
 import ContactForm from "./Components/ContactForm";
 import ProfilePage from "./Components/ProfilePage";
-import OperatorPage from "./Components/OperatorPage";
+
 import ReportPage from "./Components/ReportPage";
 
 function App() {
@@ -26,7 +26,7 @@ function App() {
         <Route path="/TermsOfService" element={<TermsOfService />} />
         <Route path="/ContactForm" element={<ContactForm />} />
         <Route path="/ProfilePage" element={<ProfilePage />} />
-        <Route path="/OperatorPage" element={<OperatorPage />} />
+
         <Route path="/report" element={<ReportPage />} />
 
       </Routes>

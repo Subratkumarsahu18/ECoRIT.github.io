@@ -24,9 +24,11 @@ function Login() {
       if (!querySnapshot.empty) {
         let userLevel = null;
         querySnapshot.forEach((doc) => {
+      
    
           userLevel = doc.data().level;
           localStorage.setItem("user", userLevel);
+          localStorage.setItem('eid',doc.data().employeeID);
         });
 
         if (isAdmin && userLevel === 0) {
