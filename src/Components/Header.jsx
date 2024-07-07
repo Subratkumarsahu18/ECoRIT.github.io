@@ -47,7 +47,7 @@ const Header = () => {
           </Link>
         </div>
       </div>
-      <div className="flex space-x-2 md:space-x-4 mt-4 md:mt-0 ml-auto">
+      <div className="flex space-x-2 md:space-x-4 mt-4 md:mt-0 ml-auto text-white">
         {" "}
         {/* Adjusted margin top for mobile and added ml-auto */}
         <div className="relative flex justify-center space-x-2 items-center">
