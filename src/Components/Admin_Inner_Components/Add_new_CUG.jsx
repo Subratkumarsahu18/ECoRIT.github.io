@@ -170,9 +170,9 @@ const Add_new_CUG = () => {
   ];
 
   const planAmounts = {
-    "Plan A": "₹ 10",
-    "Plan B": "₹ 20",
-    "Plan C": "₹ 30",
+    "A": "₹ 10",
+    "B": "₹ 20",
+    "C": "₹ 30",
   };
 
   return (

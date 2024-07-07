@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Link, Routes, Route, useNavigate } from "react-router-dom";
+import { Link, Routes, Route, useNavigate,Navigate } from "react-router-dom";
 import Header from "./Header";
 import Footer from "./Footer";
 import Department_Billing_Report from "./Admin_Inner_Components/Department_Billing_Report";
@@ -11,9 +11,10 @@ import Add_new_CUG from "./Dealer_Inner_Components/Add_New_Cug";
 import PrivacyPolicy from "./PrivacyPolicy";
 import TermsOfService from "./TermsOfService";
 import ContactForm from "./ContactForm";
+import LandingPage from "./Landingpage";
 
 function Dealer_dashboard() {
-  const [activeLink, setActiveLink] = useState("acdcreport");
+  const [activeLink, setActiveLink] = useState("");
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const navigate = useNavigate();
 
@@ -31,6 +32,7 @@ function Dealer_dashboard() {
 
   useEffect(() => {
     if (localStorage.getItem("user") == 1) {
+      navigate('landing')
       setloading(false);
     } else {
       toast.error("action not allowed");
@@ -45,7 +47,9 @@ function Dealer_dashboard() {
   return (
     <div className="min-h-screen bg-white flex flex-col text-white">
       <Header />
-
+      <h2 className="text-2xl -mb-4 text-[#2664eb] font-semibold text-center mt-10">
+        Welcome To Dealer Dashboard
+      </h2>
       <div className="p-4 md:p-8 flex lg:flex-row flex-col">
         <div className="relative flex flex-col mb-4 md:mb-0 lg:w-1/6">
           <button
@@ -99,9 +103,11 @@ function Dealer_dashboard() {
         <div className="w-full lg:ml-4">
           <Routes>
             <Route
-              path="acdcreport"
-              element={<Activate_Deactivate_New_CUG />}
+              path="/"
+              element={<Navigate to="/Admin_dashboard/landing" />}
             />
+            <Route path="acdcreport" element={<Activate_Deactivate_New_CUG />} />
+            <Route path="landing" element={<LandingPage />} />
             <Route path="addnewcug" element={<Add_new_CUG />} />
             <Route path="allocreport" element={<AllocationWiseReport />} />
             <Route path="planreport" element={<PlanWiseBillingReport />} />

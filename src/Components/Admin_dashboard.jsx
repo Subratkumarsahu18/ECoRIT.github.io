@@ -20,9 +20,10 @@ import { toast, Toaster } from 'react-hot-toast';
 import PrivacyPolicy from "./PrivacyPolicy";
 import TermsOfService from "./TermsOfService";
 import ContactForm from "./ContactForm";
+import LandingPage from "./Landingpage";
 
 function Admin_dashboard() {
-  const [activeLink, setActiveLink] = useState("createdealer");
+  const [activeLink, setActiveLink] = useState("");
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const navigate = useNavigate();
 
@@ -31,7 +32,7 @@ function Admin_dashboard() {
 
   useEffect(() => {
     if (localStorage.getItem('user') == 0) {
-      navigate('createdealer')
+      navigate('landing')
       setLoading(false);
     } else {
       toast.error('Action not allowed');
@@ -176,9 +177,10 @@ function Admin_dashboard() {
           <Routes>
             <Route
               path="/"
-              element={<Navigate to="/Admin_dashboard/createdealer" />}
+              element={<Navigate to="/Admin_dashboard/landing" />}
             />
             <Route path="activecug" element={<Activate_Deactivate_CUG />} />
+            <Route path="landing" element={<LandingPage />} />
             <Route path="addcug" element={<Add_new_CUG />} />
             <Route path="allocreport" element={<AllocationWiseReport />} />
             <Route path="allotmenthistory" element={<Allotment_History />} />
