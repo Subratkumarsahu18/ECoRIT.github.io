@@ -11,6 +11,9 @@ import Upload_Plan_Details from "./Admin_Inner_Components/Upload_Plan_Details";
 import Allotment_History from "./Admin_Inner_Components/Allotment_History";
 import Department_Billing_Report from "./Admin_Inner_Components/Department_Billing_Report";
 import Update_Plan_Details from "./Admin_Inner_Components/Update_Plan_Details";
+import Clear_Details from "./Admin_Inner_Components/Clear_Details";
+
+
 import Header from "./Header";
 import Footer from "./Footer";
 import { toast, Toaster } from 'react-hot-toast';
@@ -159,6 +162,13 @@ function Admin_dashboard() {
             >
               Update Plan Details
             </NavLinkButton>
+            <NavLinkButton
+              to="cleardetails"
+              activeLink={activeLink}
+              onClick={handleNavLinkClick}
+            >
+              Clear Details
+            </NavLinkButton>
           </div>
         </div>
         <div className="w-full lg:ml-4">
@@ -179,6 +189,7 @@ function Admin_dashboard() {
             {/* <Route path="demo" element={<Demo />} /> */}
             <Route path="departmentbillingreport" element={<Department_Billing_Report />} />
             <Route path="updateplandetails" element={<Update_Plan_Details />} />
+            <Route path="cleardetails" element={<Clear_Details />} />
             <Route path="privacy" element={<PrivacyPolicy />} />
             <Route path="terms" element={<TermsOfService />} />
             <Route path="contact" element={<ContactForm />} />
