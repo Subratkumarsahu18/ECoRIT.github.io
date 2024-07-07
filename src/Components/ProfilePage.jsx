@@ -14,6 +14,7 @@ import {
 
 const ProfilePage = () => {
   const eid = localStorage.getItem("eid");
+  const level = localStorage.getItem('user')
 const [id, setid] = useState();
   const [user, setUser] = useState();
   useEffect(() => {
@@ -54,7 +55,10 @@ const [id, setid] = useState();
           console.log(downloadURL);
           setUser((prevUser) => ({ ...prevUser, profilePic: downloadURL }));
           alert("Image uploaded successfully!");
+          if(level ==0)
           localStorage.setItem("pimg", downloadURL);
+          else
+          localStorage.setItem("dimg", downloadURL);
           const userDocRef = doc(db, "Admin", id); // Replace "users" with your collection name and userId with actual user ID
           await setDoc(
             userDocRef,

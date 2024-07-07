@@ -3,27 +3,12 @@ import { Link } from "react-router-dom";
 
 function PrivacyPolicy() {
   return (
-    <div className="min-h-screen bg-gray-100 flex flex-col">
+    <div className="min-h-screen bg-gray-100 flex flex-col text-black">
       {/* Content Box */}
       <div className="max-w-3xl mx-auto mt-8 mb-8 bg-white p-6 rounded-lg shadow-lg">
         <div className="flex justify-between items-center mb-4">
           <h1 className="text-3xl font-bold">Privacy Policy</h1>
-          <Link to="/Admin_dashboard" className="text-blue-500 hover:underline">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              className="h-6 w-6"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth="2"
-                d="M10 19l-7-7m0 0l7-7m-7 7h18"
-              />
-            </svg>
-          </Link>
+          
         </div>
         <p className="mb-6">
           Welcome to the East Coast Railway Privacy Policy page. Your privacy is

@@ -14,6 +14,9 @@ import Update_Plan_Details from "./Admin_Inner_Components/Update_Plan_Details";
 import Header from "./Header";
 import Footer from "./Footer";
 import { toast, Toaster } from 'react-hot-toast';
+import PrivacyPolicy from "./PrivacyPolicy";
+import TermsOfService from "./TermsOfService";
+import ContactForm from "./ContactForm";
 
 function Admin_dashboard() {
   const [activeLink, setActiveLink] = useState("createdealer");
@@ -48,6 +51,7 @@ function Admin_dashboard() {
 
   return (
     <div className="min-h-screen bg-white flex flex-col text-white">
+      <Toaster/>
       <Header />
       <h2 className="text-2xl -mb-4 text-[#2664eb] font-semibold text-center mt-10">
         Welcome To Admin Dashboard
@@ -175,6 +179,12 @@ function Admin_dashboard() {
             {/* <Route path="demo" element={<Demo />} /> */}
             <Route path="departmentbillingreport" element={<Department_Billing_Report />} />
             <Route path="updateplandetails" element={<Update_Plan_Details />} />
+            <Route path="privacy" element={<PrivacyPolicy />} />
+            <Route path="terms" element={<TermsOfService />} />
+            <Route path="contact" element={<ContactForm />} />
+            {/* <Route path="updateplandetails" element={<Update_Plan_Details />} />
+            <Route path="updateplandetails" element={<Update_Plan_Details />} /> */}
+            
           </Routes>
         </div>
       </div>

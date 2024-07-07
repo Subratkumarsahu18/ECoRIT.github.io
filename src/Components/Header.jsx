@@ -1,18 +1,45 @@
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import file from "../pics/file.png";
+import { db } from "../firebaseConfig";
+import { collection, getDocs, query, where } from "firebase/firestore";
 
 const Header = () => {
+  const ref = useRef();
   const [dropdownOpen, setDropdownOpen] = useState(false);
+  const [img, setimg] = useState("https://via.placeholder.com/150");
+
+  const eid = localStorage.getItem("eid");
+  const level = localStorage.getItem("user");
+  const [id, setid] = useState();
+  const [user, setUser] = useState();
+  useEffect(() => {
+    const fetchfata = async () => {
+      const userQuery = query(
+        collection(db, "Admin"),
+        where("employeeID", "==", eid) // Ensure password is hashed & securely stored in production
+      );
+      const querySnapshot = await getDocs(userQuery);
+
+      if (!querySnapshot.empty) {
+        let userLevel = null;
+        querySnapshot.forEach((doc) => {
+          setid(doc.id);
+          setimg(doc.data().profilePic);
+        });
+      }
+    };
+    fetchfata();
+  }, []);
 
   return (
     <div className="sticky top-0 z-50 w-full bg-blue-700 py-4 flex flex-wrap justify-between items-center px-4 md:px-8">
       <div className="flex items-center space-x-2">
-        <Link to="/Admin_dashboard">
+        <Link to={`${(level==0) ?"/Admin_dashboard":"/Dealer_dashboard"}`}>
           <img src={file} alt="Logo" className="w-12 h-12" />
         </Link>
         <div className="flex flex-col items-start">
-          <Link to="/Admin_dashboard">
+          <Link to={`${(level==0) ?"/Admin_dashboard":"/Dealer_dashboard"}`}>
             <h1 className="text-3xl text-white leading-none">
               East Coast Railway
             </h1>
@@ -23,15 +50,18 @@ const Header = () => {
       <div className="flex space-x-2 md:space-x-4 mt-4 md:mt-0 ml-auto">
         {" "}
         {/* Adjusted margin top for mobile and added ml-auto */}
-
-
         <div className="relative">
           <span
             className="hover:cursor-pointer"
             onMouseOver={() => setDropdownOpen(true)}
           >
-             <img src={localStorage.getItem("pimg") || "https://via.placeholder.com/150"} height={100} width={100} className="h-6 rounded-full  w-6"/>
-           
+            <img
+              ref={ref}
+              src={img || "https://via.placeholder.com/150"}
+              height={100}
+              width={100}
+              className="h-6 rounded-full  w-6"
+            />
           </span>
           {dropdownOpen && (
             <div
@@ -47,7 +77,7 @@ const Header = () => {
               <button
                 onClick={() => {
                   localStorage.removeItem("user");
-                  window.location='/'
+                  window.location = "/";
                 }}
                 className="block px-4 py-2 hover:bg-gray-200"
               >

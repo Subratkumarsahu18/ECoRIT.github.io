@@ -1,29 +1,30 @@
 import React, { useState } from 'react';
-import Header from './Header';
-import Footer from './Footer';
+import emailjs from 'emailjs-com';
 
 const ContactForm = () => {
   const [showPopup, setShowPopup] = useState(false);
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // You can perform additional form validation or submission logic here
     
-    // Show the popup notification
-    setShowPopup(true);
 
-    // Reset the form fields (optional)
+    emailjs.sendForm('service_ubangz8', 'template_3e3hexb', e.target, 'ysTp7gd5-wLU6GHB6')
+  .then((result) => {
+    console.log(result.text);
+    setShowPopup(true);
     e.target.reset();
 
-    // Hide the popup after a certain duration (e.g., 3 seconds)
     setTimeout(() => {
       setShowPopup(false);
     }, 3000);
+  }, (error) => {
+    console.log(error.text);
+  });
+
   };
 
   return (
     <div className="min-h-screen bg-gray-100 flex flex-col">
-      <Header />
       <div className="flex items-center justify-center flex-grow">
         <div className="w-full max-w-md p-8 space-y-6 bg-white rounded-lg shadow-md">
           <h2 className="text-2xl font-bold text-center">Contact Us</h2>
@@ -78,7 +79,6 @@ const ContactForm = () => {
           )}
         </div>
       </div>
-      <Footer />
     </div>
   );
 };

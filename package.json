@@ -13,6 +13,7 @@
     "@heroicons/react": "^1.0.6",
     "axios": "^1.7.2",
     "docx": "^8.5.0",
+    "emailjs-com": "^3.2.0",
     "exceljs": "^4.4.0",
     "file-saver": "^2.0.5",
     "firebase": "^10.12.2",

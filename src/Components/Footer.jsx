@@ -15,9 +15,9 @@ const Footer = () => {
         </div>
         <div className="mt-4 md:mt-0">
           <ul className="flex flex-col md:flex-row md:space-x-4">
-            <li><Link to="/privacypolicy" className="hover:underline">Privacy Policy</Link></li>
-            <li><Link to="/TermsOfService" className="hover:underline">Terms Of Service</Link></li>
-            <li><Link to="/ContactForm" className="hover:underline">Contact Form</Link></li>
+            <li><Link to="privacy" className="hover:underline">Privacy Policy</Link></li>
+            <li><Link to="terms" className="hover:underline">Terms Of Service</Link></li>
+            <li><Link to="contact" className="hover:underline">Contact Form</Link></li>
           </ul>
         </div>
         <div className="mt-4 md:mt-0 text-center md:text-right">

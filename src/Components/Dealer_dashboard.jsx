@@ -6,6 +6,7 @@ import Footer from "./Footer";
 import Activate_Deactivate_New_CUG from "./Dealer_Inner_Components/Activate_Deactivate_New_CUG";
 import AllocationWiseReport from "./Admin_Inner_Components/Allocation_Wise_Report";
 import PlanWiseBillingReport from "./Admin_Inner_Components/PlanWiseBillingReport";
+import {toast,Toaster} from 'react-hot-toast'
 import Add_new_CUG from "./Dealer_Inner_Components/Add_New_Cug";
 
 function Dealer_dashboard() {
