@@ -24,7 +24,7 @@ const Header = () => {
       if (!querySnapshot.empty) {
         let userLevel = null;
         querySnapshot.forEach((doc) => {
-          setid(doc.id);
+          setid(doc.data().employeeName);
           setimg(doc.data().profilePic);
         });
       }
@@ -50,7 +50,8 @@ const Header = () => {
       <div className="flex space-x-2 md:space-x-4 mt-4 md:mt-0 ml-auto">
         {" "}
         {/* Adjusted margin top for mobile and added ml-auto */}
-        <div className="relative">
+        <div className="relative flex justify-center space-x-2 items-center">
+          <p>welcome, {id}</p>
           <span
             className="hover:cursor-pointer"
             onMouseOver={() => setDropdownOpen(true)}

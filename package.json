@@ -10,6 +10,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@emailjs/browser": "^4.3.3",
     "@heroicons/react": "^1.0.6",
     "axios": "^1.7.2",
     "docx": "^8.5.0",

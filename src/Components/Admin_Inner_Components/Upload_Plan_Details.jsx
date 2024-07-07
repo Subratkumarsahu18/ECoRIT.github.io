@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { storage, db } from '../../firebaseConfig';
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
-import { collection, writeBatch, doc } from 'firebase/firestore';
+import { collection, writeBatch, doc, addDoc, getDocs, query, where } from 'firebase/firestore';
 import * as XLSX from 'xlsx';
 
 function Upload_Plan_Details() {
@@ -35,10 +35,35 @@ function Upload_Plan_Details() {
     }
   };
 
+  const validateRow = (row, rowIndex) => {
+    const allowedFields = ['CUG NO', 'Periodic Charge', 'Amount Usage', 'Amount Data', 'Voice', 'Video', 'SMS', 'VAS'];
+    const rowKeys = Object.keys(row);
+
+    for (const key of rowKeys) {
+      if (!allowedFields.includes(key)) {
+        return `Error in row ${rowIndex + 1}: '${key}' is not allowed. Only the following fields are allowed: CUG NO, Periodic Charge, Amount Usage, Amount Data, Voice, Video, SMS, VAS.`;
+      }
+    }
+
+    const cugNumber = row['CUG NO'] ?? '';
+    if (!/^\d{10}$/.test(cugNumber)) {
+      return `Error in row ${rowIndex + 1}, column 'CUG NO': Must contain exactly 10 numeric characters.`;
+    }
+  
+    const numericFields = ['Periodic Charge', 'Amount Usage', 'Amount Data', 'Voice', 'Video', 'SMS', 'VAS'];
+    for (const field of numericFields) {
+      if (!/^\d+(\.\d+)?$/.test(row[field] ?? '') || parseFloat(row[field]) < 0) {
+        return `Error in row ${rowIndex + 1}, column '${field}': Must contain only positive numbers or zero, including decimal values.`;
+      }
+    }
+  
+    return null;
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!file || !operator) {
-      alert('Please select an operator and a file to upload.');
+      alert('Please select an operator and upload a file.');
       return;
     }
 
@@ -53,13 +78,39 @@ function Upload_Plan_Details() {
           const workbook = XLSX.read(data, { type: 'array' });
           const firstSheetName = workbook.SheetNames[0];
           const worksheet = workbook.Sheets[firstSheetName];
-          const jsonData = XLSX.utils.sheet_to_json(worksheet);
+          const jsonData = XLSX.utils.sheet_to_json(worksheet, { defval: '' });
 
           const batch = writeBatch(db);
-          jsonData.forEach((row) => {
-            const docRef = doc(collection(db, 'Plan_report'));
-            batch.set(docRef, row);
-          });
+
+          for (const [rowIndex, row] of jsonData.entries()) {
+            const error = validateRow(row, rowIndex);
+            if (error) {
+              alert(error);
+              window.location.reload();
+              return;
+            }
+
+            const cugNumber = row['CUG NO'];
+            const cugQuery = query(collection(db, 'bill'), where('CUG NO', '==', cugNumber));
+            const querySnapshot = await getDocs(cugQuery);
+            if (querySnapshot.empty) {
+              const docRef = doc(collection(db, 'bill'));
+              batch.set(docRef, {
+                'CUG NO': cugNumber,
+                'Periodic Charge': row['Periodic Charge'],
+                'Amount Usage': row['Amount Usage'],
+                'Amount Data': row['Amount Data'],
+                'Voice': row['Voice'],
+                'Video': row['Video'],
+                'SMS': row['SMS'],
+                'VAS': row['VAS'],
+                operator: operator,
+              });
+            } else {
+              console.log(`Skipping row with existing CUG NO: ${cugNumber}`);
+            }
+          }
+
           await batch.commit();
 
           await addDoc(collection(db, 'Plan_report_files'), {
@@ -73,7 +124,7 @@ function Upload_Plan_Details() {
           setOperator('');
           setFile(null);
           setUploadedFileURL('');
-          e.target.reset(); // Reset the form fields
+          e.target.reset();
         } catch (err) {
           console.error('Error parsing or uploading file data: ', err);
           alert('Failed to process and upload file.');
@@ -140,6 +191,14 @@ function Upload_Plan_Details() {
             </button>
           </div>
         </form>
+      </div>
+      <div className="bg-white p-6 rounded-lg shadow-lg w-full mb-4 text-black">
+        <h1 className="text-red-600" >INFORMATION</h1>
+          <p><span className="text-red-600">*</span> CUG NO must be exactly 10 numeric characters.</p>
+          <p><span className="text-red-600">*</span> Al the other fields will either accept 0 or positive value</p>
+          <p><span className="text-red-600">*</span> willl on accept the fields mentioned below </p>
+          <p><span className="text-red-600">*</span> CUG NO,	Periodic Charge,	Amount Usage,	Amount Data,	Voice,	Video,	SMS and 	VAS</p>
+          
       </div>
     </div>
   );

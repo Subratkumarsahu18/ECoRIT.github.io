@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { storage, db } from '../../firebaseConfig';
-import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
-import { collection, writeBatch, doc } from 'firebase/firestore';
+import { collection, writeBatch, doc, getDocs, query, where } from 'firebase/firestore';
 import * as XLSX from 'xlsx';
 
 function Upload_CUG_Details() {
@@ -117,7 +116,19 @@ function Upload_CUG_Details() {
           }
 
           const batch = writeBatch(db);
-          jsonData.forEach((row) => {
+
+          for (const row of jsonData) {
+            const cugNumber = row['CUG NO'].toString();
+
+            // Check if CUG NO already exists in Firestore
+            const q = query(collection(db, 'demo'), where('CUG NO', '==', cugNumber));
+            const querySnapshot = await getDocs(q);
+
+            if (!querySnapshot.empty) {
+              console.log(`CUG NO ${cugNumber} already exists. Skipping this row.`);
+              continue; // Skip this row
+            }
+
             const docRef = doc(collection(db, 'demo'));
             const { PRICE, ...dataToUpload } = row; // Exclude PRICE from the data being uploaded
 
@@ -133,7 +144,8 @@ function Upload_CUG_Details() {
             dataToUpload.status = 'Active';
 
             batch.set(docRef, dataToUpload);
-          });
+          }
+
           await batch.commit();
 
           setLoading(false); // Hide loader before alert
@@ -183,15 +195,15 @@ function Upload_CUG_Details() {
       </div>
       <div className="bg-white p-6 rounded-lg shadow-lg w-full mb-4 text-black">
         <h1 className="text-red-600" >INFORMATION</h1>
-          <p><span className="text-red-600">*</span> CUG NO must be exactly 10 digits.</p>
-          <p><span className="text-red-600">*</span> PLAN must be A, B, or C.</p>
-          <p><span className="text-red-600">*</span> BILL UNIT must be exactly 7 numeric characters.</p>
-          <p><span className="text-red-600">*</span> ALLOCATION must be exactly 8 numeric characters.</p>
-          <p><span className="text-red-600">*</span> Please ensure all required columns are present: "CUG NO", "EMP NO", "NAME", "DESIGNATION", "DEPARTMENT", "BILL UNIT", "ALLOCATION", "OPERATOR", "PLAN", "PRICE".</p>
-          <p><span className="text-red-600">*</span> The DEPARTMENTS are 'S & T', 'ENGG', 'ELECT', 'ACCTS', 'OPTG', 'PERS', 'SECURITY', 'AUDIT', 'COMM', 'MED', 'GA', 'SAFETY', 'MECH', 'STORES', 'RRB'.</p>
-          <p><span className="text-red-600">*</span> The OPERATORS are 'JIO', 'AIRTEL', 'VODAFONE'.</p>
+          <p><span className="text-red-600">*</span> CUG NO must be exactly 10 numeric characters.</p>
           <p><span className="text-red-600">*</span> EMP NO must be exactly 10 digits Alpha-Numeric.</p>
-        </div>
+          <p><span className="text-red-600">*</span> PLAN must be 'A', 'B', or 'C'.</p>
+          <p><span className="text-red-600">*</span> PRICE must match PLAN: 74.61 for A, 59.05 for B, 39.9 for C.</p>
+          <p><span className="text-red-600">*</span> BILL UNIT must be exactly 7 numeric characters and within the range of specific codes.</p>
+          <p><span className="text-red-600">*</span> ALLOCATION must be exactly 8 numeric characters and within the range of specific codes.</p>
+          <p><span className="text-red-600">*</span> OPERATOR must be either JIO, AIRTEL, or VODAFONE.</p>
+          <p><span className="text-red-600">*</span> DEPARTMENT must be within the specified list of department names.</p>
+      </div>
     </div>
   );
 }
