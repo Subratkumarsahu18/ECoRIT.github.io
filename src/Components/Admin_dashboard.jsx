@@ -31,6 +31,7 @@ function Admin_dashboard() {
 
   useEffect(() => {
     if (localStorage.getItem('user') == 0) {
+      navigate('createdealer')
       setLoading(false);
     } else {
       toast.error('Action not allowed');

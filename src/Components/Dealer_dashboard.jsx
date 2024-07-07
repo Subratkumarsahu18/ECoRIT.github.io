@@ -8,6 +8,9 @@ import AllocationWiseReport from "./Admin_Inner_Components/Allocation_Wise_Repor
 import PlanWiseBillingReport from "./Admin_Inner_Components/PlanWiseBillingReport";
 import {toast,Toaster} from 'react-hot-toast'
 import Add_new_CUG from "./Dealer_Inner_Components/Add_New_Cug";
+import PrivacyPolicy from "./PrivacyPolicy";
+import TermsOfService from "./TermsOfService";
+import ContactForm from "./ContactForm";
 
 function Dealer_dashboard() {
   const [activeLink, setActiveLink] = useState("acdcreport");
@@ -95,6 +98,9 @@ function Dealer_dashboard() {
             <Route path="addnewcug" element={<Add_new_CUG />} />
             <Route path="allocreport" element={<AllocationWiseReport />} />
             <Route path="planreport" element={<PlanWiseBillingReport />} />
+            <Route path="privacy" element={<PrivacyPolicy />} />
+            <Route path="terms" element={<TermsOfService />} />
+            <Route path="contact" element={<ContactForm />} />
           </Routes>
         </div>
       </div>

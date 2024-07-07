@@ -12,40 +12,44 @@ function PlanWiseReportBilling() {
 
   const handleOperatorChange = (e) => {
     setOperator(e.target.value);
+    setViewTable(false);
   };
 
   const handlePlanChange = (e) => {
     setPlan(e.target.value);
+    setViewTable(false);
   };
 
   // Function to handle form submission and query the database
   const handleSubmit = async () => {
     if (operator && plan) {
-      console.log(operator,plan);
+      console.log(operator, plan);
       const q = query(
-        collection(db, 'cug'),
-        where('selectedOperator', '==', operator),
-        where('selectedPlan', '==', plan)
+        collection(db, 'demo'),
+        where('OPERATOR', '==', operator),
+        where('PLAN', '==', plan),
+        where('status', '==', 'Active') // Ensure only active employees are included
       );
 
       try {
         const querySnapshot = await getDocs(q);
         const rows = [];
         querySnapshot.forEach((doc) => {
-          const data1 = doc.data();
-          console.log(data1);
+          const data = doc.data();
+          console.log(data);
           rows.push({
-            selectedCUG: data1.selectedCUG,
-            employeeId: data1.employeeNumber,
-            employeeName: data1.employeeName,
-            selectedDepartment: data1.selectedDepartment,
-            selectedDivision: data1.selectedDivision,
-            selectedAllocation: data1.selectedAllocation
+            selectedCUG: data['CUG NO'],
+            employeeId: data['EMP NO'],
+            employeeName: data['NAME'],
+            selectedDepartment: data['DEPARTMENT'],
+            selectedDivision: data['BILL UNIT'], // Assuming 'BILL UNIT' is analogous to 'Division'
+            selectedAllocation: data['ALLOCATION'],
           });
         });
         console.log(rows);
         setData(rows);
         setViewTable(true);
+        setCurrentPage(1); // Reset to first page on new data fetch
       } catch (error) {
         console.error('Error fetching data: ', error);
         // Handle error appropriately (e.g., show error message)
@@ -73,6 +77,31 @@ function PlanWiseReportBilling() {
     setCurrentPage(pageNumber);
   };
 
+  // Helper function to create pagination numbers with ellipses
+  const getPaginationNumbers = () => {
+    const pages = [];
+    const maxPagesToShow = 3;
+    let startPage = Math.max(currentPage - 1, 1);
+    let endPage = Math.min(startPage + maxPagesToShow - 1, totalPages);
+
+    if (endPage - startPage < maxPagesToShow - 1) {
+      startPage = Math.max(endPage - maxPagesToShow + 1, 1);
+    }
+
+    for (let i = startPage; i <= endPage; i++) {
+      pages.push(i);
+    }
+
+    if (startPage > 1) {
+      pages.unshift('...');
+    }
+    if (endPage < totalPages) {
+      pages.push('...');
+    }
+
+    return pages;
+  };
+
   return (
     <div className="min-h-screen bg-white flex flex-col text-gray-800">
       {/* Header */}
@@ -91,7 +120,9 @@ function PlanWiseReportBilling() {
               onChange={handleOperatorChange}
               className="bg-blue-100 p-2 mb-4 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
             >
-              <option value="" disabled>Select Operator</option>
+              <option value="" disabled>
+                Select Operator
+              </option>
               <option value="JIO">JIO</option>
               <option value="AIRTEL">AIRTEL</option>
               <option value="VODAFONE">VODAFONE</option>
@@ -101,10 +132,12 @@ function PlanWiseReportBilling() {
               onChange={handlePlanChange}
               className="bg-blue-100 p-2 mb-4 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
             >
-              <option value="" disabled>Select Plan</option>
-              <option value="Plan A">Plan A</option>
-              <option value="Plan B">Plan B</option>
-              <option value="Plan C">Plan C</option>
+              <option value="" disabled>
+                Select Plan
+              </option>
+              <option value="A">A</option>
+              <option value="B">B</option>
+              <option value="C">C</option>
             </select>
           </div>
           <button
@@ -160,15 +193,16 @@ function PlanWiseReportBilling() {
             >
               Prev
             </button>
-            {Array.from({ length: totalPages }).map((_, index) => (
+            {getPaginationNumbers().map((page, index) => (
               <button
                 key={index}
-                onClick={() => handlePageChange(index + 1)}
+                onClick={() => typeof page === 'number' && handlePageChange(page)}
                 className={`py-1 px-3 rounded-lg mx-1 ${
-                  currentPage === index + 1 ? 'bg-blue-700 text-white' : 'bg-gray-200 text-gray-700'
+                  currentPage === page ? 'bg-blue-700 text-white' : 'bg-gray-200 text-gray-700'
                 }`}
+                disabled={typeof page !== 'number'}
               >
-                {index + 1}
+                {page}
               </button>
             ))}
             <button
