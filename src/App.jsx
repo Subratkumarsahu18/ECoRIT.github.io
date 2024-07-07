@@ -10,8 +10,9 @@ import PrivacyPolicy from "./Components/PrivacyPolicy";
 import TermsOfService from "./Components/TermsOfService";
 import ContactForm from "./Components/ContactForm";
 import ProfilePage from "./Components/ProfilePage";
-import ReportPage from "./Components/ReportPage";
 import DepartmentReport from './Components/DepartmentReport';
+import AllocationWiseReport from "./Components/Admin_Inner_Components/Allocation_Wise_Report";
+import GenerateReportPage from "./Components/Admin_Inner_Components/GenerateReportPage";
 
 function App() {
   const [count, setCount] = useState(0);
@@ -26,8 +27,9 @@ function App() {
         <Route path="/TermsOfService" element={<TermsOfService />} />
         <Route path="/ContactForm" element={<ContactForm />} />
         <Route path="/ProfilePage" element={<ProfilePage />} />
-        <Route path="/report" element={<ReportPage />} />
         <Route path="/department-report" element={<DepartmentReport/>} />
+        <Route path="/report" element={<AllocationWiseReport />} />
+        <Route path="/generate-report" element={<GenerateReportPage />} />
         
       </Routes>
     </BrowserRouter>
