@@ -51,7 +51,7 @@ const Header = () => {
         {" "}
         {/* Adjusted margin top for mobile and added ml-auto */}
         <div className="relative flex justify-center space-x-2 items-center">
-          <p>welcome, {id}</p>
+          <p>Welcome, {id}</p>
           <span
             className="hover:cursor-pointer"
             onMouseOver={() => setDropdownOpen(true)}
