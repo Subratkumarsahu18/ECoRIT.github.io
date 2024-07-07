@@ -32,7 +32,7 @@ function Clear_Details() {
 
     try {
       if (selectedOption === 'plan') {
-        const planDetailsRef = collection(db, 'Plan Details');
+        const planDetailsRef = collection(db, 'bill');
         const snapshot = await getDocs(planDetailsRef);
         snapshot.forEach((doc) => {
           deleteDoc(doc.ref);
@@ -95,7 +95,7 @@ function Clear_Details() {
             onChange={handleChange}
           >
             <option value="" disabled>Select an option</option>
-            <option value="plan">Plan details</option>
+            <option value="plan">Bill details</option>
             <option value="dealer">Dealer details</option>
             <option value="cug">CUG details</option>
           </select>
