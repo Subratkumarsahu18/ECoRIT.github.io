@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Link, Routes, Route, useNavigate } from "react-router-dom";
 import Header from "./Header";
 import Footer from "./Footer";
-
+import Department_Billing_Report from "./Admin_Inner_Components/Department_Billing_Report";
 import Activate_Deactivate_New_CUG from "./Dealer_Inner_Components/Activate_Deactivate_New_CUG";
 import AllocationWiseReport from "./Admin_Inner_Components/Allocation_Wise_Report";
 import PlanWiseBillingReport from "./Admin_Inner_Components/PlanWiseBillingReport";
@@ -87,6 +87,13 @@ function Dealer_dashboard() {
             >
               Plan-wise Billing Report
             </NavLinkButton>
+            <NavLinkButton
+              to="departmentbillingreport"
+              activeLink={activeLink}
+              onClick={handleNavLinkClick}
+            >
+              Department Report
+            </NavLinkButton>
           </div>
         </div>
         <div className="w-full lg:ml-4">
@@ -101,6 +108,7 @@ function Dealer_dashboard() {
             <Route path="privacy" element={<PrivacyPolicy />} />
             <Route path="terms" element={<TermsOfService />} />
             <Route path="contact" element={<ContactForm />} />
+            <Route path="departmentbillingreport" element={<Department_Billing_Report />} />
           </Routes>
         </div>
       </div>

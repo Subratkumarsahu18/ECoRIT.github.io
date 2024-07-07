@@ -187,7 +187,6 @@ function Admin_dashboard() {
             <Route path="planreport" element={<PlanWiseBillingReport />} />
             <Route path="uploadcugdetails" element={<Upload_CUG_Details />} />
             <Route path="uploadplandetails" element={<Upload_Plan_Details />} />
-            {/* <Route path="demo" element={<Demo />} /> */}
             <Route path="departmentbillingreport" element={<Department_Billing_Report />} />
             <Route path="updateplandetails" element={<Update_Plan_Details />} />
             <Route path="cleardetails" element={<Clear_Details />} />
