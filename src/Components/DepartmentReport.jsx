@@ -13,6 +13,7 @@ function DepartmentReport() {
   const [totalAmountPayable, setTotalAmountPayable] = useState(0);
   const [amountInWords, setAmountInWords] = useState('');
   const [loading, setLoading] = useState(true);
+  const [currentDate, setCurrentDate] = useState('');
   
   const handleBackToReport = () => {
     navigate('/Department_Billing_Report');
@@ -77,6 +78,11 @@ function DepartmentReport() {
     };
 
     fetchData();
+    // Get current date
+    const date = new Date();
+    const formattedDate = `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`;
+    setCurrentDate(formattedDate);
+
   }, []);
 
   useEffect(() => {
@@ -202,7 +208,7 @@ function DepartmentReport() {
 
       {loading ? (
         <div className="flex items-center justify-center min-h-screen">
-          <p className="text-xl font-semibold">Loading...</p>
+          <div className="loader border-t-4 border-b-4 border-blue-500 rounded-full w-16 h-16 animate-spin"></div>
         </div>
         ) : (
 
@@ -214,6 +220,7 @@ function DepartmentReport() {
         </p>
         <div className="w-full text-left">
           <p className="text-lg font-bold">Division: HQ</p>
+          <p className="text-lg font-bold">Date: {currentDate}</p>
         </div>
 
         <div className="overflow-x-auto w-full mt-8">
