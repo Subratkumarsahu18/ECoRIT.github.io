@@ -70,7 +70,7 @@ function Login() {
     <div className="flex flex-col md:flex-row h-screen">
       <Toaster />
       <div className="flex flex-1 md:w-1/2 flex-col justify-center items-center bg-white text-center p-8">
-        <h1 className={`text-3xl mb-4 ${isAdmin ? "text-blue-600" : "text-yellow-500"}`}>
+        <h1 className={`text-3xl mb-4 ${isAdmin ? "text-blue-600" : "text-blue-600"}`}>
           East Coast Railway Bhubaneswar
         </h1>
         <img
@@ -78,7 +78,7 @@ function Login() {
           alt="Login Illustration"
           className="max-w-full h-auto mb-4 mix-blend-auto"
         />
-        <h2 className={`text-2xl ${isAdmin ? "text-blue-500" : "text-yellow-500"}`}>
+        <h2 className={`text-2xl ${isAdmin ? "text-blue-500" : "text-blue-500"}`}>
           Closed User Group (CUG)
         </h2>
         <p className="text-gray-600">Stay Connected Stay in Loop</p>
@@ -86,7 +86,7 @@ function Login() {
       <div className="flex justify-center items-center md:w-1/2 text-white p-8">
         <form
           className={`relative p-20 rounded-lg transition-all duration-500 transform ${
-            isAdmin ? "bg-blue-500" : "bg-yellow-500"
+            isAdmin ? "bg-blue-500" : "bg-blue-500"
           }`}
         >
           <div className="absolute top-5 right-5 flex space-x-4">
@@ -146,7 +146,7 @@ function Login() {
               className={`w-full py-2 rounded-lg transition-all duration-300 transform ${
                 isAdmin
                   ? "bg-blue-800 hover:bg-blue-900 hover:scale-105"
-                  : "bg-yellow-800 hover:bg-yellow-900 hover:scale-105"
+                  : "bg-blue-800 hover:bg-blue-900 hover:scale-105"
               } text-white`}
               disabled={loading}
             >
