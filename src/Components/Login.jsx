@@ -3,12 +3,14 @@ import { Link, useNavigate } from "react-router-dom";
 import { toast, Toaster } from "react-hot-toast";
 import { db } from "../firebaseConfig"; // Adjust the path if your firebaseConfig.js is in a different directory
 import { collection, query, where, getDocs } from "firebase/firestore";
+import { FaEye, FaEyeSlash } from "react-icons/fa"; // Import icons
 
 function Login() {
   const [loading, setLoading] = useState(false);
   const [isAdmin, setIsAdmin] = useState(true);
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false); // State for password visibility
   const navigate = useNavigate();
 
   const handleLogin = async () => {
@@ -24,11 +26,9 @@ function Login() {
       if (!querySnapshot.empty) {
         let userLevel = null;
         querySnapshot.forEach((doc) => {
-      
-   
           userLevel = doc.data().level;
           localStorage.setItem("user", userLevel);
-          localStorage.setItem('eid',doc.data().employeeID);
+          localStorage.setItem("eid", doc.data().employeeID);
         });
 
         if (isAdmin && userLevel === 0) {
@@ -66,6 +66,15 @@ function Login() {
     setPassword(""); // Clear password field on mode switch
   };
 
+  const togglePasswordVisibility = () => {
+    setShowPassword((prevShowPassword) => !prevShowPassword);
+  };
+
+  const handleFormSubmit = (e) => {
+    e.preventDefault(); // Prevent default form submission
+    handleLogin(); // Call your login function
+  };
+
   return (
     <div className="flex flex-col md:flex-row h-screen">
       <Toaster />
@@ -85,6 +94,7 @@ function Login() {
       </div>
       <div className="flex justify-center items-center md:w-1/2 text-white p-8">
         <form
+          onSubmit={handleFormSubmit} // Handle form submission
           className={`relative p-20 rounded-lg transition-all duration-500 transform ${
             isAdmin ? "bg-blue-500" : "bg-blue-500"
           }`}
@@ -122,14 +132,21 @@ function Login() {
                 className="w-full px-4 py-2 rounded-lg text-black"
               />
             </div>
-            <div className="mb-4">
+            <div className="mb-4 relative">
               <input
-                type="password"
+                type={showPassword ? "text" : "password"}
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="Enter Password"
                 className="w-full px-4 py-2 rounded-lg text-black"
               />
+              <button
+                type="button"
+                onClick={togglePasswordVisibility}
+                className="absolute inset-y-0 right-0 px-3 flex items-center text-black"
+              >
+                {showPassword ? < FaEye/> : <FaEyeSlash/>}
+              </button>
             </div>
             <div className="flex justify-between space-x-10 items-center mb-4 text-sm">
               <div>
@@ -137,12 +154,11 @@ function Login() {
                 <label htmlFor="rememberMe">Remember me</label>
               </div>
               <a href="#" className="text-blue-200 hover:underline">
-                Forgot Password?
+                
               </a>
             </div>
             <button
-              type="button"
-              onClick={handleLogin}
+              type="submit" // Change button type to submit
               className={`w-full py-2 rounded-lg transition-all duration-300 transform ${
                 isAdmin
                   ? "bg-blue-800 hover:bg-blue-900 hover:scale-105"
