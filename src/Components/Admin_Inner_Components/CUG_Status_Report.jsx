@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { db } from '../../firebaseConfig'; // Adjust the path if your firebaseConfig.js is in a different directory
-import { collection, getDocs } from 'firebase/firestore';
+import { collection, query, where, orderBy, getDocs } from 'firebase/firestore';
 
 function CUG_Status_Report() {
   const [tableData, setTableData] = useState([]);
@@ -12,7 +12,9 @@ function CUG_Status_Report() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const querySnapshot = await getDocs(collection(db, 'demo'));
+        const q = query(collection(db, 'demo'));
+        const querySnapshot = await getDocs(q);
+
         let data = [];
         let deactivatedMap = new Map();
 
@@ -26,7 +28,7 @@ function CUG_Status_Report() {
             status: doc.data()['status'] || '', // Adjust field names according to your Firestore document
           };
 
-          if (rowData.status === 'Deactivated') {
+          if (rowData.status === 'deactivated') {
             const current = deactivatedMap.get(rowData.selectedCUG);
             if (!current || new Date(rowData.activationDate) > new Date(current.activationDate)) {
               deactivatedMap.set(rowData.selectedCUG, rowData);
@@ -61,19 +63,30 @@ function CUG_Status_Report() {
     fetchData();
   }, [sortDirection]); // Update useEffect dependency to re-fetch data when sortDirection changes
 
-  // Function to format date
+  // Function to format date and time
   const formatDate = (timestamp) => {
     if (!timestamp) return '-';
 
+    let date;
     if (timestamp instanceof Date) {
-      return timestamp.toLocaleDateString();
+      date = timestamp;
     } else if (timestamp && timestamp.seconds) {
-      return new Date(timestamp.seconds * 1000).toLocaleDateString();
+      date = new Date(timestamp.seconds * 1000);
     } else if (timestamp) {
-      return new Date(timestamp).toLocaleDateString();
+      date = new Date(timestamp);
+    } else {
+      return '-';
     }
 
-    return '-';
+    const options = {
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit',
+      hour: '2-digit',
+      minute: '2-digit',
+      second: '2-digit',
+    };
+    return date.toLocaleDateString('en-US', options);
   };
 
   // Pagination logic
