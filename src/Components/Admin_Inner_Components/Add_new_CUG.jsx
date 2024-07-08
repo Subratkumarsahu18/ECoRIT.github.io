@@ -307,7 +307,7 @@ const Add_new_CUG = () => {
                   <option value="">Select Operator</option>
                   <option value="AIRTEL">AIRTEL</option>
                   <option value="VODAFONE">VODAFONE</option>
-                  <option value="BSNL">JIO</option>
+                  <option value="JIO">JIO</option>
                 </select>
               </div>
               <div>
