@@ -80,7 +80,7 @@ function Upload_CUG_Details() {
         return `Invalid DEPARTMENT at row ${rowIndex + 2}. Allowed values are: ${departments.join(', ')}.`;
       }
       if (empNo.length !== 11 || !/^[a-zA-Z0-9]+$/.test(empNo)) {
-        return `Invalid EMP NO at row ${rowIndex + 2}. EMP NO must be exactly 10 digits Alpha-Numeric.`;
+        return `Invalid EMP NO at row ${rowIndex + 2}. EMP NO must be exactly 11 digits Alpha-Numeric.`;
       }
     }
 
