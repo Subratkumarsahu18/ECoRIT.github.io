@@ -1,8 +1,4 @@
-# React + Vite
-
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
-
-Currently, two official plugins are available:
-
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+During our summer internship at East Coast Railway, Bhubaneswar, We Developed a web application for a Closed User Group using React and Firebase. 
+The app features seamless file upload functionality, data storage in Firestore, and real-time updates. Ideal for managing and sharing documents within a secure, private group.
+We conducted research and collaborated with our team members to troubleshoot and resolve technical issues, improving overall 
+project efficiency.
